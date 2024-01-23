@@ -1,0 +1,88 @@
+<div class="mat-elevation-z8">
+  <table class="full-width-table" aria-label="Elements">
+    <tr>
+      <th></th>
+      @for (month of months; track month.key) {
+        <th [attr.colspan]="month.quantity">{{month.display}}</th>
+      }
+    </tr>
+    <tr>
+      <th></th>
+      @for (day of days; track day.key) {
+        <th [attr.colspan]="day.quantity">{{day.display}}</th>
+      }
+    </tr>
+    <tr>
+      <th></th>
+      @for (hour of hours; track hour.key) {
+        <th [attr.colspan]="hour.quantity">{{hour.display}}</th>
+      }
+    </tr>
+    <tr>
+      <th></th>
+      @for (activite of activites; track activite.id) {
+        @if (activite.type === ActivityType.Kmer) {
+          <th>
+            <mat-icon>kayaking</mat-icon>
+          </th>
+        }
+        @if (activite.type === ActivityType.Piscine) {
+          <th>
+            <mat-icon>pool</mat-icon>
+          </th>
+        }
+        @if (activite.type === ActivityType.Musculation) {
+          <th>
+            <mat-icon>fitness_center</mat-icon>
+          </th>
+        }
+        @if (activite.type === ActivityType.EauVive) {
+          <th>
+            <mat-icon>waves</mat-icon>
+          </th>
+        }
+      }
+    </tr>
+    <tr>
+      <th>Votre participation</th>
+      @for (participation of participations; track participation.id) {
+        <td>
+          {{ participation.type || '?' }}
+          <mat-button-toggle-group [(ngModel)]="participation.type" aria-label="Type de participation">
+            <mat-button-toggle [value]="ParticipationType.Oui">
+              <mat-icon>check</mat-icon>
+            </mat-button-toggle>
+            <mat-button-toggle [value]="ParticipationType.Non">
+              <mat-icon>close</mat-icon>
+            </mat-button-toggle>
+            <br/>
+            <mat-button-toggle [value]="ParticipationType.PeutEtre">
+              <mat-icon>change_circle</mat-icon>
+            </mat-button-toggle>
+            <mat-button-toggle [value]="ParticipationType.NonRepondu">
+              <mat-icon>question_mark</mat-icon>
+            </mat-button-toggle>
+          </mat-button-toggle-group>
+          <!-- <mat-form-field>
+            <mat-select [(ngModel)]="participation.type">
+              <mat-option [value]="ParticipationType.Oui">Oui</mat-option>
+              <mat-option [value]="ParticipationType.Non">Non</mat-option>
+              <mat-option [value]="ParticipationType.PeutEtre">Peut-être</mat-option>
+              <mat-option [value]="ParticipationType.NonRepondu"></mat-option>
+            </mat-select>
+          </mat-form-field> -->
+        </td>
+      }
+    </tr>
+    @for (participant of participants; track participant.id) {
+      <tr>
+        <th>{{participant.name}}</th>
+        @for (activite of activites; track activite.id) {
+          <td>
+            {{ findParticipation(activite, participant) }}
+          </td>
+        }
+      </tr>
+    }
+  </table>
+</div>
