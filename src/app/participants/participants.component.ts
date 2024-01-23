@@ -22,10 +22,10 @@ enum ActivityType {
 }
 
 enum ParticipationType {
-  Oui = 'Oui',
-  Non = 'Non',
-  PeutEtre = 'Peut-être',
-  NonRepondu = '',
+  Oui = 'oui',
+  Non = 'non',
+  PeutEtre = 'peutEtre',
+  NonRepondu = 'unknown',
 }
 
 type Activity = {

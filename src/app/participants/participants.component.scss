@@ -10,6 +10,51 @@ td {
   text-align: center;
 }
 
+tr.participation {
+  min-height: 100px;
+  height: 100px;
+}
+
 mat-button-toggle-group {
   flex-wrap: wrap;
+  max-width: 100px;
+}
+
+mat-button-toggle.oui {
+  color: green;
+}
+
+mat-button-toggle.oui.mat-button-toggle-checked, td.oui {
+  color: white;
+  background-color: green;
+}
+
+mat-button-toggle.non {
+  color: red;
+}
+
+mat-button-toggle.non.mat-button-toggle-checked, td.non {
+  color: white;
+  background-color: red;
+}
+
+mat-button-toggle.peutEtre {
+  color: orange;
+}
+
+mat-button-toggle.peutEtre.mat-button-toggle-checked, td.peutEtre  {
+  color: white;
+  background-color: orange;
+}
+
+.participation td mat-button-toggle-group {
+  display: none;
+}
+
+.participation td:hover mat-icon.display {
+  display: none;
+}
+
+.participation td:hover mat-button-toggle-group {
+  display: inline-flex;
 }
