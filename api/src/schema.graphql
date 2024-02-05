@@ -1,0 +1,63 @@
+scalar DateTime
+scalar EmailAddress
+scalar PhoneNumber
+
+type Query {
+  clubs: [Club!]!
+  club(id: ID!): Club
+  user(id: ID!): User
+}
+
+type Mutation {
+  # createClub(name: String!): Club!
+  # createUser(name: String!, email: EmailAddress!, phone: PhoneNumber!): User!
+  # createActivity(clubId: ID!, date: DateTime!, type: ActivityType!): Activity!
+  participate(activityId: ID!, userId: ID!, type: ParticipationType!): ActivityParticipation!
+}
+
+type Club {
+  id: ID!
+  name: String!
+  members: [User!]!
+  activities: [Activity!]!
+  agenda: Agenda!
+}
+
+type Agenda {
+  activities: [Activity!]!
+  participants: [User!]!
+}
+
+type User {
+  id: ID!
+  name: String!
+  email: EmailAddress!
+  phone: PhoneNumber!
+}
+
+type Activity {
+  id: ID!
+  date: DateTime!
+  type: ActivityType!
+  participations: [ActivityParticipation!]!
+}
+
+type ActivityParticipation {
+  participant: User!
+  type: ParticipationType!
+}
+
+enum ActivityType {
+  kmer,
+  piscine,
+  eauVive,
+  slalom,
+  musculation
+}
+
+enum ParticipationType {
+  oui
+  non
+  peutEtre
+  nonRepondu
+}
