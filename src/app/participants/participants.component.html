@@ -1,27 +1,27 @@
 <div class="mat-elevation-z8">
   <table class="full-width-table" aria-label="Elements">
     <tbody>
-      <tr>
+      <tr class="headers">
         <th></th>
-        @for (month of months; track month.key) {
+        @for (month of (headers$ | async)?.months; track month.key) {
           <th [attr.colspan]="month.quantity">{{month.display}}</th>
         }
       </tr>
-      <tr>
+      <tr class="headers">
         <th></th>
-        @for (day of days; track day.key) {
+        @for (day of (headers$ | async)?.days; track day.key) {
           <th [attr.colspan]="day.quantity">{{day.display}}</th>
         }
       </tr>
-      <tr>
+      <tr class="headers">
         <th></th>
-        @for (hour of hours; track hour.key) {
+        @for (hour of (headers$ | async)?.hours; track hour.key) {
           <th [attr.colspan]="hour.quantity">{{hour.display}}</th>
         }
       </tr>
-      <tr>
+      <tr class="headers">
         <th></th>
-        @for (activite of activites; track activite.id) {
+        @for (activite of activites$ | async; track activite.id) {
           @if (activite.type === ActivityType.Kmer) {
             <th>
               <mat-icon>kayaking</mat-icon>
@@ -44,54 +44,66 @@
           }
         }
       </tr>
-      <tr  class="participation">
-        <th>Votre participation</th>
-        @for (participation of participations; track participation.id) {
-          <td class="participation" [class]="participation.type">
-            @switch (participation.type) {
-              @case (ParticipationType.Oui) {
-                <mat-icon class="oui display">check</mat-icon>
+      <tr class="participation">
+        @if (user$ | async; as user) {
+          <th>Votre participation<br/>{{user.name}}</th>
+          @for (participation of participations$ | async; track participation.activity) {
+            <td class="participation" [class]="participation.type">
+              @switch (participation.type) {
+                @case (ParticipationType.Oui) {
+                  <mat-icon class="oui display">check</mat-icon>
+                }
+                @case (ParticipationType.Non) {
+                  <mat-icon class="non display">close</mat-icon>
+                }
+                @case (ParticipationType.PeutEtre) {
+                  <mat-icon class="peutEtre display">change_circle</mat-icon>
+                }
+                @default {
+                  <mat-icon class="nonRepondu display">question_mark</mat-icon>
+                }
               }
-              @case (ParticipationType.Non) {
-                <mat-icon class="non display">close</mat-icon>
-              }
-              @case (ParticipationType.PeutEtre) {
-                <mat-icon class="peutEtre display">change_circle</mat-icon>
-              }
-              @default {
-                <mat-icon class="unknown display">question_mark</mat-icon>
-              }
-            }
-            <mat-button-toggle-group [(ngModel)]="participation.type" aria-label="Type de participation">
-              <mat-button-toggle [value]="ParticipationType.Oui" class="oui">
-                <mat-icon class="oui">check</mat-icon>
-              </mat-button-toggle>
-              <mat-button-toggle [value]="ParticipationType.Non" class="non">
-                <mat-icon>close</mat-icon>
-              </mat-button-toggle>
-              <br/>
-              <mat-button-toggle [value]="ParticipationType.PeutEtre" class="peutEtre">
-                <mat-icon>change_circle</mat-icon>
-              </mat-button-toggle>
-              <mat-button-toggle [value]="ParticipationType.NonRepondu" class="unknown">
-                <mat-icon>question_mark</mat-icon>
-              </mat-button-toggle>
-            </mat-button-toggle-group>
-            <!-- <mat-form-field>
-              <mat-select [(ngModel)]="participation.type">
-                <mat-option [value]="ParticipationType.Oui">Oui</mat-option>
-                <mat-option [value]="ParticipationType.Non">Non</mat-option>
-                <mat-option [value]="ParticipationType.PeutEtre">Peut-être</mat-option>
-                <mat-option [value]="ParticipationType.NonRepondu"></mat-option>
-              </mat-select>
-            </mat-form-field> -->
+              <mat-button-toggle-group [(ngModel)]="participation.type" (change)="updateParticipation(participation)" aria-label="Type de participation">
+                <mat-button-toggle [value]="ParticipationType.Oui" class="oui">
+                  <mat-icon class="oui">check</mat-icon>
+                </mat-button-toggle>
+                <mat-button-toggle [value]="ParticipationType.Non" class="non">
+                  <mat-icon>close</mat-icon>
+                </mat-button-toggle>
+                <br/>
+                <mat-button-toggle [value]="ParticipationType.PeutEtre" class="peutEtre">
+                  <mat-icon>change_circle</mat-icon>
+                </mat-button-toggle>
+                <mat-button-toggle [value]="ParticipationType.NonRepondu" class="nonRepondu">
+                  <mat-icon>question_mark</mat-icon>
+                </mat-button-toggle>
+              </mat-button-toggle-group>
+              <!-- <mat-form-field>
+                <mat-select [(ngModel)]="participation.type">
+                  <mat-option [value]="ParticipationType.Oui">Oui</mat-option>
+                  <mat-option [value]="ParticipationType.Non">Non</mat-option>
+                  <mat-option [value]="ParticipationType.PeutEtre">Peut-être</mat-option>
+                  <mat-option [value]="ParticipationType.NonRepondu"></mat-option>
+                </mat-select>
+              </mat-form-field> -->
+            </td>
+          }
+        } @else {
+          <th>Participer !</th>
+          <td [attr.colspan]="(activites$ | async)?.length">
+            <button mat-raised-button color="primary" (click)="signup()" class="flex">Se connecter</button>
           </td>
         }
       </tr>
-      @for (participant of participants; track participant.id) {
+      @for (participant of participants$ | async; track participant.id) {
         <tr>
-          <th>{{participant.name}}</th>
-          @for (activite of activites; track activite.id) {
+          <th>
+            <span>{{participant.name}}</span>
+            <button mat-icon-button (click)="login(participant)">
+              <mat-icon >edit</mat-icon>
+            </button>
+          </th>
+          @for (activite of activites$ | async; track activite.id) {
             @switch (findParticipation(activite, participant)) {
               @case (ParticipationType.Oui) {
                 <td class="oui">
@@ -110,13 +122,19 @@
               }
               @default {
                 <td>
-                  <mat-icon class="unknown">question_mark</mat-icon>
+                  <mat-icon class="nonRepondu">question_mark</mat-icon>
                 </td>
               }
             }
           }
         </tr>
       }
+      <tr class="footer">
+        <th>Total</th>
+        @for (total of totaux$ | async; track total.activity) {
+          <th>{{ total.oui }} (+{{ total.peutEtre }})</th>
+        }
+      </tr>
     </tbody>
   </table>
 </div>

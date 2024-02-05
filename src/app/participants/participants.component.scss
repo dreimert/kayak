@@ -2,8 +2,22 @@
   width: 100%;
 }
 
+.flex {
+  width: 100%;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  border: solid black;
+}
+
 th {
   border-right-style: solid;
+}
+
+.footer th {
+  border-top: 2px solid black;
 }
 
 td {
@@ -13,6 +27,11 @@ td {
 tr.participation {
   min-height: 100px;
   height: 100px;
+}
+
+tr.participation, tr.participation th, tr.participation td {
+  border-top: 2px solid black;
+  border-bottom: 2px solid black;
 }
 
 mat-button-toggle-group {

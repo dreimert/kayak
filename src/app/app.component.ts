@@ -12,6 +12,8 @@ import { Observable } from 'rxjs';
 import { map, shareReplay } from 'rxjs/operators';
 
 import { ParticipantsComponent } from './participants/participants.component';
+import { HttpClientModule } from '@angular/common/http';
+import { AgendaService } from './services/agenda.service';
 
 @Component({
   selector: 'app-root',
@@ -19,6 +21,7 @@ import { ParticipantsComponent } from './participants/participants.component';
   imports: [
     CommonModule,
     RouterOutlet,
+    HttpClientModule,
     MatToolbarModule,
     MatButtonModule,
     MatSidenavModule,
@@ -28,6 +31,7 @@ import { ParticipantsComponent } from './participants/participants.component';
 
     ParticipantsComponent,
   ],
+  providers: [AgendaService],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
