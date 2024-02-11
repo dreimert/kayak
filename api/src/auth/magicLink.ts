@@ -1,9 +1,9 @@
 import _MagicLoginStrategy from "passport-magic-login"
 
-import { sendMail } from "../../mail"
+import { sendMail } from "../../mail.js"
 
 import { db, getUniqId } from "../datas/db.js"
-import { User } from "../models/User"
+import { User } from "../models/User.js"
 
 // @ts-ignore
 const MagicLoginStrategy = _MagicLoginStrategy.default
