@@ -1,7 +1,8 @@
 import { Component, inject } from '@angular/core';
-import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { CommonModule } from '@angular/common';
-import { RouterOutlet } from '@angular/router';
+import { HttpClientModule } from '@angular/common/http';
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
+import { RouterLink, RouterOutlet } from '@angular/router';
 import { AsyncPipe } from '@angular/common';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
@@ -10,10 +11,6 @@ import { MatListModule } from '@angular/material/list';
 import { MatIconModule } from '@angular/material/icon';
 import { Observable } from 'rxjs';
 import { map, shareReplay } from 'rxjs/operators';
-
-import { ParticipantsComponent } from './participants/participants.component';
-import { HttpClientModule } from '@angular/common/http';
-import { AgendaService } from './services/agenda.service';
 
 @Component({
   selector: 'app-root',
@@ -29,14 +26,14 @@ import { AgendaService } from './services/agenda.service';
     MatIconModule,
     AsyncPipe,
 
-    ParticipantsComponent,
+    RouterLink,
   ],
-  providers: [AgendaService],
+  providers: [],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
 export class AppComponent {
-  title = 'kayakDate';
+  title = 'Kayakons';
 
   private breakpointObserver = inject(BreakpointObserver);
 

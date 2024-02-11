@@ -47,6 +47,9 @@ export type Agenda = {
 export type User = {
   id: UserId;
   name: string;
-  email: string;
+}
+
+export type UserFull = User & {
   phone: string;
-};
+  email: string;
+}

@@ -1,0 +1,17 @@
+{
+	email contact@kayakons.dev
+	local_certs
+}
+
+kayakons.dev {
+	encode zstd gzip
+
+	handle /api/* {
+		uri strip_prefix /api
+		reverse_proxy localhost:4040
+	}
+
+	handle * {
+		reverse_proxy localhost:4200
+	}
+}

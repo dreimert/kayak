@@ -2,25 +2,31 @@
   <table class="full-width-table" aria-label="Elements">
     <tbody>
       <tr class="headers">
-        <th></th>
+        <th rowspan="4">
+          <mat-form-field>
+            <mat-label>Filtre</mat-label>
+            <mat-select [formControl]="filter">
+              @for (filter of filters; track $index) {
+                <mat-option [value]="filter">{{ filter.name }}</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+        </th>
         @for (month of (headers$ | async)?.months; track month.key) {
           <th [attr.colspan]="month.quantity">{{month.display}}</th>
         }
       </tr>
       <tr class="headers">
-        <th></th>
         @for (day of (headers$ | async)?.days; track day.key) {
           <th [attr.colspan]="day.quantity">{{day.display}}</th>
         }
       </tr>
       <tr class="headers">
-        <th></th>
         @for (hour of (headers$ | async)?.hours; track hour.key) {
           <th [attr.colspan]="hour.quantity">{{hour.display}}</th>
         }
       </tr>
       <tr class="headers">
-        <th></th>
         @for (activite of activites$ | async; track activite.id) {
           @if (activite.type === ActivityType.Kmer) {
             <th>
@@ -91,16 +97,20 @@
         } @else {
           <th>Participer !</th>
           <td [attr.colspan]="(activites$ | async)?.length">
-            <button mat-raised-button color="primary" (click)="signup()" class="flex">Se connecter</button>
+            <a mat-raised-button color="primary" class="flex" routerLink="/login">Se connecter ou créer un compte</a>
           </td>
         }
       </tr>
       @for (participant of participants$ | async; track participant.id) {
         <tr>
-          <th>
-            <span>{{participant.name}}</span>
-            <button mat-icon-button (click)="login(participant)">
-              <mat-icon >edit</mat-icon>
+          <th class="user">
+            <span class="flex">{{participant.name}}</span>
+            <button
+              type="button"
+              aria-label="Voir le numero de téléphone"
+              mat-icon-button
+              (click)="showPhone(participant)">
+              <mat-icon aria-label="téléphone">phone</mat-icon>
             </button>
           </th>
           @for (activite of activites$ | async; track activite.id) {

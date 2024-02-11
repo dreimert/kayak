@@ -1,12 +1,12 @@
-import { ID } from "../types-db.js";
+import { ID, Model } from "../types-db.js";
 
-export class User {
+export class User implements Model {
   id: ID;
-  name: string;
+  name?: string;
   email: string;
-  phone: string;
+  phone?: string;
 
-  constructor(data: any) {
+  constructor(data: Partial<User>) {
     this.id = data.id;
     this.name = data.name;
     this.email = data.email;

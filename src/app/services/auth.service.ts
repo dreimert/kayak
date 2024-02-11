@@ -1,41 +1,75 @@
 import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Apollo, gql } from 'apollo-angular';
 import { isPlatformBrowser } from '@angular/common';
 
-import { BehaviorSubject } from 'rxjs';
+import { Observable, firstValueFrom, map, of, shareReplay } from 'rxjs';
 
-import { User } from '../../types';
+import { UserFull } from '../../types';
+
+export type LoginResponse = {
+  success: boolean;
+  code: string;
+}
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
 
-  user = new BehaviorSubject<User | null>(null);
+  user$
 
-  constructor (@Inject(PLATFORM_ID) private platformId:Object) {
-    // if (isPlatformBrowser(platformId)) {
-    //   const user = localStorage.getItem('user')
-
-    //   if (user) {
-    //     this.user.next(JSON.parse(user))
-    //   }
-    // }
+  constructor (
+    @Inject(PLATFORM_ID) private platformId:Object,
+    private http: HttpClient,
+    private apollo: Apollo,
+  ) {
+    if (isPlatformBrowser(platformId)) {
+      this.user$ = this.checkAuthenticated()
+    } else {
+      this.user$ = of(null)
+    }
   }
 
-  async login (user: User) {
-    // TODO: call API to login
-
-    // localStorage.setItem('user', JSON.stringify(user))
-    this.user.next(user)
+  checkAuthenticated () : Observable<UserFull | null> {
+    return this.apollo.query<{me: UserFull}>({
+      query: gql`
+        query Me {
+          me {
+            id
+            name
+            email
+            phone
+          }
+        }
+      `
+    }).pipe(
+      map(result => {
+        return result.data.me || null
+      }),
+      shareReplay(1)
+    )
   }
 
-  async signup (mail: string) {
-    // TODO: call API to send mail
+  reCheckAuthenticated () {
+    this.user$ = this.checkAuthenticated()
+  }
+
+  isAuthenticated () {
+    return firstValueFrom(this.user$).then(user => !!user)
+  }
+
+  isFullAuthenticated () {
+    return firstValueFrom(this.user$).then(user => !!user && !!user.name && !!user.phone)
+  }
+
+  login (mail: string) {
+    return this.http.post<LoginResponse>('https://kayakons.dev/api/auth/magiclogin', { destination: mail })
   }
 
   async logout () {
-    // TODO: call API to logout
-    localStorage.removeItem('user')
-    this.user.next(null)
+    await firstValueFrom(this.http.get('https://kayakons.dev/api/auth/logout'))
+
+    this.user$ = of(null)
   }
 }

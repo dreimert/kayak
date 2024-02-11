@@ -1,18 +1,25 @@
 import { Component } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { KeyValuePipe, AsyncPipe } from '@angular/common';
 
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTableModule } from '@angular/material/table';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
 
-import { AuthService } from '../services/auth.service';
-import { Activity, ActivityId, ActivityType, UserId, ParticipationType, User, Agenda, ActivityParticipation } from '../../types';
-import { Observable, Subject, combineLatest } from 'rxjs';
+import { AuthService } from '../../services/auth.service';
+import { Activity, ActivityId, ActivityType, ParticipationType, User, Agenda, ActivityParticipation } from '../../../types';
+import { Observable, Subject, combineLatest, firstValueFrom } from 'rxjs';
 import { map, shareReplay, startWith } from 'rxjs/operators';
-import { ParticipationPipe } from '../pipes/participation.pipe';
-import { AgendaService } from '../services/agenda.service';
+import { ParticipationPipe } from '../../pipes/participation.pipe';
+import { AgendaService } from '../../services/agenda.service';
+import { RouterLink } from '@angular/router';
+import { ShowPhoneDialog } from '../../dialogs/show-phone/show-phone.dialog';
+import { ConfirmShowPhoneDialog } from '../../dialogs/confirm-show-phone/confirm-show-phone.dialog';
+import { UserService } from '../../services/user.service';
 
 type DisplayableHeader = {
   key: string;
@@ -26,16 +33,17 @@ type Participation = {
 }
 
 @Component({
-  selector: 'app-participants',
-  templateUrl: './participants.component.html',
-  styleUrls: ['./participants.component.scss'],
+  selector: 'app-agenda',
+  templateUrl: './agenda.component.html',
+  styleUrls: ['./agenda.component.scss'],
   standalone: true,
   imports: [
-    FormsModule, MatButtonModule, MatButtonToggleModule, MatIconModule, MatTableModule,
-    KeyValuePipe, AsyncPipe, ParticipationPipe
+    FormsModule, ReactiveFormsModule, MatButtonModule, MatButtonToggleModule, MatDialogModule, MatFormFieldModule, MatIconModule, MatTableModule, MatSelectModule,
+    KeyValuePipe, AsyncPipe, ParticipationPipe,
+    RouterLink,
   ]
 })
-export class ParticipantsComponent {
+export class AgendaComponent {
   agenda$: Observable<Agenda>
   activites$: Observable<Activity[]>
   participants$: Observable<User[]>
@@ -57,18 +65,50 @@ export class ParticipantsComponent {
 
   participations$: Observable<Participation[]>
 
-  user$: AuthService['user']
+  user$: AuthService['user$']
 
   updateAgenda$ = new Subject<void>()
 
-  constructor(private authService: AuthService, private agendaService: AgendaService) {
-    this.user$ = authService.user
+  filters = [{
+    name: 'Aucun',
+    filter: (activity: Activity) => true
+  }, {
+    name: 'Eau vive',
+    filter: (activity: Activity) => activity.type === ActivityType.EauVive
+  }, {
+    name: 'Musculation',
+    filter: (activity: Activity) => activity.type === ActivityType.Musculation
+  }, {
+    name: 'Piscine',
+    filter: (activity: Activity) => activity.type === ActivityType.Piscine
+  }, {
+    name: 'Randonnée',
+    filter: (activity: Activity) => activity.type === ActivityType.Kmer
+  }, {
+    name: 'Slalom',
+    filter: (activity: Activity) => activity.type === ActivityType.Slalom
+  }]
+
+  filter = new FormControl(this.filters[0]);
+
+  constructor(
+    private dialog: MatDialog,
+    private authService: AuthService,
+    private agendaService: AgendaService,
+    private userService: UserService
+  ) {
+    this.user$ = authService.user$
 
     this.agenda$ = agendaService.getAgenda()
 
-    this.activites$ = this.agenda$.pipe(
-      map(agenda => agenda.activities.sort((a, b) => a.date.getTime() - b.date.getTime())),
-      shareReplay(1),
+    this.activites$ = combineLatest({
+      activites: this.agenda$.pipe(
+        map(agenda => agenda.activities.sort((a, b) => a.date.getTime() - b.date.getTime())),
+        shareReplay(1),
+      ),
+      filter: this.filter.valueChanges.pipe(startWith(this.filters[0]))
+    }).pipe(
+      map(({ activites, filter }) => activites.filter(filter!.filter))
     )
 
     this.participants$ = combineLatest({
@@ -81,12 +121,10 @@ export class ParticipantsComponent {
 
     this.headers$ = this.activites$.pipe(
       map(activities => {
-        console.log('headers');
-
         return activities.reduce((acc, activite) => {
           const year = activite.date.getFullYear()
           const month = activite.date.toLocaleString('default', { month: 'long' })
-          const day = activite.date.getDay()
+          const day = activite.date.getDate()
           const weekday = activite.date.toLocaleString('default', { weekday: 'short'})
           const hour = activite.date.getHours()
           const minute = activite.date.getMinutes().toString().padStart(2, '0')
@@ -162,8 +200,6 @@ export class ParticipantsComponent {
       activities: this.activites$
     }).pipe(
       map(({user, activities}) => {
-        console.log('combineLatest');
-
         return activities.map(activity => {
           const find = activity.participations.find(participation => user?.id === participation.participant.id)
 
@@ -183,8 +219,6 @@ export class ParticipantsComponent {
       updateAgenda: this.updateAgenda$.pipe(startWith(''))
     }).pipe(
       map(({participants, activities, participations}) => {
-        console.log('totaux');
-
         const participe = (participation: ActivityParticipation) => participants.find(p => p.id === participation.participant.id)
 
         return activities.map(activity => {
@@ -233,20 +267,35 @@ export class ParticipantsComponent {
     return ParticipationType.NonRepondu
   }
 
-  updateParticipation(participation: Participation) {
-    console.log('updateParticipation', participation);
+  async updateParticipation(participation: Participation) {
+    const user = await firstValueFrom(this.user$)
 
-    this.agendaService.participate(participation.activity, this.user$.value?.id!, participation.type).subscribe((res) => {
-      console.log('participate', res);
+    this.agendaService.participate(participation.activity, user!.id!, participation.type).subscribe((res) => {
       this.updateAgenda$.next()
     })
   }
 
-  login (user: User) {
-    this.authService.login(user)
-  }
+  showPhone(user: User) {
+    console.log(user);
 
-  signup () {
+    const dialogRef = this.dialog.open(ConfirmShowPhoneDialog, {
+      data: user
+    });
 
+    dialogRef.afterClosed().subscribe(async result => {
+      console.log(`Dialog result: ${result}`);
+      this.userService.phone(user.id).pipe(
+        map(phone => {
+          return this.dialog.open(ShowPhoneDialog, {
+            data: {
+              user,
+              phone
+            }
+          }).afterClosed();
+        })
+      ).subscribe(result => {
+        console.log(`Dialog result: ${result}`);
+      });
+    });
   }
 }

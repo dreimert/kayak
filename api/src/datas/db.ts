@@ -7,6 +7,7 @@ import fs from 'fs'
 import { Club } from '../models/Club.js'
 import { User } from '../models/User.js'
 import { Activity } from '../models/Activity.js'
+import { Model } from '../types-db.js'
 
 export type DB = {
   clubs: Club[]
@@ -42,6 +43,16 @@ export function saveDb () {
   const json = JSON.stringify(db, null, 2)
 
   fs.writeFileSync(process.env['DB_PATH'] || './api/datas/db.json', json)
+}
+
+export function getUniqId (collection: Model[]) {
+  let id = Math.floor(Math.random() * 1000000).toString()
+
+  while (collection.some((model) => model.id === id)) {
+    id = Math.floor(Math.random() * 1000000).toString()
+  }
+
+  return id
 }
 
 setInterval(saveDb, 1000 * 60 * 5)

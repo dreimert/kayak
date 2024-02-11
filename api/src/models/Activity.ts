@@ -2,9 +2,9 @@ import { db } from "../datas/db.js";
 
 import { ActivityType } from "../enums/ActivityType.js";
 
-import { ActivityParticipation, ID } from "../types-db.js";
+import { ActivityParticipation, ID, Model } from "../types-db.js";
 
-export class Activity {
+export class Activity implements Model {
   id: ID;
   date: Date;
   type: ActivityType;

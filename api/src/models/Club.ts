@@ -1,9 +1,8 @@
 import { db } from "../datas/db.js";
 
-import { ID } from "../types-db.js";
-import { Activity } from "./Activity.js";
+import { ID, Model } from "../types-db.js";
 
-export class Club {
+export class Club implements Model {
   id: ID;
   name: string;
   members: ID[];
@@ -25,8 +24,6 @@ export class Club {
   }
 
   getAgenda() {
-    console.log('getAgenda');
-
     const agendaActivities = this.getActivities()
       .filter((activity) => activity?.date! > new Date());
 

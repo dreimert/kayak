@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "kayakDate": {
+    "kayakons": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -68,10 +68,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "kayakDate:build:production"
+              "buildTarget": "kayakons:build:production"
             },
             "development": {
-              "buildTarget": "kayakDate:build:development"
+              "buildTarget": "kayakons:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -79,7 +79,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "buildTarget": "kayakDate:build"
+            "buildTarget": "kayakons:build"
           }
         },
         "test": {

@@ -73,7 +73,6 @@ export class AgendaService {
       }
     }).pipe(
       map(result => result?.data?.participate),
-      tap(console.log)
     )
   }
 }
