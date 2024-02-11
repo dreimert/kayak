@@ -25,7 +25,7 @@ export const magicLogin = new MagicLoginStrategy({
       destination,
       `Lien de connexion à ${process.env.APP_NAME} - token : ${token}`,
       `Cliquez sur ce lien pour terminer votre connexion : ${link}`,
-      `Cliquez sur ce lien pour terminer votre connexion : <a href="${link}">${link}</a>`
+      `<html>Cliquez sur ce lien pour terminer votre connexion : <a href="${link}">${link}</a></html>`
     )
   },
 
