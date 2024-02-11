@@ -6,6 +6,7 @@ import { isPlatformBrowser } from '@angular/common';
 import { Observable, firstValueFrom, map, of, shareReplay } from 'rxjs';
 
 import { UserFull } from '../../types';
+import { environment } from '../../environments/environment';
 
 export type LoginResponse = {
   success: boolean;
@@ -64,11 +65,11 @@ export class AuthService {
   }
 
   login (mail: string) {
-    return this.http.post<LoginResponse>('https://kayakons.dev/api/auth/magiclogin', { destination: mail })
+    return this.http.post<LoginResponse>(`${environment.apiUrl}/auth/magiclogin`, { destination: mail })
   }
 
   async logout () {
-    await firstValueFrom(this.http.get('https://kayakons.dev/api/auth/logout'))
+    await firstValueFrom(this.http.get(`${environment.apiUrl}/auth/logout`))
 
     this.user$ = of(null)
   }
