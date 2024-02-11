@@ -15,7 +15,7 @@ type Mutation {
   # createUser(name: String!, email: EmailAddress!, phone: PhoneNumber!): User!
   # createActivity(clubId: ID!, date: DateTime!, type: ActivityType!): Activity!
   participate(activityId: ID!, userId: ID!, type: ParticipationType!): ActivityParticipation!
-  updateProfile(userId: ID!, name: String!, phone: PhoneNumber!): User!
+  updateProfile(userId: ID!, name: String!, phone: PhoneNumber!): UserFull!
 }
 
 type Club {
