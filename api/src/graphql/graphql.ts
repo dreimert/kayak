@@ -13,7 +13,7 @@ import { db } from '../datas/db.js';
 import { ParticipationType } from '../enums/ParticipationType.js';
 import { ActivityType } from '../enums/ActivityType.js';
 import { User } from '../models/User.js';
-import { sendMail } from '../../mail.js';
+import { sendMail } from '../mail.js';
 
 export type Context = {
   user?: User;

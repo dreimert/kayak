@@ -8,7 +8,7 @@ import nodemailer from "nodemailer"
 let configOptions = {
   host: process.env.MAIL_SMTP,
   port: parseInt(process.env.MAIL_PORT),
-  // secure: true,
+  secure: JSON.parse(process.env.MAIL_SECURE),
   auth: {
     user: process.env.MAIL,
     pass: process.env.MAIL_PASSWORD

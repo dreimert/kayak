@@ -9,6 +9,8 @@ import { User } from '../models/User.js'
 import { Activity } from '../models/Activity.js'
 import { Model } from '../types-db.js'
 
+const dbPath = process.env['DB_PATH'] || './api/datas/db.json'
+
 export type DB = {
   clubs: Club[]
   users: User[]
@@ -22,9 +24,9 @@ export const db: DB = {
 }
 
 export function initDb () {
-  console.info('Initializing db...');
+  console.info('Initializing db with', dbPath);
 
-  const json = fs.readFileSync(process.env['DB_PATH'] || './api/datas/db.json', 'utf8')
+  const json = fs.readFileSync(dbPath, 'utf8')
 
   const rawData = JSON.parse(json)
 
@@ -38,11 +40,11 @@ export function initDb () {
 }
 
 export function saveDb () {
-  console.info('Saving db...');
+  console.info('Saving db in', dbPath);
 
   const json = JSON.stringify(db, null, 2)
 
-  fs.writeFileSync(process.env['DB_PATH'] || './api/datas/db.json', json)
+  fs.writeFileSync(dbPath, json)
 }
 
 export function getUniqId (collection: Model[]) {
