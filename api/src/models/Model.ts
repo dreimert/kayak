@@ -1,6 +1,6 @@
-import { getUniqId } from "../datas/db";
+import { getUniqId } from "../datas/db.js";
 
-import { ID } from "../types-db";
+import { ID } from "../types-db.js";
 
 export class Model {
   constructor (public id: ID, collection: Model[]) {
