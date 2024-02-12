@@ -1,22 +1,21 @@
-import { db, getUniqId } from "../datas/db.js";
+import { db } from "../datas/db.js";
+
+import { Model } from "./Model.js";
 
 import { ActivityType } from "../enums/ActivityType.js";
+import { ActivityParticipation, ID } from "../types-db.js";
 
-import { ActivityParticipation, ID, Model } from "../types-db.js";
-
-export class Activity implements Model {
-  id: ID;
+export class Activity extends Model {
   date: Date;
   type: ActivityType;
   participations: ActivityParticipation[];
 
   constructor(data: any) {
-    this.id = data.id
+    super(data.id, db.activities)
+
     this.date = new Date(data.date)
     this.type = data.type
     this.participations = data.participations
-
-    this.id ??= getUniqId(db.activities)
   }
 
   getParticipations() {

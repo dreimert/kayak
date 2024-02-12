@@ -1,15 +1,18 @@
-import { db, getUniqId } from "../datas/db.js";
+import { db } from "../datas/db.js";
 
-import { ID, Model } from "../types-db.js";
+import { Model } from "./Model.js";
+import { Activity } from "./Activity.js";
 
-export class Club implements Model {
-  id: ID;
+import { ActivityType } from "../enums/ActivityType.js";
+import { ID } from "../types-db.js";
+export class Club extends Model {
   name: string;
   members: ID[];
   activities: ID[];
 
   constructor(data: any) {
-    this.id = data.id;
+    super(data.id, db.clubs);
+
     this.name = data.name;
     this.members = data.members;
     this.activities = data.activities;

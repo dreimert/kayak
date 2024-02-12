@@ -7,7 +7,7 @@ import fs from 'fs'
 import { Club } from '../models/Club.js'
 import { User } from '../models/User.js'
 import { Activity } from '../models/Activity.js'
-import { Model } from '../types-db.js'
+import { Model } from '../models/Model.js'
 
 const dbPath = process.env['DB_PATH'] || './api/datas/db.json'
 

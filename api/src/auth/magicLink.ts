@@ -2,7 +2,7 @@ import _MagicLoginStrategy from "passport-magic-login"
 
 import { sendMail } from "../mail.js"
 
-import { db, getUniqId } from "../datas/db.js"
+import { db } from "../datas/db.js"
 import { User } from "../models/User.js"
 
 // @ts-ignore
@@ -45,7 +45,6 @@ export const magicLogin = new MagicLoginStrategy({
       callback(null, user)
     } else {
       const user = new User({
-        id: getUniqId(db.users),
         email: destination,
       })
 

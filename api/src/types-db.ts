@@ -6,6 +6,3 @@ export type ActivityParticipation = {
   participant: ID
   type: ParticipationType
 }
-export interface Model {
-  id: ID
-}
