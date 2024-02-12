@@ -165,7 +165,7 @@ export class Club extends Model {
       const upcomingRecurringActivities = this.getUpcomingRecurringActivities(now);
 
       upcomingRecurringActivities.forEach((activity) => {
-        const findActivity = db.activities.find((act) => act.date === activity.date && act.type === activity.type);
+        const findActivity = db.activities.find((act) => act.date.getTime() === activity.date.getTime() && act.type === activity.type);
 
         if (!findActivity) {
           db.activities.push(activity);
