@@ -1,3 +1,4 @@
+import { db, getUniqId } from "../datas/db.js";
 import { ID, Model } from "../types-db.js";
 
 export class User implements Model {
@@ -11,5 +12,7 @@ export class User implements Model {
     this.name = data.name;
     this.email = data.email;
     this.phone = data.phone;
+
+    this.id ??= getUniqId(db.activities)
   }
 }

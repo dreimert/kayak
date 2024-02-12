@@ -1,4 +1,4 @@
-import { db } from "../datas/db.js";
+import { db, getUniqId } from "../datas/db.js";
 
 import { ID, Model } from "../types-db.js";
 
@@ -13,6 +13,8 @@ export class Club implements Model {
     this.name = data.name;
     this.members = data.members;
     this.activities = data.activities;
+
+    this.id ??= getUniqId(db.activities)
   }
 
   getMembers() {

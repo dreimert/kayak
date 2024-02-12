@@ -1,4 +1,4 @@
-import { db } from "../datas/db.js";
+import { db, getUniqId } from "../datas/db.js";
 
 import { ActivityType } from "../enums/ActivityType.js";
 
@@ -15,6 +15,8 @@ export class Activity implements Model {
     this.date = new Date(data.date)
     this.type = data.type
     this.participations = data.participations
+
+    this.id ??= getUniqId(db.activities)
   }
 
   getParticipations() {
