@@ -13,7 +13,7 @@ module.exports = {
     time: true
   }, {
     name: 'Kayakons - api',
-    script: './api/dist/src/index.js',
+    script: './api/dist/index.js',
     interpreter_args: '--env-file=.env',
     autorestart: true,
     env: {
