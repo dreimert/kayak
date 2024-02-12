@@ -12,6 +12,15 @@ let configOptions = {
   auth: {
     user: process.env.MAIL_USER,
     pass: process.env.MAIL_PASSWORD
+  },
+  dkim: undefined
+}
+
+if (process.env.MAIL_DKIM_DOMAIN) {
+  configOptions.dkim = {
+    domainName: process.env.MAIL_DKIM_DOMAIN,
+    keySelector: process.env.MAIL_DKIM_KEY,
+    privateKey: process.env.MAIL_DKIM_PRIVATE_KEY
   }
 }
 
