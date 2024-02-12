@@ -1,3 +1,4 @@
+import { readFileSync } from "node:fs"
 import nodemailer from "nodemailer"
 
 // MAIL="contact@kayakons.ovh"
@@ -17,10 +18,12 @@ let configOptions = {
 }
 
 if (process.env.MAIL_DKIM_DOMAIN) {
+  const privateKey = readFileSync(process.env.MAIL_DKIM_PRIVATE_KEY, 'utf-8')
+
   configOptions.dkim = {
     domainName: process.env.MAIL_DKIM_DOMAIN,
     keySelector: process.env.MAIL_DKIM_KEY,
-    privateKey: process.env.MAIL_DKIM_PRIVATE_KEY
+    privateKey
   }
 }
 
