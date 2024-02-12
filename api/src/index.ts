@@ -55,7 +55,8 @@ app.use(session({
   saveUninitialized: false, // don't create session until something stored
   store: new (NedbStore(session))({
     filename: process.env.SESSION_STORE_PATH
-  })
+  }),
+  cookie: { maxAge: 1000 * 60 * 60 * 24 * 60 }
 }));
 // app.use(csrf());
 // app.use(passport.authenticate('session'));
@@ -102,3 +103,9 @@ const port = process.env['PORT'] || 4040;
 app.listen(port, () => {
   console.info(`API server listening on port ${port}`);
 });
+
+
+db.clubs.forEach((club) => {
+  console.log(club.name);
+  console.log(club.createRecurrentActivity());
+})
