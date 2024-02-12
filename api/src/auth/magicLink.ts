@@ -23,7 +23,7 @@ export const magicLogin = new MagicLoginStrategy({
 
     await sendMail(
       destination,
-      `Lien de connexion à ${process.env.APP_NAME} - token : ${token}`,
+      `Lien de connexion à ${process.env.APP_NAME}`,
       `Cliquez sur ce lien pour terminer votre connexion : ${link}`,
       `<html>Cliquez sur ce lien pour terminer votre connexion : <a href="${link}">${link}</a></html>`
     )

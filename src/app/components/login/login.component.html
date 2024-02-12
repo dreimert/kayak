@@ -13,13 +13,13 @@
     }
   </mat-form-field>
   <p>Conditions d'utilisation : <a href="/about">à propos</a></p>
-  <mat-checkbox formControlName="cgu">J'accepte les conditions générales d'utilisations</mat-checkbox>
+  <mat-checkbox formControlName="cgu">J'accepte les conditions générales d'utilisations<sup>*</sup></mat-checkbox>
   <button class="flex" mat-raised-button color="primary" [disabled]="!loginForm.valid" type="submit">Envoyer</button>
 </form>
 
 @if (login$ | async; as login) {
   @if (login.success) {
-    <p class="padding">Un mail a été envoyé avec le code {{ login.code }}</p>
+    <p class="padding">Un mail a été envoyé.</p>
   } @else {
     <p class="padding">Une erreur est survenue. Merci de réessayer plus tard ou de contacter le support technique.</p>
   }

@@ -22,7 +22,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 export class LoginComponent {
   loginForm = this._formBuilder.group({
     email: ['', [Validators.required, Validators.email]],
-    cgu: [false, Validators.requiredTrue],
+    cgu: [false, [Validators.required, Validators.requiredTrue]],
   });
 
   sent = false;
