@@ -58,3 +58,12 @@ export function getUniqId (collection: Model[]) {
 }
 
 setInterval(saveDb, 1000 * 60 * 5)
+
+process.on('SIGINT', async function () {
+  console.error('SIGINT in DB: save DB and exit')
+
+  saveDb()
+
+  console.info('DB saved, exiting...')
+  process.exit(0)
+})
