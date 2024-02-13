@@ -112,13 +112,14 @@
           <th class="user">
             <span class="flex">{{participant.name}}</span>
             @if (user$ | async; as user) {
-              <button
+              <!-- à restraindre aux membres du codir / organisateur de l'évènement. Déporter sur la page évènement -->
+              <!-- <button
                 type="button"
                 aria-label="Voir le mail"
                 mat-icon-button
                 (click)="showData(participant, 'email')">
                 <mat-icon aria-label="mail">email</mat-icon>
-              </button>
+              </button> -->
               <button
                 type="button"
                 aria-label="Voir le numero de téléphone"
