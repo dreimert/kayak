@@ -2,7 +2,7 @@ import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
-import { RouterLink, RouterOutlet } from '@angular/router';
+import { RouterOutlet, RouterModule } from '@angular/router';
 import { AsyncPipe } from '@angular/common';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
@@ -17,6 +17,7 @@ import { map, shareReplay } from 'rxjs/operators';
   standalone: true,
   imports: [
     CommonModule,
+    RouterModule,
     RouterOutlet,
     HttpClientModule,
     MatToolbarModule,
@@ -25,8 +26,6 @@ import { map, shareReplay } from 'rxjs/operators';
     MatListModule,
     MatIconModule,
     AsyncPipe,
-
-    RouterLink,
   ],
   providers: [],
   templateUrl: './app.component.html',

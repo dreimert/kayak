@@ -10,7 +10,7 @@ import { AsyncPipe } from '@angular/common';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { Apollo, gql, MutationResult } from 'apollo-angular';
 import { User } from '../../../types';
-import { RouterLink } from '@angular/router';
+import { RouterModule } from '@angular/router';
 // import { ApolloQueryResult } from '@apollo/client';
 
 @Component({
@@ -19,9 +19,8 @@ import { RouterLink } from '@angular/router';
   styleUrl: './profile.component.scss',
   standalone: true,
   imports: [
-    FormsModule, MatButtonModule, MatCheckboxModule, MatFormFieldModule, MatIconModule, MatInputModule, ReactiveFormsModule,
+    FormsModule, RouterModule, MatButtonModule, MatCheckboxModule, MatFormFieldModule, MatIconModule, MatInputModule, ReactiveFormsModule,
     AsyncPipe,
-    RouterLink,
   ],
 })
 export class ProfileComponent {
