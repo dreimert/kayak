@@ -13,6 +13,7 @@ export enum ParticipationType {
   Non = 'non',
   PeutEtre = 'peutEtre',
   NonRepondu = 'nonRepondu',
+  Coordinator = 'coordinator',
 }
 
 export type ClubId = ID

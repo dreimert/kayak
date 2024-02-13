@@ -80,6 +80,15 @@ mat-button-toggle.peutEtre.mat-button-toggle-checked, td.peutEtre  {
   background-color: orange;
 }
 
+mat-button-toggle.coordinator {
+  color: blue;
+}
+
+mat-button-toggle.coordinator.mat-button-toggle-checked, td.coordinator  {
+  color: white;
+  background-color: blue;
+}
+
 .participation td mat-button-toggle-group {
   display: none;
 }

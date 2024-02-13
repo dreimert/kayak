@@ -58,6 +58,7 @@ export class AgendaComponent {
     activity: ActivityId,
     oui: number,
     peutEtre: number,
+    coordinator: number
   }[]>
 
   ParticipationType = ParticipationType
@@ -224,13 +225,15 @@ export class AgendaComponent {
         return activities.map(activity => {
           const oui = activity.participations.filter(participation => participation.type === ParticipationType.Oui).filter(participe).length
           const peutEtre = activity.participations.filter(participation => participation.type === ParticipationType.PeutEtre).filter(participe).length
+          const coordinator = activity.participations.filter(participation => participation.type === ParticipationType.Coordinator).filter(participe).length
 
           const participation = participations.find(participation => participation.activity === activity.id)
 
           return {
             activity: activity.id,
             oui: oui + (participation?.type === ParticipationType.Oui ? 1 : 0),
-            peutEtre: peutEtre + (participation?.type === ParticipationType.PeutEtre ? 1 : 0)
+            peutEtre: peutEtre + (participation?.type === ParticipationType.PeutEtre ? 1 : 0),
+            coordinator: coordinator + (participation?.type === ParticipationType.Coordinator ? 1 : 0),
           }
         })
       }),

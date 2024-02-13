@@ -3,4 +3,5 @@ export enum ParticipationType {
   non = 'non',
   peutEtre = 'peutEtre',
   nonRepondu = 'nonRepondu',
+  coordinator = 'coordinator',
 }

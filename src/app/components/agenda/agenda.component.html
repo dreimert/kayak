@@ -65,6 +65,9 @@
                 @case (ParticipationType.PeutEtre) {
                   <mat-icon class="peutEtre display">change_circle</mat-icon>
                 }
+                @case (ParticipationType.Coordinator) {
+                  <mat-icon class="coordinator display">shield_person</mat-icon>
+                }
                 @default {
                   <mat-icon class="nonRepondu display">question_mark</mat-icon>
                 }
@@ -82,6 +85,9 @@
                 </mat-button-toggle>
                 <mat-button-toggle [value]="ParticipationType.NonRepondu" class="nonRepondu">
                   <mat-icon>question_mark</mat-icon>
+                </mat-button-toggle>
+                <mat-button-toggle [value]="ParticipationType.Coordinator" class="coordinator">
+                  <mat-icon>shield_person</mat-icon>
                 </mat-button-toggle>
               </mat-button-toggle-group>
               <!-- <mat-form-field>

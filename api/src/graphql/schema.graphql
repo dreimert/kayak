@@ -75,4 +75,5 @@ enum ParticipationType {
   non
   peutEtre
   nonRepondu
+  coordinator
 }
