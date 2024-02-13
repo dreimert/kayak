@@ -1,4 +1,5 @@
-<p>Entrer une adresse mail valide. Un mail vous sera envoyé avec un de connexion. Le lien est valide 2 jours.</p>
+<p>Entrer une adresse mail valide. Un mail vous sera envoyé avec un lien de connexion. Le lien sera valide 2 jours.</p>
+<p>En plus de l'adresse mail, vous devez accepter les conditions d'utilisations. Aucune donnée n'est revendu ou envoyé à des entreprises.</p>
 
 <form (ngSubmit)="onSubmit()" [formGroup]="loginForm">
   <mat-form-field class="flex">
@@ -19,7 +20,8 @@
 
 @if (login$ | async; as login) {
   @if (login.success) {
-    <p class="padding">Un mail a été envoyé.</p>
+    <p class="padding">Un mail a été envoyé. Vous pouvez fermer cette page.</p>
+    <p class="padding">Vous devez cliquer sur le lien dans le mail pour vous connecter.</p>
   } @else {
     <p class="padding">Une erreur est survenue. Merci de réessayer plus tard ou de contacter le support technique.</p>
   }
