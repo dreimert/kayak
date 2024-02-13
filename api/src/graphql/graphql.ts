@@ -43,7 +43,7 @@ const resolvers = {
     me: (_, __, { user }) => {
       return user
     },
-    phone: async (_, args: { userId: ID }, context: Context) => {
+    userPrivateData: async (_, args: { userId: ID, type: string }, context: Context) => {
       if (!context.user?.id) {
         throw new Error('Vous devez être connecté pour accéder à cette ressource');
       }
@@ -54,14 +54,27 @@ const resolvers = {
         throw new Error(`User not found: ${args.userId}`);
       }
 
+      let fieldName
+
+      switch (args.type) {
+        case 'phone':
+          fieldName = 'numéro de téléphone';
+          break;
+        case 'email':
+          fieldName = 'adresse mail';
+          break;
+        default:
+          throw new Error(`Invalid type: ${args.type}`);
+      }
+
       await sendMail(
         user.email,
-        `${context.user.name} a consulté votre numéro de téléphone`,
-        `${context.user.name} a consulté votre numéro de téléphone.`,
-        `${context.user.name} a consulté votre numéro de téléphone.`
+        `${context.user.name} a consulté votre ${fieldName}`,
+        `${context.user.name} a consulté votre ${fieldName}.`,
+        `${context.user.name} a consulté votre ${fieldName}.`
       )
 
-      return user.phone;
+      return user[args.type];
     },
   },
 

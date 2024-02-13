@@ -17,8 +17,8 @@ import { map, shareReplay, startWith } from 'rxjs/operators';
 import { ParticipationPipe } from '../../pipes/participation.pipe';
 import { AgendaService } from '../../services/agenda.service';
 import { RouterLink } from '@angular/router';
-import { ShowPhoneDialog } from '../../dialogs/show-phone/show-phone.dialog';
-import { ConfirmShowPhoneDialog } from '../../dialogs/confirm-show-phone/confirm-show-phone.dialog';
+import { ShowUserDataDialog } from '../../dialogs/show-user-data/show-user-data.dialog';
+import { ConfirmShowUserDataDialog } from '../../dialogs/confirm-show-user-data/confirm-show-user-data.dialog';
 import { UserService } from '../../services/user.service';
 
 type DisplayableHeader = {
@@ -278,27 +278,26 @@ export class AgendaComponent {
     })
   }
 
-  showPhone(user: User) {
-    console.log(user);
-
-    const dialogRef = this.dialog.open(ConfirmShowPhoneDialog, {
-      data: user
+  showData (user: User, type: 'phone' | 'email') {
+    const dialogRef = this.dialog.open(ConfirmShowUserDataDialog, {
+      data: {
+        user,
+        type
+      }
     });
 
     dialogRef.afterClosed().subscribe(async result => {
-      console.log(`Dialog result: ${result}`);
-      this.userService.phone(user.id).pipe(
-        map(phone => {
-          return this.dialog.open(ShowPhoneDialog, {
+      this.userService.data(user.id, type).pipe(
+        map(data => {
+          return this.dialog.open(ShowUserDataDialog, {
             data: {
               user,
-              phone
+              data,
+              type
             }
           }).afterClosed();
         })
-      ).subscribe(result => {
-        console.log(`Dialog result: ${result}`);
-      });
+      ).subscribe(result => {});
     });
   }
 }

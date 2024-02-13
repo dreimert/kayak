@@ -7,7 +7,7 @@ type Query {
   club(id: ID!): Club
   user(id: ID!): User
   me: Me
-  phone(userId: ID!): PhoneNumber
+  userPrivateData(userId: ID!, type: String!): String!
 }
 
 type Mutation {

@@ -16,18 +16,19 @@ export class UserService {
     private apollo: Apollo,
   ) {}
 
-  phone (userId: string) : Observable<string> {
-    return this.apollo.query<{phone: string}>({
+  data (userId: string, type: 'phone' | 'email') : Observable<string> {
+    return this.apollo.query<{userPrivateData: string}>({
       query: gql`
-        query ShowPhone($userId: ID!) {
-          phone(userId: $userId)
+        query ShowData($userId: ID!, $type: String!) {
+          userPrivateData(userId: $userId, type: $type)
         }
       `,
       variables: {
-        userId
+        userId,
+        type
       }
     }).pipe(
-      map(result => result.data.phone),
+      map(result => result.data.userPrivateData),
       shareReplay(1)
     )
   }

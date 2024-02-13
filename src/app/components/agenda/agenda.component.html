@@ -111,13 +111,22 @@
         <tr>
           <th class="user">
             <span class="flex">{{participant.name}}</span>
-            <button
-              type="button"
-              aria-label="Voir le numero de téléphone"
-              mat-icon-button
-              (click)="showPhone(participant)">
-              <mat-icon aria-label="téléphone">phone</mat-icon>
-            </button>
+            @if (user$ | async; as user) {
+              <button
+                type="button"
+                aria-label="Voir le mail"
+                mat-icon-button
+                (click)="showData(participant, 'email')">
+                <mat-icon aria-label="mail">email</mat-icon>
+              </button>
+              <button
+                type="button"
+                aria-label="Voir le numero de téléphone"
+                mat-icon-button
+                (click)="showData(participant, 'phone')">
+                <mat-icon aria-label="téléphone">phone</mat-icon>
+              </button>
+            }
           </th>
           @for (activite of activites$ | async; track activite.id) {
             @switch (findParticipation(activite, participant)) {

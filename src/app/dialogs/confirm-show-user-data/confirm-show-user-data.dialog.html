@@ -1,6 +1,6 @@
-<h2 mat-dialog-title>Voir le numéro de téléphone de {{data.name}}</h2>
+<h2 mat-dialog-title>Voir {{article}}{{ dataName }} de {{ data.user.name }}</h2>
 <mat-dialog-content class="mat-typography">
-  {{data.name}} sera notifié que vous avez regardé son numéro de téléphone.
+  {{data.user.name}} sera notifié que vous avez regardé son {{ dataName }}.
 </mat-dialog-content>
 <mat-dialog-actions align="end">
   <button mat-button mat-dialog-close>Annuler</button>
