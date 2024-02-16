@@ -106,6 +106,6 @@ app.listen(port, () => {
 
 
 db.clubs.forEach((club) => {
-  console.log(club.name);
-  console.log(club.createRecurrentActivity());
+  console.info(club.name);
+  console.info(club.createRecurrentActivity());
 })
