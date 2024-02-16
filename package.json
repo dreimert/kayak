@@ -5,6 +5,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng build ; tsc -p ./api/tsconfig.json ; pm2 start ecosystem.config.cjs --env production",
+    "dev": "pm2 start ecosystem.dev.config.cjs",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
