@@ -82,10 +82,19 @@ mat-button-toggle.peutEtre.mat-button-toggle-checked, td.peutEtre  {
 }
 
 mat-button-toggle.coordinator {
-  color: blue;
+  color: cornflowerblue;
 }
 
 mat-button-toggle.coordinator.mat-button-toggle-checked, td.coordinator  {
+  color: white;
+  background-color: cornflowerblue;
+}
+
+mat-button-toggle.security {
+  color: blue;
+}
+
+mat-button-toggle.security.mat-button-toggle-checked, td.security  {
   color: white;
   background-color: blue;
 }

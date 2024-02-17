@@ -74,8 +74,9 @@ enum ActivityType {
 
 enum ParticipationType {
   oui
-  non
   peutEtre
+  non
   nonRepondu
   coordinator
+  security
 }

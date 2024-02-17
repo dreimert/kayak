@@ -10,15 +10,12 @@ export enum ActivityType {
 
 export enum ParticipationType {
   Oui = 'oui',
-  Non = 'non',
   PeutEtre = 'peutEtre',
+  Non = 'non',
   NonRepondu = 'nonRepondu',
   Coordinator = 'coordinator',
+  Security = 'security',
 }
-
-export type ClubId = ID
-export type ActivityId = ID
-export type UserId = ID
 
 export type ActivityParticipation = {
   participant: User;

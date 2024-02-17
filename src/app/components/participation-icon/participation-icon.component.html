@@ -3,13 +3,16 @@
     @case (ParticipationType.Oui) {
       check
     }
+    @case (ParticipationType.PeutEtre) {
+      swap_vert
+    }
     @case (ParticipationType.Non) {
       close
     }
-    @case (ParticipationType.PeutEtre) {
-      change_circle
-    }
     @case (ParticipationType.Coordinator) {
+      manage_accounts
+    }
+    @case (ParticipationType.Security) {
       shield_person
     }
     @default {

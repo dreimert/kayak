@@ -28,49 +28,35 @@
       </tr>
       <tr class="headers">
         @for (activite of activites$ | async; track activite.id) {
-          @if (activite.type === ActivityType.Kmer) {
-            <th>
-              <mat-icon>kayaking</mat-icon>
-            </th>
-          }
-          @if (activite.type === ActivityType.Piscine) {
-            <th>
-              <mat-icon>pool</mat-icon>
-            </th>
-          }
-          @if (activite.type === ActivityType.Musculation) {
-            <th>
-              <mat-icon>fitness_center</mat-icon>
-            </th>
-          }
-          @if (activite.type === ActivityType.EauVive) {
-            <th>
-              <mat-icon>waves</mat-icon>
-            </th>
-          }
+          <th><a mat-icon-button [routerLink]="['/activity', activite.id]">
+            <ky-activity-icon [type]="activite.type"></ky-activity-icon>
+        </a></th>
         }
       </tr>
       <tr class="participation">
         @if (user) {
           <th>Votre participation<br/>{{user.name}}</th>
           @for (myParticipation of authUserParticipations$ | async; track myParticipation.activity) {
-            <td class="myParticipation" [class]="myParticipation.type">
+            <td class="participation" [class]="myParticipation.type">
               <ky-participation-icon [type]="myParticipation.type"></ky-participation-icon>
               <mat-button-toggle-group [(ngModel)]="myParticipation.type" (change)="updateParticipation(myParticipation)" aria-label="Type de participation">
                 <mat-button-toggle [value]="ParticipationType.Oui" class="oui">
                   <mat-icon class="oui">check</mat-icon>
                 </mat-button-toggle>
-                <mat-button-toggle [value]="ParticipationType.Non" class="non">
-                  <mat-icon>close</mat-icon>
-                </mat-button-toggle>
                 <br/>
                 <mat-button-toggle [value]="ParticipationType.PeutEtre" class="peutEtre">
-                  <mat-icon>change_circle</mat-icon>
+                  <mat-icon>swap_vert</mat-icon>
+                </mat-button-toggle>
+                <mat-button-toggle [value]="ParticipationType.Non" class="non">
+                  <mat-icon>close</mat-icon>
                 </mat-button-toggle>
                 <mat-button-toggle [value]="ParticipationType.NonRepondu" class="nonRepondu">
                   <mat-icon>question_mark</mat-icon>
                 </mat-button-toggle>
                 <mat-button-toggle [value]="ParticipationType.Coordinator" class="coordinator">
+                  <mat-icon>manage_accounts</mat-icon>
+                </mat-button-toggle>
+                <mat-button-toggle [value]="ParticipationType.Security" class="security">
                   <mat-icon>shield_person</mat-icon>
                 </mat-button-toggle>
               </mat-button-toggle-group>

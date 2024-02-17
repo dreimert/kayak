@@ -31,6 +31,16 @@ type Participation = {
   activity: ActivityId,
   type: ParticipationType
 }
+function isLikeOui (participation: ParticipationType) {
+  switch (participation) {
+    case ParticipationType.Oui:
+    case ParticipationType.Coordinator:
+    case ParticipationType.Security:
+      return true
+    default:
+      return false
+  }
+}
 
 @Component({
   selector: 'ky-agenda',
@@ -69,7 +79,6 @@ export class AgendaComponent implements OnInit {
     activity: ActivityId,
     oui: number,
     peutEtre: number,
-    coordinator: number
   }[]>
 
   updateAgenda$ = new Subject<void>()
@@ -227,9 +236,8 @@ export class AgendaComponent implements OnInit {
         const participe = (participation: ActivityParticipation) => this.agenda.participants.find(p => p.id === participation.participant.id)
 
         return activities.map(activity => {
-          const oui = activity.participations.filter(participation => participation.type === ParticipationType.Oui).filter(participe).length
+          const oui = activity.participations.filter(participation => isLikeOui(participation.type)).filter(participe).length
           const peutEtre = activity.participations.filter(participation => participation.type === ParticipationType.PeutEtre).filter(participe).length
-          const coordinator = activity.participations.filter(participation => participation.type === ParticipationType.Coordinator).filter(participe).length
 
           const participation = participations.find(participation => participation.activity === activity.id)
 
@@ -237,7 +245,6 @@ export class AgendaComponent implements OnInit {
             activity: activity.id,
             oui: oui + (participation?.type === ParticipationType.Oui ? 1 : 0),
             peutEtre: peutEtre + (participation?.type === ParticipationType.PeutEtre ? 1 : 0),
-            coordinator: coordinator + (participation?.type === ParticipationType.Coordinator ? 1 : 0),
           }
         })
       }),
