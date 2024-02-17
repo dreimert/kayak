@@ -5,6 +5,7 @@ scalar PhoneNumber
 type Query {
   clubs: [Club!]!
   club(id: ID!): Club
+  clubByDomain(domain: String!): Club
   user(id: ID!): User
   me: Me
   userPrivateData(userId: ID!, type: String!): String!
@@ -20,6 +21,7 @@ type Mutation {
 
 type Club {
   id: ID!
+  domain: String!
   name: String!
   members: [User!]!
   activities: [Activity!]!

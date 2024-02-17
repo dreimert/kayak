@@ -31,6 +31,7 @@ export type Recurrence = {
 
 export class Club extends Model {
   name: string;
+  domain: string;
   members: ID[];
   activities: ID[];
   recurrences: Recurrence[] = [{
@@ -80,8 +81,10 @@ export class Club extends Model {
     super(data.id, db.clubs);
 
     this.name = data.name;
+    this.domain = data.domain;
     this.members = data.members;
     this.activities = data.activities;
+    this.recurrences = data.recurrences;
   }
 
   getMembers() {
