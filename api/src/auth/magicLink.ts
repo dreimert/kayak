@@ -1,3 +1,4 @@
+import { Request } from "express"
 import _MagicLoginStrategy from "passport-magic-login"
 
 import { sendMail } from "../mail.js"
@@ -18,8 +19,16 @@ export const magicLogin = new MagicLoginStrategy({
   // "destination" is what you POST-ed from the client
   // "href" is your confirmUrl with the confirmation token,
   // for example "/auth/magiclogin/confirm?token=<longtoken>"
-  sendMagicLink: async (destination, href, token, ...others) => {
-    const link = `${process.env['API_URL']}${href}`
+  sendMagicLink: async (destination: string, href: string, token: string, req: Request, ...others) => {
+    console.log("sendMagicLink", destination, href, token, req.hostname, others);
+
+    let link = `${process.env['API_URL']}${href}`
+
+    const subDomain = new RegExp(`^(\\w+)\\.${process.env.DOMAIN}$`).exec(req.hostname)
+
+    if (subDomain) {
+      link = link.replace(process.env.DOMAIN, `${subDomain[1]}.${process.env.DOMAIN}`)
+    }
 
     await sendMail(
       destination,

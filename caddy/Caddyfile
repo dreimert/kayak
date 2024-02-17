@@ -3,7 +3,7 @@
 	local_certs
 }
 
-kayakons.dev {
+kayakons.dev, cklom.kayakons.dev {
 	encode zstd gzip
 
 	handle /api/* {

@@ -73,9 +73,9 @@ app.post("/auth/magiclogin", magicLogin.send);
 // The standard passport callback setup
 app.get("/auth/magic/callback", passport.authenticate("magiclogin"), (req, res) => {
   if (req.user.name && req.user.phone) {
-    res.redirect(process.env.FRONT_URL)
+    res.redirect('/')
   } else {
-    res.redirect(`${process.env.FRONT_URL}/profile`)
+    res.redirect(`/profile`)
   }
 })
 
