@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { KeyValuePipe, AsyncPipe } from '@angular/common';
 
@@ -10,8 +10,7 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 
-import { AuthService } from '../../services/auth.service';
-import { Activity, ActivityId, ActivityType, ParticipationType, User, Agenda, ActivityParticipation } from '../../../types';
+import { Activity, ActivityId, ActivityType, ParticipationType, User, Agenda, ActivityParticipation, UserFull } from '../../../types';
 import { Observable, Subject, combineLatest, firstValueFrom } from 'rxjs';
 import { map, shareReplay, startWith } from 'rxjs/operators';
 import { ParticipationPipe } from '../../pipes/participation.pipe';
@@ -20,6 +19,7 @@ import { RouterLink } from '@angular/router';
 import { ShowUserDataDialog } from '../../dialogs/show-user-data/show-user-data.dialog';
 import { ConfirmShowUserDataDialog } from '../../dialogs/confirm-show-user-data/confirm-show-user-data.dialog';
 import { UserService } from '../../services/user.service';
+import { ParticipationIconComponent } from '../participation-icon/participation-icon.component';
 
 type DisplayableHeader = {
   key: string;
@@ -41,12 +41,17 @@ type Participation = {
     FormsModule, ReactiveFormsModule, MatButtonModule, MatButtonToggleModule, MatDialogModule, MatFormFieldModule, MatIconModule, MatTableModule, MatSelectModule,
     KeyValuePipe, AsyncPipe, ParticipationPipe,
     RouterLink,
+    ParticipationIconComponent
   ]
 })
-export class AgendaComponent {
-  agenda$: Observable<Agenda>
+export class AgendaComponent implements OnInit {
+  @Input({ required: true }) agenda: Agenda
+  @Input() user: UserFull | null = null
+
+  ParticipationType = ParticipationType
+  ActivityType = ActivityType
+
   activites$: Observable<Activity[]>
-  participants$: Observable<User[]>
 
   headers$: Observable<{
     months: DisplayableHeader[],
@@ -54,19 +59,18 @@ export class AgendaComponent {
     hours: DisplayableHeader[]
   }>
 
+  authUserParticipations$: Observable<Participation[]>
+
+  othersUserParticipations$: Observable<(User & {
+    participations: ParticipationType[]
+  })[]>
+
   totaux$: Observable<{
     activity: ActivityId,
     oui: number,
     peutEtre: number,
     coordinator: number
   }[]>
-
-  ParticipationType = ParticipationType
-  ActivityType = ActivityType
-
-  participations$: Observable<Participation[]>
-
-  user$: AuthService['user$']
 
   updateAgenda$ = new Subject<void>()
 
@@ -94,30 +98,19 @@ export class AgendaComponent {
 
   constructor(
     private dialog: MatDialog,
-    private authService: AuthService,
     private agendaService: AgendaService,
     private userService: UserService
-  ) {
-    this.user$ = authService.user$
+  ) {}
 
-    this.agenda$ = agendaService.getAgenda()
+  ngOnInit(): void {
+    this.agenda.activities.sort((a, b) => a.date.getTime() - b.date.getTime())
+    this.agenda.participants = this.agenda.participants.filter(participant => participant.id !== this.user?.id)
 
-    this.activites$ = combineLatest({
-      activites: this.agenda$.pipe(
-        map(agenda => agenda.activities.sort((a, b) => a.date.getTime() - b.date.getTime())),
-        shareReplay(1),
-      ),
-      filter: this.filter.valueChanges.pipe(startWith(this.filters[0]))
-    }).pipe(
-      map(({ activites, filter }) => activites.filter(filter!.filter))
-    )
+    // this.agenda$ = agendaService.getAgenda()
 
-    this.participants$ = combineLatest({
-      user: this.user$,
-      agenda: this.agenda$
-    }).pipe(
-      map(({ user, agenda }) => agenda.participants.filter(participant => participant.id !== user?.id)),
-      shareReplay(1),
+    this.activites$ = this.filter.valueChanges.pipe(
+      startWith(this.filters[0]),
+      map(filter => this.agenda.activities.filter(filter!.filter))
     )
 
     this.headers$ = this.activites$.pipe(
@@ -195,14 +188,10 @@ export class AgendaComponent {
       shareReplay(1),
     )
 
-    // TODO: get user from auth service
-    this.participations$ = combineLatest({
-      user: this.user$,
-      activities: this.activites$
-    }).pipe(
-      map(({user, activities}) => {
+    this.authUserParticipations$ = this.activites$.pipe(
+      map((activities) => {
         return activities.map(activity => {
-          const find = activity.participations.find(participation => user?.id === participation.participant.id)
+          const find = activity.participations.find(participation => this.user?.id === participation.participant.id)
 
           return {
             activity: activity.id,
@@ -213,14 +202,29 @@ export class AgendaComponent {
       shareReplay(1),
     )
 
+    this.othersUserParticipations$ = this.activites$.pipe(
+      map((activities) => {
+        return this.agenda.participants.map(participant => {
+          return {
+            ...participant,
+            participations: activities.map(activity => {
+              const find = activity.participations.find(participation => participant.id === participation.participant.id)
+
+              return find?.type ?? ParticipationType.NonRepondu
+            })
+          }
+        })
+      }),
+      shareReplay(1),
+    )
+
     this.totaux$ = combineLatest({
-      participants: this.participants$,
       activities: this.activites$,
-      participations: this.participations$,
+      participations: this.authUserParticipations$,
       updateAgenda: this.updateAgenda$.pipe(startWith(''))
     }).pipe(
-      map(({participants, activities, participations}) => {
-        const participe = (participation: ActivityParticipation) => participants.find(p => p.id === participation.participant.id)
+      map(({activities, participations}) => {
+        const participe = (participation: ActivityParticipation) => this.agenda.participants.find(p => p.id === participation.participant.id)
 
         return activities.map(activity => {
           const oui = activity.participations.filter(participation => participation.type === ParticipationType.Oui).filter(participe).length
@@ -271,9 +275,7 @@ export class AgendaComponent {
   }
 
   async updateParticipation(participation: Participation) {
-    const user = await firstValueFrom(this.user$)
-
-    this.agendaService.participate(participation.activity, user!.id!, participation.type).subscribe((res) => {
+    this.agendaService.participate(participation.activity, this.user!.id!, participation.type).subscribe((res) => {
       this.updateAgenda$.next()
     })
   }

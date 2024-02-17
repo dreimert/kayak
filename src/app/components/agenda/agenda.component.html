@@ -1,5 +1,5 @@
 <div class="mat-elevation-z8" class="horizontal-scroll">
-  <table class="full-width-table" aria-label="Elements">
+  <table class="full-width-table" aria-label="Agenda du club">
     <tbody>
       <tr class="headers">
         <th rowspan="4">
@@ -51,28 +51,12 @@
         }
       </tr>
       <tr class="participation">
-        @if (user$ | async; as user) {
+        @if (user) {
           <th>Votre participation<br/>{{user.name}}</th>
-          @for (participation of participations$ | async; track participation.activity) {
-            <td class="participation" [class]="participation.type">
-              @switch (participation.type) {
-                @case (ParticipationType.Oui) {
-                  <mat-icon class="oui display">check</mat-icon>
-                }
-                @case (ParticipationType.Non) {
-                  <mat-icon class="non display">close</mat-icon>
-                }
-                @case (ParticipationType.PeutEtre) {
-                  <mat-icon class="peutEtre display">change_circle</mat-icon>
-                }
-                @case (ParticipationType.Coordinator) {
-                  <mat-icon class="coordinator display">shield_person</mat-icon>
-                }
-                @default {
-                  <mat-icon class="nonRepondu display">question_mark</mat-icon>
-                }
-              }
-              <mat-button-toggle-group [(ngModel)]="participation.type" (change)="updateParticipation(participation)" aria-label="Type de participation">
+          @for (myParticipation of authUserParticipations$ | async; track myParticipation.activity) {
+            <td class="myParticipation" [class]="myParticipation.type">
+              <ky-participation-icon [type]="myParticipation.type"></ky-participation-icon>
+              <mat-button-toggle-group [(ngModel)]="myParticipation.type" (change)="updateParticipation(myParticipation)" aria-label="Type de participation">
                 <mat-button-toggle [value]="ParticipationType.Oui" class="oui">
                   <mat-icon class="oui">check</mat-icon>
                 </mat-button-toggle>
@@ -107,52 +91,35 @@
           </td>
         }
       </tr>
-      @for (participant of participants$ | async; track participant.id) {
+      @for (participant of othersUserParticipations$ | async; track participant.id) {
         <tr>
           <th class="user">
-            <span class="flex">{{participant.name}}</span>
-            @if (user$ | async; as user) {
-              <!-- à restraindre aux membres du codir / organisateur de l'évènement. Déporter sur la page évènement -->
-              <!-- <button
-                type="button"
-                aria-label="Voir le mail"
-                mat-icon-button
-                (click)="showData(participant, 'email')">
-                <mat-icon aria-label="mail">email</mat-icon>
-              </button> -->
-              <button
-                type="button"
-                aria-label="Voir le numero de téléphone"
-                mat-icon-button
-                (click)="showData(participant, 'phone')">
-                <mat-icon aria-label="téléphone">phone</mat-icon>
-              </button>
+            <div class="row">
+              <span class="flex">{{participant.name}}</span>
+              @if (user) {
+                <!-- à restraindre aux membres du codir / organisateur de l'évènement. Déporter sur la page évènement -->
+                <!-- <button
+                  type="button"
+                  aria-label="Voir le mail"
+                  mat-icon-button
+                  (click)="showData(participant, 'email')">
+                  <mat-icon aria-label="mail">email</mat-icon>
+                </button> -->
+                <button
+                  type="button"
+                  aria-label="Voir le numero de téléphone"
+                  mat-icon-button
+                  (click)="showData(participant, 'phone')">
+                  <mat-icon aria-label="téléphone">phone</mat-icon>
+                </button>
+              }
+              </div>
+            </th>
+            @for (participation of participant.participations; track $index) {
+              <td [class]="participation">
+                <ky-participation-icon [type]="participation"></ky-participation-icon>
+              </td>
             }
-          </th>
-          @for (activite of activites$ | async; track activite.id) {
-            @switch (findParticipation(activite, participant)) {
-              @case (ParticipationType.Oui) {
-                <td class="oui">
-                  <mat-icon class="oui">check</mat-icon>
-                </td>
-              }
-              @case (ParticipationType.Non) {
-                <td class="non">
-                  <mat-icon class="non">close</mat-icon>
-                </td>
-              }
-              @case (ParticipationType.PeutEtre) {
-                <td class="peutEtre">
-                  <mat-icon class="peutEtre">change_circle</mat-icon>
-                </td>
-              }
-              @default {
-                <td>
-                  <mat-icon class="nonRepondu">question_mark</mat-icon>
-                </td>
-              }
-            }
-          }
         </tr>
       }
       <tr class="footer">

@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
 
 import { Apollo, gql } from 'apollo-angular';
 
-import { map, tap, shareReplay } from 'rxjs/operators';
+import { map, shareReplay } from 'rxjs/operators';
 
 import { ActivityParticipation, Club } from '../../types';
 
@@ -13,7 +14,7 @@ export class AgendaService {
 
   constructor (private apollo: Apollo) { }
 
-  getAgenda () {
+  getAgenda (): Observable<Club['agenda']> {
     return this.apollo.query<{club: Club}>({
       query: gql`
         query ExampleQuery($clubId: ID!) {

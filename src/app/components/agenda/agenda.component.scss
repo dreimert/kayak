@@ -22,7 +22,8 @@ th {
   border-right-style: solid;
 }
 
-th.user {
+th.user .row {
+  min-height: 50px;
   display: flex;
   flex-direction: row;
   flex-wrap: nowrap;
@@ -87,6 +88,15 @@ mat-button-toggle.coordinator {
 mat-button-toggle.coordinator.mat-button-toggle-checked, td.coordinator  {
   color: white;
   background-color: blue;
+}
+
+mat-button-toggle.nonRepondu {
+  color: black;
+}
+
+mat-button-toggle.nonRepondu.mat-button-toggle-checked, td.nonRepondu  {
+  color: black;
+  background-color: white;
 }
 
 .participation td mat-button-toggle-group {
