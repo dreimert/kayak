@@ -1,0 +1,19 @@
+<mat-icon [class]="type">
+  @switch (type) {
+    @case (ParticipationType.Oui) {
+      check
+    }
+    @case (ParticipationType.Non) {
+      close
+    }
+    @case (ParticipationType.PeutEtre) {
+      change_circle
+    }
+    @case (ParticipationType.Coordinator) {
+      shield_person
+    }
+    @default {
+      question_mark
+    }
+  }
+</mat-icon>
