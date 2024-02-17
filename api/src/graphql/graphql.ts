@@ -40,6 +40,7 @@ const resolvers = {
     clubs: () => db.clubs,
     club: (_, args: { id: ID }) => db.clubs.find((club) => club.id === args.id),
     clubByDomain: (_, args: { domain: string }) => db.clubs.find((club) => club.domain === args.domain),
+    activity: (_, args: { id: ID }) => db.activities.find((activity) => activity.id === args.id),
     user: (_, args: { id: ID }) => db.users.find((user) => user.id === args.id),
     me: (_, __, { user }) => {
       return user

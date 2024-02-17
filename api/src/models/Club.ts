@@ -22,11 +22,11 @@ export type RecurrencePattern = {
   minutes: number
 }
 
-export type Recurrence = {
+// https://stackoverflow.com/questions/47893110/typescript-mapped-types-class-to-interface-without-methods
+export type Recurrence = Omit<Activity, 'date' | 'participations' | 'getParticipations' | 'recurring'> & {
   start: Date
   end?: Date
   pattern: RecurrencePattern
-  type: ActivityType;
 }
 
 export class Club extends Model {
@@ -34,48 +34,7 @@ export class Club extends Model {
   domain: string;
   members: ID[];
   activities: ID[];
-  recurrences: Recurrence[] = [{
-    start: new Date("2024-02-12"),
-    end: new Date("2024-03-31"),
-    pattern: {
-      day: Day.Tuesday,
-      hour: 19,
-      minutes: 30
-    },
-    type: ActivityType.musculation,
-  }, {
-    start: new Date("2024-02-12"),
-    pattern: {
-      day: Day.Thursday,
-      hour: 9,
-      minutes: 0
-    },
-    type: ActivityType.kmer,
-  }, {
-    start: new Date("2024-02-19"),
-    pattern: {
-      day: Day.Friday,
-      hour: 20,
-      minutes: 30
-    },
-    type: ActivityType.piscine,
-  }, {
-    start: new Date("2024-02-12"),
-    pattern: {
-      day: Day.Saturday,
-      hour: 9,
-      minutes: 0
-    },
-    type: ActivityType.kmer,
-  }, {
-    start: new Date("2024-02-12"),
-    pattern: {
-      day: Day.Saturday,
-      hour: 14,
-      minutes: 0
-    },
-    type: ActivityType.kmer,
-  }];
+  recurrences: Recurrence[];
 
   constructor(data: any) {
     super(data.id, db.clubs);
@@ -133,9 +92,12 @@ export class Club extends Model {
 
         if (recurrence.start < instance && (!recurrence.end || instance < recurrence.end)) {
           return new Activity({
+            title: recurrence.title,
+            description: recurrence.description,
             date: instance,
             type: recurrence.type,
             club: this.id,
+            recurring: true,
             participations: []
           });
         } else {

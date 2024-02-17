@@ -6,6 +6,7 @@ type Query {
   clubs: [Club!]!
   club(id: ID!): Club
   clubByDomain(domain: String!): Club
+  activity(id: ID!): Activity
   user(id: ID!): User
   me: Me
   userPrivateData(userId: ID!, type: String!): String!
@@ -54,8 +55,11 @@ type Me {
 
 type Activity {
   id: ID!
+  title: String
+  description: String
   date: DateTime!
   type: ActivityType!
+  recurring: Boolean
   participations: [ActivityParticipation!]!
 }
 
