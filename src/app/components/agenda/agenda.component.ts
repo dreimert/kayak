@@ -10,8 +10,8 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 
-import { Activity, ActivityId, ActivityType, ParticipationType, User, Agenda, ActivityParticipation, UserFull } from '../../../types';
-import { Observable, Subject, combineLatest, firstValueFrom } from 'rxjs';
+import { ActivityType, ParticipationType, ActivityParticipation } from '../../../types';
+import { Observable, Subject, combineLatest } from 'rxjs';
 import { map, shareReplay, startWith } from 'rxjs/operators';
 import { ParticipationPipe } from '../../pipes/participation.pipe';
 import { AgendaService } from '../../services/agenda.service';
@@ -20,6 +20,11 @@ import { ShowUserDataDialog } from '../../dialogs/show-user-data/show-user-data.
 import { ConfirmShowUserDataDialog } from '../../dialogs/confirm-show-user-data/confirm-show-user-data.dialog';
 import { UserService } from '../../services/user.service';
 import { ParticipationIconComponent } from '../participation-icon/participation-icon.component';
+
+import { Activity, ActivityId } from '../../models/activity.model';
+import { User, UserPartial } from '../../models/user.model';
+import { Agenda } from '../../models/agenda.model';
+import { ActivityIconComponent } from '../activity-icon/activity-icon.component';
 
 type DisplayableHeader = {
   key: string;
@@ -51,12 +56,12 @@ function isLikeOui (participation: ParticipationType) {
     FormsModule, ReactiveFormsModule, MatButtonModule, MatButtonToggleModule, MatDialogModule, MatFormFieldModule, MatIconModule, MatTableModule, MatSelectModule,
     KeyValuePipe, AsyncPipe, ParticipationPipe,
     RouterLink,
-    ParticipationIconComponent
+    ParticipationIconComponent, ActivityIconComponent
   ]
 })
 export class AgendaComponent implements OnInit {
   @Input({ required: true }) agenda: Agenda
-  @Input() user: UserFull | null = null
+  @Input() user: User | null = null
 
   ParticipationType = ParticipationType
   ActivityType = ActivityType
@@ -71,7 +76,7 @@ export class AgendaComponent implements OnInit {
 
   authUserParticipations$: Observable<Participation[]>
 
-  othersUserParticipations$: Observable<(User & {
+  othersUserParticipations$: Observable<(UserPartial & {
     participations: ParticipationType[]
   })[]>
 
@@ -271,7 +276,7 @@ export class AgendaComponent implements OnInit {
     // })
   }
 
-  findParticipation(activity: Activity, participant: User): ParticipationType {
+  findParticipation(activity: Activity, participant: UserPartial): ParticipationType {
     const participation = activity.participations.find(participation => participation.participant.id === participant.id)
 
     if (participation) {
@@ -287,7 +292,7 @@ export class AgendaComponent implements OnInit {
     })
   }
 
-  showData (user: User, type: 'phone' | 'email') {
+  showData (user: UserPartial, type: 'phone' | 'email') {
     const dialogRef = this.dialog.open(ConfirmShowUserDataDialog, {
       data: {
         user,

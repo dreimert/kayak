@@ -2,7 +2,7 @@ import { Component, Inject } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
 
-import { User } from '../../../types';
+import { UserPartial } from '../../models/user.model';
 
 @Component({
   selector: 'ky-show-phone-dialog',
@@ -12,5 +12,5 @@ import { User } from '../../../types';
   imports: [MatDialogModule, MatButtonModule],
 })
 export class ShowPhoneDialog {
-  constructor(@Inject(MAT_DIALOG_DATA) public data: User) {}
+  constructor(@Inject(MAT_DIALOG_DATA) public data: UserPartial) {}
 }

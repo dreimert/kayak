@@ -1,0 +1,97 @@
+<h1>{{ activity.title }}
+  @if (activity.recurring) {
+    <mat-icon>restart_alt</mat-icon>
+  }
+</h1>
+<p>Date : {{ activity.date.toLocaleDateString() }}</p>
+<p>Heure : {{ activity.date.toLocaleTimeString() }}</p>
+<p>Type d'activité : <ky-activity-icon [type]="activity.type"></ky-activity-icon>
+  @if (activity.type === ActivityType.Kmer) {
+    Kayak de mer
+  }
+  @if (activity.type === ActivityType.Piscine) {
+    Piscine
+  }
+  @if (activity.type === ActivityType.Musculation) {
+    Musculation
+  }
+  @if (activity.type === ActivityType.EauVive) {
+    Eau vive
+  }
+</p>
+<p>{{ activity.description }}</p>
+<div class="mat-elevation-z8" class="horizontal-scroll">
+  <table class="full-width-table" aria-label="Participant à l'activité">
+    <tbody>
+      <tr class="participation">
+        @if (user) {
+          <th>Votre participation<br/>{{user.name}}</th>
+          <td [class]="participation">
+            <ky-participation-icon [type]="participation"></ky-participation-icon>
+            <!-- <mat-button-toggle-group [(ngModel)]="participation.type" (change)="updateParticipation(participation)" aria-label="Type de participation">
+              <mat-button-toggle [value]="ParticipationType.Oui" class="oui">
+                <mat-icon class="oui">check</mat-icon>
+              </mat-button-toggle>
+              <mat-button-toggle [value]="ParticipationType.Non" class="non">
+                <mat-icon>close</mat-icon>
+              </mat-button-toggle>
+              <br/>
+              <mat-button-toggle [value]="ParticipationType.PeutEtre" class="peutEtre">
+                <mat-icon>change_circle</mat-icon>
+              </mat-button-toggle>
+              <mat-button-toggle [value]="ParticipationType.NonRepondu" class="nonRepondu">
+                <mat-icon>question_mark</mat-icon>
+              </mat-button-toggle>
+              <mat-button-toggle [value]="ParticipationType.Coordinator" class="coordinator">
+                <mat-icon>shield_person</mat-icon>
+              </mat-button-toggle>
+            </mat-button-toggle-group> -->
+            <!-- <mat-form-field>
+              <mat-select [(ngModel)]="participation.type">
+                <mat-option [value]="ParticipationType.Oui">Oui</mat-option>
+                <mat-option [value]="ParticipationType.Non">Non</mat-option>
+                <mat-option [value]="ParticipationType.PeutEtre">Peut-être</mat-option>
+                <mat-option [value]="ParticipationType.NonRepondu"></mat-option>
+              </mat-select>
+            </mat-form-field> -->
+          </td>
+        } @else {
+          <th>Participer !</th>
+          <td>
+            <a mat-raised-button color="primary" class="flex" routerLink="/login">Se connecter ou créer un compte</a>
+          </td>
+        }
+      </tr>
+      @for (participation of this.activity.participations; track participation.participant.id) {
+        <tr>
+          <th class="user">
+            <span class="flex">{{participation.participant.name}}</span>
+            @if (user) {
+              <!-- à restraindre aux membres du codir / organisateur de l'évènement. Déporter sur la page évènement -->
+              <!-- <button
+                type="button"
+                aria-label="Voir le mail"
+                mat-icon-button
+                (click)="showData(participation.participant, 'email')">
+                <mat-icon aria-label="mail">email</mat-icon>
+              </button> -->
+              <!-- <button
+                type="button"
+                aria-label="Voir le numero de téléphone"
+                mat-icon-button
+                (click)="showData(participation.participant, 'phone')">
+                <mat-icon aria-label="téléphone">phone</mat-icon>
+              </button> -->
+            }
+          </th>
+        </tr>
+      }
+      <!-- <tr class="footer">
+        <th>Total</th>
+        @for (total of totaux$ | async; track total.activity) {
+          <th>{{ total.oui }} (+{{ total.peutEtre }})</th>
+        }
+      </tr> -->
+    </tbody>
+  </table>
+</div>

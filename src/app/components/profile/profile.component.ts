@@ -9,8 +9,9 @@ import { Observable, firstValueFrom, map, shareReplay, tap } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { Apollo, gql, MutationResult } from 'apollo-angular';
-import { User } from '../../../types';
 import { RouterModule } from '@angular/router';
+
+import { User } from '../../models/user.model';
 // import { ApolloQueryResult } from '@apollo/client';
 
 @Component({

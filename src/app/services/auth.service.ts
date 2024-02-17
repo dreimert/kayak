@@ -5,8 +5,9 @@ import { isPlatformBrowser } from '@angular/common';
 
 import { Observable, firstValueFrom, map, of, shareReplay } from 'rxjs';
 
-import { UserFull } from '../../types';
 import { environment } from '../../environments/environment';
+
+import { User } from '../models/user.model';
 
 export type LoginResponse = {
   success: boolean;
@@ -32,8 +33,8 @@ export class AuthService {
     }
   }
 
-  checkAuthenticated () : Observable<UserFull | null> {
-    return this.apollo.query<{me: UserFull}>({
+  checkAuthenticated () : Observable<User | null> {
+    return this.apollo.query<{me: User}>({
       query: gql`
         query Me {
           me {
@@ -46,7 +47,7 @@ export class AuthService {
       `
     }).pipe(
       map(result => {
-        return result.data.me || null
+        return result.data.me ? new User(result.data.me) : null
       }),
       shareReplay(1)
     )

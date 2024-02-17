@@ -1,0 +1,107 @@
+:host {
+  display: block;
+  margin: 4px;
+}
+
+.flex {
+  width: 100%;
+}
+
+table {
+  margin: auto;
+  border-collapse: collapse;
+  border: solid black;
+}
+
+th {
+  border-right-style: solid;
+}
+
+th.user .row {
+  min-height: 50px;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: space-evenly;
+  align-items: center;
+}
+
+.footer th {
+  border-top: 2px solid black;
+}
+
+td {
+  text-align: center;
+}
+
+tr.participation {
+  min-height: 100px;
+  height: 100px;
+}
+
+tr.participation, tr.participation th, tr.participation td {
+  border-top: 2px solid black;
+  border-bottom: 2px solid black;
+}
+
+mat-button-toggle-group {
+  flex-wrap: wrap;
+  max-width: 100px;
+}
+
+mat-button-toggle.oui {
+  color: green;
+}
+
+mat-button-toggle.oui.mat-button-toggle-checked, td.oui {
+  color: white;
+  background-color: green;
+}
+
+mat-button-toggle.non {
+  color: red;
+}
+
+mat-button-toggle.non.mat-button-toggle-checked, td.non {
+  color: white;
+  background-color: red;
+}
+
+mat-button-toggle.peutEtre {
+  color: orange;
+}
+
+mat-button-toggle.peutEtre.mat-button-toggle-checked, td.peutEtre  {
+  color: white;
+  background-color: orange;
+}
+
+mat-button-toggle.coordinator {
+  color: blue;
+}
+
+mat-button-toggle.coordinator.mat-button-toggle-checked, td.coordinator  {
+  color: white;
+  background-color: blue;
+}
+
+mat-button-toggle.nonRepondu {
+  color: black;
+}
+
+mat-button-toggle.nonRepondu.mat-button-toggle-checked, td.nonRepondu  {
+  color: black;
+  background-color: white;
+}
+
+.participation td mat-button-toggle-group {
+  display: none;
+}
+
+.participation td:hover mat-icon.display {
+  display: none;
+}
+
+.participation td:hover mat-button-toggle-group {
+  display: inline-flex;
+}

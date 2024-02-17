@@ -2,10 +2,10 @@ import { Component, Inject } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
 
-import { User } from '../../../types';
+import { UserPartial } from '../../models/user.model';
 
 export type ShowUserDataDialogData = {
-  user: User
+  user: UserPartial
   data: string
   type: 'phone' | 'email'
 }
