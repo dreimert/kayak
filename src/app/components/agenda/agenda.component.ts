@@ -33,7 +33,7 @@ type Participation = {
 }
 
 @Component({
-  selector: 'app-agenda',
+  selector: 'ky-agenda',
   templateUrl: './agenda.component.html',
   styleUrls: ['./agenda.component.scss'],
   standalone: true,

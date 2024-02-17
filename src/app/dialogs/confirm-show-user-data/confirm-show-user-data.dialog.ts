@@ -10,7 +10,7 @@ export type ConfirmShowUserDataDialogData = {
 };
 
 @Component({
-  selector: 'app-confirm-show-user-data-dialog',
+  selector: 'ky-confirm-show-user-data-dialog',
   templateUrl: './confirm-show-user-data.dialog.html',
   styleUrl: './confirm-show-user-data.dialog.scss',
   standalone: true,

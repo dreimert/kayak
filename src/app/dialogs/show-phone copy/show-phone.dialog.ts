@@ -5,7 +5,7 @@ import { MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
 import { User } from '../../../types';
 
 @Component({
-  selector: 'app-show-phone-dialog',
+  selector: 'ky-show-phone-dialog',
   templateUrl: './show-phone.dialog.html',
   styleUrl: './show-phone.dialog.scss',
   standalone: true,

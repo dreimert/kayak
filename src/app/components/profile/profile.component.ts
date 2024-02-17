@@ -14,7 +14,7 @@ import { RouterModule } from '@angular/router';
 // import { ApolloQueryResult } from '@apollo/client';
 
 @Component({
-  selector: 'app-profile',
+  selector: 'ky-profile',
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.scss',
   standalone: true,

@@ -13,7 +13,7 @@ import { Observable } from 'rxjs';
 import { map, shareReplay } from 'rxjs/operators';
 
 @Component({
-  selector: 'app-root',
+  selector: 'ky-root',
   standalone: true,
   imports: [
     CommonModule,

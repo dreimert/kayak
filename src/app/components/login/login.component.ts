@@ -10,7 +10,7 @@ import { AsyncPipe } from '@angular/common';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 
 @Component({
-  selector: 'app-login',
+  selector: 'ky-login',
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss',
   standalone: true,

@@ -11,7 +11,7 @@ export type ShowUserDataDialogData = {
 }
 
 @Component({
-  selector: 'app-show-user-data-dialog',
+  selector: 'ky-show-user-data-dialog',
   templateUrl: './show-user-data.dialog.html',
   styleUrl: './show-user-data.dialog.scss',
   standalone: true,
