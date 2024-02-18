@@ -1,5 +1,6 @@
 import { ApolloServer } from '@apollo/server';
 import { ApolloServerPluginLandingPageLocalDefault, ApolloServerPluginLandingPageProductionDefault } from '@apollo/server/plugin/landingPage/default';
+import { ApolloServerErrorCode } from '@apollo/server/errors';
 
 import { readFileSync } from 'fs';
 import { DateTimeResolver, EmailAddressResolver, PhoneNumberResolver } from 'graphql-scalars';
@@ -159,6 +160,23 @@ export const server = new ApolloServer<Context>({
         includeCookies: true,
       }),
   ],
+  formatError: (formattedError, error) => {
+    console.error('GraphQLError', formattedError);
+    // Return a different error message
+    if (
+      formattedError.extensions.code ===
+      ApolloServerErrorCode.GRAPHQL_VALIDATION_FAILED
+    ) {
+      return {
+        ...formattedError,
+        message: "Your query doesn't match the schema. Try double-checking it!",
+      };
+    }
+
+    // Otherwise return the formatted error. This error can also
+    // be manipulated in other ways, as long as it's returned.
+    return formattedError;
+  },
 })
 
 await server.start()
