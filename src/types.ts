@@ -23,3 +23,11 @@ export type ActivityParticipation = {
   participant: User;
   type: ParticipationType;
 }
+
+export const ActivityTypeLabelsList = [
+  { value: ActivityType.Kmer, label: 'Kmer' },
+  { value: ActivityType.Piscine, label: 'Piscine' },
+  { value: ActivityType.EauVive, label: 'Eau vive' },
+  { value: ActivityType.Slalom, label: 'Slalom' },
+  { value: ActivityType.Musculation, label: 'Musculation' },
+]

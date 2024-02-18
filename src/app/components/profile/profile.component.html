@@ -21,6 +21,16 @@
       <mat-error>Le téléphone doit commencer par + suivi du code pays et sans espace.</mat-error>
     }
   </mat-form-field>
+  <mat-form-field class="flex">
+    <mat-icon matPrefix>notifications</mat-icon>
+    <mat-label>Abonnements aux créations de sorties :</mat-label>
+    <mat-select formControlName="notifications" multiple>
+      @for (activity of ActivityTypeLabelsList; track $index) {
+        <mat-option [value]="activity.value">{{ activity.label }}</mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
+
   <button class="flex" mat-raised-button color="primary" [disabled]="!profileForm.valid" type="submit">Sauvegarder</button>
 </form>
 

@@ -35,6 +35,12 @@ export const routes: Routes = [
     }
   },
   { path: 'login', component: LoginComponent },
-  { path: 'profile', component: ProfileComponent, canActivate: [authGuard] },
+  {
+    path: 'profile', component: ProfileComponent,
+    canActivate: [authGuard],
+    resolve: {
+      'user': () => inject(AuthService).user$,
+    }
+  },
   { path: 'about', component: AboutComponent },
 ];

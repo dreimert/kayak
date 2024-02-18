@@ -42,6 +42,8 @@ export class AuthService {
             name
             email
             phone
+            domain
+            notifications
           }
         }
       `

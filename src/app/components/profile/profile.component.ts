@@ -1,17 +1,20 @@
-import { Component } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { Validators, FormsModule, ReactiveFormsModule, NonNullableFormBuilder } from '@angular/forms';
+import { Apollo, gql } from 'apollo-angular';
+import { RouterModule } from '@angular/router';
+import { Observable, firstValueFrom, map, tap } from 'rxjs';
+import { AsyncPipe } from '@angular/common';
+
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field'
 import { MatIconModule } from '@angular/material/icon'
 import { MatButtonModule } from '@angular/material/button';
-import { AuthService } from '../../services/auth.service';
-import { Observable, firstValueFrom, map, shareReplay, tap } from 'rxjs';
-import { AsyncPipe } from '@angular/common';
 import { MatCheckboxModule } from '@angular/material/checkbox';
-import { Apollo, gql, MutationResult } from 'apollo-angular';
-import { RouterModule } from '@angular/router';
+import { MatSelectModule } from '@angular/material/select';
 
 import { User } from '../../models/user.model';
+import { ActivityType, ActivityTypeLabelsList } from '../../../types';
+import { AuthService } from '../../services/auth.service';
 // import { ApolloQueryResult } from '@apollo/client';
 
 @Component({
@@ -20,14 +23,20 @@ import { User } from '../../models/user.model';
   styleUrl: './profile.component.scss',
   standalone: true,
   imports: [
-    FormsModule, RouterModule, MatButtonModule, MatCheckboxModule, MatFormFieldModule, MatIconModule, MatInputModule, ReactiveFormsModule,
+    FormsModule, ReactiveFormsModule, RouterModule,
+    MatButtonModule, MatCheckboxModule, MatFormFieldModule, MatIconModule, MatInputModule, MatSelectModule,
     AsyncPipe,
   ],
 })
-export class ProfileComponent {
+export class ProfileComponent implements OnInit {
+  @Input() user: User;
+
+  ActivityTypeLabelsList = ActivityTypeLabelsList;
+
   profileForm = this._formBuilder.group({
     name: ['', [Validators.required]],
     phone: ['', [Validators.required, Validators.pattern(/^\+\d{7,15}$/)]],
+    notifications: [[] as ActivityType[]]
   });
 
   sent = false;
@@ -39,12 +48,13 @@ export class ProfileComponent {
     private _formBuilder: NonNullableFormBuilder,
     private apollo: Apollo,
     private authService: AuthService
-  ) {
-    authService.user$.subscribe((user) => {
-      this.profileForm.patchValue({
-        name: user?.name || '',
-        phone: user?.phone || '',
-      });
+  ) {}
+
+  ngOnInit(): void {
+    this.profileForm.patchValue({
+      name: this.user.name || '',
+      phone: this.user.phone || '',
+      notifications: this.user.notifications || [],
     });
   }
 
@@ -53,23 +63,23 @@ export class ProfileComponent {
 
     this.sent = true;
 
-    const user = await firstValueFrom(this.authService.user$)
-
     // updateProfile(user: ID!, name: String!, phone: PhoneNumber!): User!
     this.profile$ = this.apollo.mutate<{updateProfile: User}>({
       mutation: gql`
-        mutation UpdateProfile($userId: ID!, $name: String!, $phone: PhoneNumber!) {
-          updateProfile(userId: $userId, name: $name, phone: $phone) {
+        mutation UpdateProfile($userId: ID!, $input: ProfileInput!) {
+          updateProfile(userId: $userId, input: $input) {
             id
             name
             email
             phone
+            domain
+            notifications
           }
         }
       `,
       variables: {
-        userId: user!.id,
-        ...this.profileForm.value,
+        userId: this.user.id,
+        input: this.profileForm.value,
       },
     }).pipe(
       map(result => result.data!.updateProfile),

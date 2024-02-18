@@ -17,7 +17,7 @@ type Mutation {
   # createUser(name: String!, email: EmailAddress!, phone: PhoneNumber!): User!
   # createActivity(clubId: ID!, date: DateTime!, type: ActivityType!): Activity!
   participate(activityId: ID!, userId: ID!, type: ParticipationType!): ActivityParticipation!
-  updateProfile(userId: ID!, name: String!, phone: PhoneNumber!): UserFull!
+  updateProfile(userId: ID!, input: ProfileInput!): UserFull!
 }
 
 type Club {
@@ -46,6 +46,7 @@ type UserFull {
   name: String!
   email: EmailAddress!
   phone: PhoneNumber!
+  domain: String
   notifications: [ActivityType!]!
 }
 
@@ -54,6 +55,8 @@ type Me {
   name: String
   email: EmailAddress!
   phone: PhoneNumber
+  domain: String
+  notifications: [ActivityType!]!
 }
 
 type Activity {
@@ -85,6 +88,12 @@ type RecurrencePattern {
 type ActivityParticipation {
   participant: User!
   type: ParticipationType!
+}
+
+input ProfileInput {
+  name: String!
+  phone: PhoneNumber!
+  notifications: [ActivityType!]
 }
 
 enum ActivityType {

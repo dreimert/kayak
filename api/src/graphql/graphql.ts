@@ -115,7 +115,7 @@ const resolvers = {
         type: args.type,
       };
     },
-    updateProfile: (_, args: { userId: ID, name: string, phone: string }, context) : User => {
+    updateProfile: (_, args: { userId: ID, input: Pick<User, 'name' | 'phone' | 'notifications'> }, context) : User => {
       //(user: ID!, name: String!, phone: PhoneNumber!): User!
       const user = User.findById(args.userId);
 
@@ -127,8 +127,9 @@ const resolvers = {
         throw new Error(`User not authorized: ${args.userId}`);
       }
 
-      user.name = args.name;
-      user.phone = args.phone;
+      user.name = args.input.name;
+      user.phone = args.input.phone;
+      user.notifications = args.input.notifications || [];
 
       return user;
     },
