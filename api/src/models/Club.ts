@@ -5,29 +5,7 @@ import { Activity } from "./Activity.js";
 
 import { ID } from "../types-db.js";
 import { User } from "./User.js";
-
-export enum Day {
-  Sunday,
-  Monday,
-  Tuesday,
-  Wednesday,
-  Thursday,
-  Friday,
-  Saturday,
-}
-
-export type RecurrencePattern = {
-  day: Day,
-  hour: number,
-  minutes: number
-}
-
-// https://stackoverflow.com/questions/47893110/typescript-mapped-types-class-to-interface-without-methods
-export type Recurrence = Omit<Activity, 'date' | 'participations' | 'getParticipations' | 'recurring'> & {
-  start: Date
-  end?: Date
-  pattern: RecurrencePattern
-}
+import { Recurrence } from "./Recurrence.js";
 
 export class Club extends Model {
   name: string;
@@ -44,7 +22,9 @@ export class Club extends Model {
     this.domain = data.domain;
     this.members = data.members || [];
     this.activities = data.activities || [];
-    this.recurrences = data.recurrences || [];
+    this.recurrences = data.recurrences || []
+
+    this.recurrences = this.recurrences.map((recurrence) => new Recurrence(recurrence, this));
   }
 
   getMembers() {
