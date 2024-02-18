@@ -3,8 +3,8 @@ import { db } from "../datas/db.js";
 import { Model } from "./Model.js";
 import { Activity } from "./Activity.js";
 
-import { ActivityType } from "../enums/ActivityType.js";
 import { ID } from "../types-db.js";
+import { User } from "./User.js";
 
 export enum Day {
   Sunday,
@@ -33,25 +33,26 @@ export class Club extends Model {
   name: string;
   domain: string;
   members: ID[];
+  administrateurs: ID[];
   activities: ID[];
   recurrences: Recurrence[];
 
-  constructor(data: any) {
+  constructor(data: Partial<Club>) {
     super(data.id, db.clubs);
 
     this.name = data.name;
     this.domain = data.domain;
-    this.members = data.members;
-    this.activities = data.activities;
-    this.recurrences = data.recurrences;
+    this.members = data.members || [];
+    this.activities = data.activities || [];
+    this.recurrences = data.recurrences || [];
   }
 
   getMembers() {
-    return this.members.map((member) => db.users.find((user) => user.id === member))
+    return this.members.map((member) => User.findById(member));
   }
 
   getActivities() {
-    return this.activities.map((activity) => db.activities.find((act) => act.id === activity)).filter((activity) => activity !== undefined);
+    return this.activities.map((activity) => Activity.findById(activity)).filter((activity) => activity !== undefined);
   }
 
   getAgenda() {
@@ -67,8 +68,8 @@ export class Club extends Model {
           });
 
           return set;
-        }, new Set()))]
-        .map((id) => db.users.find((user) => user.id === id))
+        }, new Set<ID>()))]
+        .map((id) => User.findById(id))
     };
   }
 
@@ -96,7 +97,7 @@ export class Club extends Model {
             description: recurrence.description,
             date: instance,
             type: recurrence.type,
-            club: this.id,
+            // club: this.id,
             recurring: true,
             participations: []
           });
@@ -107,20 +108,21 @@ export class Club extends Model {
       .filter((instance) => instance !== undefined);
   }
 
-  createActivity (date: Date, type: ActivityType) {
-    const activity = new Activity({
-      date,
-      type,
-      club: this.id,
-      participations: []
-    });
+  // createActivity (date: Date, type: ActivityType) {
+  //   const activity = Activity.create({
+  //     date,
+  //     type,
+  //     club: this.id,
+  //     participations: []
+  //   });
 
-    db.activities.push(activity);
+  //   // db.activities.push(activity);
 
-    this.activities.push(activity.id);
 
-    return activity;
-  }
+  //   this.activities.push(activity.id);
+
+  //   return activity;
+  // }
 
   createRecurrentActivity () {
     const now = new Date();
@@ -143,5 +145,28 @@ export class Club extends Model {
     }
 
     return createdActivities;
+  }
+
+  static create(name: string, domain: string) {
+    const club = new Club({
+      name,
+      domain,
+    });
+
+    db.clubs.push(club);
+
+    return club;
+  }
+
+  static findById(id: ID) {
+    return db.clubs.find((club) => club.id === id);
+  }
+
+  static findByDomain(domain: string) {
+    return db.clubs.find((club) => club.domain === domain);
+  }
+
+  static all() {
+    return db.clubs;
   }
 }

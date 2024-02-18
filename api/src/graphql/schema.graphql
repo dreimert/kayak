@@ -26,6 +26,8 @@ type Club {
   name: String!
   members: [User!]!
   activities: [Activity!]!
+  recurrences: [Recurrence!]!
+
   agenda: Agenda!
 }
 
@@ -44,6 +46,7 @@ type UserFull {
   name: String!
   email: EmailAddress!
   phone: PhoneNumber!
+  notifications: [ActivityType!]!
 }
 
 type Me {
@@ -61,6 +64,22 @@ type Activity {
   type: ActivityType!
   recurring: Boolean
   participations: [ActivityParticipation!]!
+}
+
+type Recurrence {
+  id: ID!
+  title: String
+  description: String
+  type: ActivityType!
+  start: DateTime!
+  end: DateTime
+  pattern: RecurrencePattern
+}
+
+type RecurrencePattern {
+  day: Day,
+  hour: Int,
+  minutes: Int
 }
 
 type ActivityParticipation {
@@ -83,4 +102,15 @@ enum ParticipationType {
   nonRepondu
   coordinator
   security
+}
+
+
+enum Day {
+  Sunday,
+  Monday,
+  Tuesday,
+  Wednesday,
+  Thursday,
+  Friday,
+  Saturday,
 }

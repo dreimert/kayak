@@ -8,12 +8,11 @@ import { ActivityParticipation, ID } from '../types-db.js';
 
 import { Club } from '../models/Club.js';
 
-import { db } from '../datas/db.js';
-
 import { ParticipationType } from '../enums/ParticipationType.js';
 import { ActivityType } from '../enums/ActivityType.js';
 import { User } from '../models/User.js';
 import { sendMail } from '../mail.js';
+import { Activity } from '../models/Activity.js';
 
 export type Context = {
   user?: User;
@@ -37,11 +36,11 @@ const resolvers = {
   ActivityType,
 
   Query: {
-    clubs: () => db.clubs,
-    club: (_, args: { id: ID }) => db.clubs.find((club) => club.id === args.id),
-    clubByDomain: (_, args: { domain: string }) => db.clubs.find((club) => club.domain === args.domain),
-    activity: (_, args: { id: ID }) => db.activities.find((activity) => activity.id === args.id),
-    user: (_, args: { id: ID }) => db.users.find((user) => user.id === args.id),
+    clubs: () => Club.all(),
+    club: (_, args: { id: ID }) => Club.findById(args.id),
+    clubByDomain: (_, args: { domain: string }) => Club.findByDomain(args.domain),
+    activity: (_, args: { id: ID }) => Activity.findById(args.id),
+    user: (_, args: { id: ID }) => User.findById(args.id),
     me: (_, __, { user }) => {
       return user
     },
@@ -50,7 +49,7 @@ const resolvers = {
         throw new Error('Vous devez être connecté pour accéder à cette ressource');
       }
 
-      const user = db.users.find((user) => user.id === args.userId);
+      const user = User.findById(args.userId);
 
       if (!user) {
         throw new Error(`User not found: ${args.userId}`);
@@ -83,13 +82,13 @@ const resolvers = {
   Mutation: {
     // participate(activityId: ID!, userId: ID!, type: ParticipationType!): ActivityParticipation!
     participate: (_, args: { activityId: ID, userId: ID, type: ParticipationType }, context) : ActivityParticipation => {
-      const activity = db.activities.find((activity) => activity.id === args.activityId);
+      const activity = Activity.findById(args.activityId);
 
       if (!activity) {
         throw new Error(`Activity not found: ${args.activityId}`);
       }
 
-      const user = db.users.find((user) => user.id === args.userId);
+      const user = User.findById(args.userId);
 
       if (!user) {
         throw new Error(`User not found: ${args.userId}`);
@@ -117,7 +116,7 @@ const resolvers = {
     },
     updateProfile: (_, args: { userId: ID, name: string, phone: string }, context) : User => {
       //(user: ID!, name: String!, phone: PhoneNumber!): User!
-      const user = db.users.find((user) => user.id === args.userId);
+      const user = User.findById(args.userId);
 
       if (!user) {
         throw new Error(`User not found: ${args.userId}`);
@@ -141,7 +140,7 @@ const resolvers = {
   },
 
   ActivityParticipation: {
-    participant: (parent: ActivityParticipation) => db.users.find((user) => user.id === parent.participant),
+    participant: (parent: ActivityParticipation) => User.findById(parent.participant),
   },
 };
 

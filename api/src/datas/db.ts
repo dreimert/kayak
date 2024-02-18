@@ -1,68 +1,53 @@
 import fs from 'fs'
 
-// import { clubs } from './clubs.js'
-// import { users } from './users.js'
-// import { activities } from './activities.js'
-
 import { Club } from '../models/Club.js'
 import { User } from '../models/User.js'
 import { Activity } from '../models/Activity.js'
-import { Model } from '../models/Model.js'
 
-const dbPath = process.env['DB_PATH'] || './api/datas/db.json'
+export const IdSize = 12
 
-export type DB = {
+class DB {
+  static dbPath = process.env['DB_PATH'] || './api/datas/db.json'
+
   clubs: Club[]
   users: User[]
   activities: Activity[]
-}
 
-export const db: DB = {
-  clubs: [],
-  users: [],
-  activities: []
-}
-
-export function initDb () {
-  console.info('Initializing db with', dbPath);
-
-  const json = fs.readFileSync(dbPath, 'utf8')
-
-  const rawData = JSON.parse(json)
-
-  const data: DB = {
-    clubs: rawData.clubs.map((club: any) => new Club(club)),
-    users: rawData.users.map((user: any) => new User(user)),
-    activities: rawData.activities.map((activity: any) => new Activity(activity))
+  constructor (data: any = {}) {
+    this.clubs = []
+    this.users = []
+    this.activities = []
   }
 
-  Object.assign(db, data)
-}
+  save () {
+    console.info('Saving db in', DB.dbPath);
 
-export function saveDb () {
-  console.info('Saving db in', dbPath);
+    const json = JSON.stringify(this, null, 2)
 
-  const json = JSON.stringify(db, null, 2)
-
-  fs.writeFileSync(dbPath, json)
-}
-
-export function getUniqId (collection: Model[]) {
-  let id = Math.floor(Math.random() * 1000000).toString()
-
-  while (collection.some((model) => model.id === id)) {
-    id = Math.floor(Math.random() * 1000000).toString()
+    fs.writeFileSync(DB.dbPath, json)
   }
 
-  return id
+  loadDB () {
+    console.info('Initializing db with', DB.dbPath);
+
+    const json = fs.readFileSync(DB.dbPath, 'utf8')
+
+    const rawData = JSON.parse(json)
+
+    this.clubs = (rawData.clubs || []).map((club: any) => new Club(club))
+    this.users = (rawData.users || []).map((user: any) => new User(user))
+    this.activities = (rawData.activities || []).map((activity: any) => new Activity(activity))
+  }
 }
 
-setInterval(saveDb, 1000 * 60 * 5)
+export const db = new DB()
+
+setInterval(() => db.save(), 1000 * 60 * 5)
 
 process.on('SIGINT', async function () {
   console.error('SIGINT in DB: save DB and exit')
 
-  saveDb()
+  db.save()
 
   console.info('DB saved, exiting...')
   process.exit(0)

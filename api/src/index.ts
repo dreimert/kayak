@@ -7,10 +7,11 @@ import express from 'express'
 import passport from 'passport'
 
 import { magicLogin } from './auth/magicLink.js';
-import { initDb, db } from './datas/db.js';
+import { db } from './datas/db.js';
 import { server as apolloServer } from './graphql/graphql.js';
+import { User } from './models/User.js';
 
-initDb();
+db.loadDB()
 
 const app = express();
 
@@ -39,9 +40,7 @@ passport.serializeUser(function(user, cb) {
 
 passport.deserializeUser(function(user, cb) {
   process.nextTick(function() {
-    const find = db.users.find((u) => u.id === user.id)
-
-    return cb(null, find);
+    return cb(null, User.findById(user.id));
   });
 });
 

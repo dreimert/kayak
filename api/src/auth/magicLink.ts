@@ -3,11 +3,14 @@ import _MagicLoginStrategy from "passport-magic-login"
 
 import { sendMail } from "../mail.js"
 
-import { db } from "../datas/db.js"
 import { User } from "../models/User.js"
 
 // @ts-ignore
 const MagicLoginStrategy = _MagicLoginStrategy.default
+
+function getSubDomain (hostname: string) {
+  return new RegExp(`^(\\w+)\\.${process.env.DOMAIN}$`).exec(hostname)?.[1]
+}
 
 export const magicLogin = new MagicLoginStrategy({
   secret: process.env.MAGIC_LINK_SECRET,
@@ -19,15 +22,13 @@ export const magicLogin = new MagicLoginStrategy({
   // "destination" is what you POST-ed from the client
   // "href" is your confirmUrl with the confirmation token,
   // for example "/auth/magiclogin/confirm?token=<longtoken>"
-  sendMagicLink: async (destination: string, href: string, token: string, req: Request, ...others) => {
-    console.log("sendMagicLink", destination, href, token, req.hostname, others);
-
+  sendMagicLink: async (destination: string, href: string, token: string, req: Request) => {
     let link = `${process.env['API_URL']}${href}`
 
-    const subDomain = new RegExp(`^(\\w+)\\.${process.env.DOMAIN}$`).exec(req.hostname)
+    const subDomain = getSubDomain(req.hostname)
 
     if (subDomain) {
-      link = link.replace(process.env.DOMAIN, `${subDomain[1]}.${process.env.DOMAIN}`)
+      link = link.replace(process.env.DOMAIN, `${subDomain}.${process.env.DOMAIN}`)
     }
 
     await sendMail(
@@ -44,20 +45,18 @@ export const magicLogin = new MagicLoginStrategy({
   // "payload" contains { "destination": "email" }
   // In standard passport fashion, call callback with the error as the first argument (if there was one)
   // and the user data as the second argument!
-  verify: (payload, callback) => {
+  verify: (payload, callback, req: Request) => {
     // Get or create a user with the provided email from the database
     const destination = payload.destination.toLowerCase()
 
-    const user = db.users.find((user) => user.email === destination)
+    const user = User.findByEmail(destination)
 
     if (user) {
       callback(null, user)
     } else {
-      const user = new User({
-        email: destination,
-      })
+      const domain = getSubDomain(req.hostname)
 
-      db.users.push(user)
+      const user = User.create(destination, domain)
 
       callback(null, user)
     }
