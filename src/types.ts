@@ -31,3 +31,5 @@ export const ActivityTypeLabelsList = [
   { value: ActivityType.Slalom, label: 'Slalom' },
   { value: ActivityType.Musculation, label: 'Musculation' },
 ]
+
+export const ActivityTypeToLabel = (type: ActivityType) => ActivityTypeLabelsList.find((activityType) => activityType.value === type)?.label || type

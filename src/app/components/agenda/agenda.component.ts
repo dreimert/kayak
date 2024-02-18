@@ -82,7 +82,7 @@ export class AgendaComponent implements OnInit {
 
   totaux$: Observable<{
     activity: ActivityId,
-    oui: number,
+    ouiLike: number,
     peutEtre: number,
   }[]>
 
@@ -238,18 +238,12 @@ export class AgendaComponent implements OnInit {
       updateAgenda: this.updateAgenda$.pipe(startWith(''))
     }).pipe(
       map(({activities, participations}) => {
-        const participe = (participation: ActivityParticipation) => this.agenda.participants.find(p => p.id === participation.participant.id)
+        // const participe = (participation: ActivityParticipation) => this.agenda.participants.find(p => p.id === participation.participant.id)
 
         return activities.map(activity => {
-          const oui = activity.participations.filter(participation => isLikeOui(participation.type)).filter(participe).length
-          const peutEtre = activity.participations.filter(participation => participation.type === ParticipationType.PeutEtre).filter(participe).length
-
-          const participation = participations.find(participation => participation.activity === activity.id)
-
           return {
             activity: activity.id,
-            oui: oui + (participation?.type === ParticipationType.Oui ? 1 : 0),
-            peutEtre: peutEtre + (participation?.type === ParticipationType.PeutEtre ? 1 : 0),
+            ...activity.getParticipationSum()
           }
         })
       }),
@@ -287,7 +281,9 @@ export class AgendaComponent implements OnInit {
   }
 
   async updateParticipation(participation: Participation) {
-    this.agendaService.participate(participation.activity, this.user!.id!, participation.type).subscribe((res) => {
+    const activity = this.agenda.activities.find(activity => activity.id === participation.activity)
+
+    activity!.participate(this.user!.id!, participation.type).subscribe((res) => {
       this.updateAgenda$.next()
     })
   }

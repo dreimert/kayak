@@ -8,6 +8,9 @@ import { AsyncPipe } from '@angular/common';
 import { Activity } from '../../models/activity.model';
 import { User } from '../../models/user.model';
 import { ActivityIconComponent } from '../activity-icon/activity-icon.component';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'ky-activity',
@@ -15,7 +18,7 @@ import { ActivityIconComponent } from '../activity-icon/activity-icon.component'
   styleUrl: './activity.component.scss',
   standalone: true,
   imports: [
-    MatIconModule,
+    FormsModule, ReactiveFormsModule, MatButtonModule, MatButtonToggleModule, MatIconModule,
     AsyncPipe,
     ParticipationIconComponent, ActivityIconComponent
   ],
@@ -28,11 +31,21 @@ export class ActivityComponent implements OnInit {
   ParticipationType = ParticipationType
 
   participation: ParticipationType
+  others: Activity['participations']
+  total: {
+    ouiLike: number,
+    peutEtre: number,
+  }
 
   ngOnInit(): void {
-    // throw new Error('Method not implemented.');
     this.participation = this.activity.participations.find(participation => participation.participant.id === this.user.id)?.type || ParticipationType.NonRepondu
+    this.others = this.activity.participations.filter(participation => participation.participant.id !== this.user.id)
+    this.total = this.activity.getParticipationSum()
+  }
 
-    this.activity.recurring = true
+  participate(participation: ParticipationType) {
+    this.activity.participate(this.user.id, participation).subscribe((res) => {
+      this.total = this.activity.getParticipationSum()
+    })
   }
 }

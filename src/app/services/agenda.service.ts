@@ -64,6 +64,7 @@ export class AgendaService {
             participations {
               participant {
                 id
+                name
               }
               type
             }
@@ -78,29 +79,6 @@ export class AgendaService {
       map(result => result.data.activity),
       map(activity => new Activity(activity)),
       shareReplay(1),
-    )
-  }
-
-
-  participate (activityId: string, userId: string, type: string) {
-    return this.apollo.mutate<{participate: ActivityParticipation}>({
-      mutation: gql`
-        mutation Participate($activityId: ID!, $userId: ID!, $type: ParticipationType!) {
-          participate(activityId: $activityId, userId: $userId, type: $type) {
-            participant {
-              id
-            }
-            type
-          }
-        }
-      `,
-      variables: {
-        activityId,
-        userId,
-        type
-      }
-    }).pipe(
-      map(result => result?.data?.participate),
     )
   }
 }
