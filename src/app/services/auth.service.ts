@@ -46,7 +46,8 @@ export class AuthService {
             notifications
           }
         }
-      `
+      `,
+      fetchPolicy: 'network-only'
     }).pipe(
       map(result => {
         return result.data.me ? new User(result.data.me) : null
