@@ -25,7 +25,7 @@ import { MatButtonModule } from '@angular/material/button';
 })
 export class ActivityComponent implements OnInit {
   @Input({ required: true }) activity: Activity
-  @Input({ required: true }) user: User
+  @Input({ required: true }) user: User | null
 
   ActivityType = ActivityType
   ParticipationType = ParticipationType
@@ -38,13 +38,13 @@ export class ActivityComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.participation = this.activity.participations.find(participation => participation.participant.id === this.user.id)?.type || ParticipationType.NonRepondu
-    this.others = this.activity.participations.filter(participation => participation.participant.id !== this.user.id)
+    this.participation = this.activity.participations.find(participation => participation.participant.id === this.user?.id)?.type || ParticipationType.NonRepondu
+    this.others = this.activity.participations.filter(participation => participation.participant.id !== this.user?.id)
     this.total = this.activity.getParticipationSum()
   }
 
   participate(participation: ParticipationType) {
-    this.activity.participate(this.user.id, participation).subscribe((res) => {
+    this.activity.participate(this.user!.id, participation).subscribe((res) => {
       this.total = this.activity.getParticipationSum()
     })
   }
