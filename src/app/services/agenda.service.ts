@@ -60,6 +60,8 @@ export class AgendaService {
         query Activity($activityId: ID!) {
           activity(id: $activityId) {
             id
+            title
+            description
             date
             participations {
               participant {
