@@ -40,7 +40,13 @@ passport.serializeUser(function(user, cb) {
 
 passport.deserializeUser(function(user, cb) {
   process.nextTick(function() {
-    return cb(null, User.findById(user.id));
+    const find = User.findById(user.id);
+
+    if (!find) {
+      return cb(new Error('User not found'));
+    }
+
+    return cb(null, find);
   });
 });
 
