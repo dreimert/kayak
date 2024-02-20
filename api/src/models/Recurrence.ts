@@ -42,8 +42,8 @@ export class Recurrence extends Model {
     this.title = data.title;
     this.description = data.description;
     this.type = data.type;
-    this.start = data.start || new Date();
-    this.end = data.end;
+    this.start = data.start ? new Date(data.start) : new Date();
+    this.end = data.end ? new Date(data.end) : undefined;
     this.pattern = data.pattern;
     this.coordinator = data.coordinator;
   }

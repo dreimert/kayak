@@ -59,7 +59,7 @@ export class Club extends Model {
 
   getUpcomingRecurringActivities (now: Date = new Date()): Activity[] {
     return this.recurrences
-      .filter((recurrence) => !recurrence.end || recurrence.end > now)
+      .filter((recurrence) => !recurrence.end || recurrence.end.getTime() > now.getTime())
       .map((recurrence) => {
         const nextRecurrence = new Date(now);
         nextRecurrence.setHours(recurrence.pattern.hour);
@@ -71,7 +71,7 @@ export class Club extends Model {
 
         const instance = new Date(nextRecurrence.getTime() + daysUntilNextRecurrence * 24 * 60 * 60 * 1000);
 
-        if (recurrence.start < instance && (!recurrence.end || instance < recurrence.end)) {
+        if (recurrence.start.getTime() < instance.getTime() && (!recurrence.end || instance.getTime() < recurrence.end.getTime())) {
           return new Activity({
             title: recurrence.title,
             description: recurrence.description,
