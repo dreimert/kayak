@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Apollo, gql } from 'apollo-angular';
 import { isPlatformBrowser } from '@angular/common';
 
-import { Observable, firstValueFrom, map, of, shareReplay } from 'rxjs';
+import { Observable, catchError, firstValueFrom, map, of, shareReplay } from 'rxjs';
 
 import { environment } from '../../environments/environment';
 
@@ -52,6 +52,7 @@ export class AuthService {
       map(result => {
         return result.data.me ? new User(result.data.me) : null
       }),
+      catchError(() => of(null)),
       shareReplay(1)
     )
   }
