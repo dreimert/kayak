@@ -29,7 +29,7 @@ passport.deserializeUser(function(user, cb) {
 
     if (!find) {
       console.error('User not found', user.id);
-      return cb(new Error('User not found'));
+      return cb(null, null);
     }
 
     return cb(null, find);
