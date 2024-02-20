@@ -43,7 +43,7 @@ const resolvers = {
     activity: (_, args: { id: ID }) => Activity.findById(args.id),
     user: (_, args: { id: ID }) => User.findById(args.id),
     me: (_, __, { user }) => {
-      return user
+      return user || null;
     },
     userPrivateData: async (_, args: { userId: ID, type: string }, context: Context) => {
       if (!context.user?.id) {
@@ -164,10 +164,7 @@ export const server = new ApolloServer<Context>({
   formatError: (formattedError, error) => {
     console.error('GraphQLError', formattedError);
     // Return a different error message
-    if (
-      formattedError.extensions.code ===
-      ApolloServerErrorCode.GRAPHQL_VALIDATION_FAILED
-    ) {
+    if (formattedError.extensions.code === ApolloServerErrorCode.GRAPHQL_VALIDATION_FAILED) {
       return {
         ...formattedError,
         message: "Your query doesn't match the schema. Try double-checking it!",
