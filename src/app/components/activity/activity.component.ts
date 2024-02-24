@@ -11,6 +11,7 @@ import { ActivityIconComponent } from '../activity-icon/activity-icon.component'
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'ky-activity',
@@ -20,6 +21,7 @@ import { MatButtonModule } from '@angular/material/button';
   imports: [
     FormsModule, ReactiveFormsModule, MatButtonModule, MatButtonToggleModule, MatIconModule,
     AsyncPipe,
+    RouterLink,
     ParticipationIconComponent, ActivityIconComponent
   ],
 })
