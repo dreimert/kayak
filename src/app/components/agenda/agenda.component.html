@@ -1,8 +1,14 @@
+<p class="bienvenue">Bienvenue dans l'agenda des sorties !</p>
+<p>Vous pouvez :</p>
+<ul>
+  <li>Cliquer sur le logo d'une activité pour avoir plus de détails sur celle-ci.</li>
+  <li>Cliquer sur le burger à coté de "Kayakons !" pour modifier votre profil ou en savoir plus sur l'application.</li>
+</ul>
 <div class="mat-elevation-z8" class="horizontal-scroll">
   <table class="full-width-table" aria-label="Agenda du club">
     <tbody>
       <tr class="headers">
-        <th rowspan="4">
+        <th rowspan="5">
           <mat-form-field>
             <mat-label>Filtre</mat-label>
             <mat-select [formControl]="filter">
@@ -28,9 +34,24 @@
       </tr>
       <tr class="headers">
         @for (activite of activites$ | async; track activite.id) {
-          <th><a mat-icon-button [routerLink]="['/activity', activite.id]">
-            <ky-activity-icon [type]="activite.type"></ky-activity-icon>
-        </a></th>
+          <th>
+            @if (activite.recurring) {
+              <mat-icon class="small-icon">restart_alt</mat-icon>
+            } @else {
+              <mat-icon class="small-icon">star</mat-icon>
+            }
+            <!-- <mat-icon class="small-icon">warning</mat-icon>
+            <mat-icon class="small-icon">cancel</mat-icon> -->
+          </th>
+        }
+      </tr>
+      <tr class="headers">
+        @for (activite of activites$ | async; track activite.id) {
+          <th>
+            <a mat-icon-button [routerLink]="['/activity', activite.id]">
+              <ky-activity-icon [type]="activite.type"></ky-activity-icon>
+            </a>
+          </th>
         }
       </tr>
       <tr class="participation">
@@ -41,9 +62,8 @@
               <ky-participation-icon [type]="myParticipation.type"></ky-participation-icon>
               <mat-button-toggle-group [(ngModel)]="myParticipation.type" (change)="updateParticipation(myParticipation)" aria-label="Type de participation">
                 <mat-button-toggle [value]="ParticipationType.Oui" class="oui">
-                  <mat-icon class="oui">check</mat-icon>
+                  <mat-icon>check</mat-icon>
                 </mat-button-toggle>
-                <br/>
                 <mat-button-toggle [value]="ParticipationType.PeutEtre" class="peutEtre">
                   <mat-icon>swap_vert</mat-icon>
                 </mat-button-toggle>
@@ -102,7 +122,7 @@
               </div>
             </th>
             @for (participation of participant.participations; track $index) {
-              <td [class]="participation">
+              <td [class]="participation" class="reverse">
                 <ky-participation-icon [type]="participation"></ky-participation-icon>
               </td>
             }
@@ -116,4 +136,37 @@
       </tr>
     </tbody>
   </table>
+</div>
+<p>Légende :</p>
+<div class="legende">
+  <ul>
+    <li><mat-icon class="oui">check</mat-icon> : Participe</li>
+    <li><mat-icon class="peutEtre">swap_vert</mat-icon> : Je ne sais pas encore</li>
+    <li><mat-icon class="non">close</mat-icon> : Ne participe pas</li>
+    <li><mat-icon class="nonRepondu">question_mark</mat-icon> : N'a pas répondu</li>
+    <li><mat-icon class="coordinator">manage_accounts</mat-icon> : Participe à l'organisation</li>
+    <li><mat-icon class="security">shield_person</mat-icon> : Assure la sécurité</li>
+  </ul>
+  <ul>
+    <li><mat-icon>kayaking</mat-icon> : Kmer</li>
+    <li><mat-icon>pool</mat-icon> : Piscine</li>
+    <li><mat-icon>fitness_center</mat-icon> : Musculation</li>
+    <li><mat-icon>waves</mat-icon> : Eau-vive</li>
+    <li><mat-icon>flag</mat-icon> : Slalom</li>
+    <li><mat-icon>interests</mat-icon> : Autres disciplines</li>
+  </ul>
+  <ul>
+    <li>
+      <mat-icon>restart_alt</mat-icon> : Activité récurrente
+    </li>
+    <li>
+      <mat-icon>star</mat-icon> : Activité ponctuelle
+    </li>
+    <li>
+      <mat-icon>warning</mat-icon> : Problème (niveau d'eau, météo, etc.)
+    </li>
+    <li>
+      <mat-icon>cancel</mat-icon> : Activité annulée
+    </li>
+  </ul>
 </div>

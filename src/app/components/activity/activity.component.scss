@@ -54,51 +54,6 @@ mat-button-toggle-group {
   max-width: 100px;
 }
 
-mat-button-toggle.oui {
-  color: green;
-}
-
-mat-button-toggle.oui.mat-button-toggle-checked, td.oui {
-  color: white;
-  background-color: green;
-}
-
-mat-button-toggle.non {
-  color: red;
-}
-
-mat-button-toggle.non.mat-button-toggle-checked, td.non {
-  color: white;
-  background-color: red;
-}
-
-mat-button-toggle.peutEtre {
-  color: orange;
-}
-
-mat-button-toggle.peutEtre.mat-button-toggle-checked, td.peutEtre  {
-  color: white;
-  background-color: orange;
-}
-
-mat-button-toggle.coordinator {
-  color: blue;
-}
-
-mat-button-toggle.coordinator.mat-button-toggle-checked, td.coordinator  {
-  color: white;
-  background-color: blue;
-}
-
-mat-button-toggle.nonRepondu {
-  color: black;
-}
-
-mat-button-toggle.nonRepondu.mat-button-toggle-checked, td.nonRepondu  {
-  color: black;
-  background-color: white;
-}
-
 .participation td mat-button-toggle-group {
   display: none;
 }

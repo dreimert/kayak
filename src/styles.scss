@@ -2,3 +2,58 @@
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+.oui {
+  color: green;
+}
+
+.non {
+  color: red;
+}
+
+.peutEtre {
+  color: orange;
+}
+
+.coordinator {
+  color: cornflowerblue;
+}
+
+.security {
+  color: blue;
+}
+
+.nonRepondu {
+  color: black;
+}
+
+.oui.mat-button-toggle-checked, .oui.reverse, .reverse .oui {
+  color: white;
+  background-color: green;
+}
+
+.non.mat-button-toggle-checked, .non.reverse, .reverse .non {
+  color: white;
+  background-color: red;
+}
+
+
+.peutEtre.mat-button-toggle-checked, .peutEtre.reverse, .reverse .peutEtre {
+  color: white;
+  background-color: orange;
+}
+
+.coordinator.mat-button-toggle-checked, .coordinator.reverse, .reverse .coordinator {
+  color: white;
+  background-color: cornflowerblue;
+}
+
+.security.mat-button-toggle-checked, .security.reverse, .reverse .security {
+  color: white;
+  background-color: blue;
+}
+
+.nonRepondu.mat-button-toggle-checked, .nonRepondu.reverse, .reverse .nonRepondu {
+  color: black;
+  background-color: white;
+}

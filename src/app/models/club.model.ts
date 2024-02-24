@@ -42,6 +42,7 @@ export class Club {
                   type
                 }
                 type
+                recurring
               }
               participants {
                 id

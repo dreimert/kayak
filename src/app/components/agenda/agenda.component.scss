@@ -1,3 +1,7 @@
+p {
+  margin: 8px;
+}
+
 .horizontal-scroll {
   overflow: scroll;
   padding-bottom: 10px;
@@ -19,6 +23,10 @@ table {
 
 th {
   border-right-style: solid;
+}
+
+.small-icon {
+  transform: scale(0.6);
 }
 
 th.user .row {
@@ -53,60 +61,6 @@ mat-button-toggle-group {
   max-width: 100px;
 }
 
-mat-button-toggle.oui {
-  color: green;
-}
-
-mat-button-toggle.oui.mat-button-toggle-checked, td.oui {
-  color: white;
-  background-color: green;
-}
-
-mat-button-toggle.non {
-  color: red;
-}
-
-mat-button-toggle.non.mat-button-toggle-checked, td.non {
-  color: white;
-  background-color: red;
-}
-
-mat-button-toggle.peutEtre {
-  color: orange;
-}
-
-mat-button-toggle.peutEtre.mat-button-toggle-checked, td.peutEtre  {
-  color: white;
-  background-color: orange;
-}
-
-mat-button-toggle.coordinator {
-  color: cornflowerblue;
-}
-
-mat-button-toggle.coordinator.mat-button-toggle-checked, td.coordinator  {
-  color: white;
-  background-color: cornflowerblue;
-}
-
-mat-button-toggle.security {
-  color: blue;
-}
-
-mat-button-toggle.security.mat-button-toggle-checked, td.security  {
-  color: white;
-  background-color: blue;
-}
-
-mat-button-toggle.nonRepondu {
-  color: black;
-}
-
-mat-button-toggle.nonRepondu.mat-button-toggle-checked, td.nonRepondu  {
-  color: black;
-  background-color: white;
-}
-
 .participation td mat-button-toggle-group {
   display: none;
 }
@@ -117,4 +71,10 @@ mat-button-toggle.nonRepondu.mat-button-toggle-checked, td.nonRepondu  {
 
 .participation td:hover mat-button-toggle-group {
   display: inline-flex;
+}
+
+.legende {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
 }
