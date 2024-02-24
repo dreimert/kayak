@@ -14,7 +14,6 @@ import { ActivityType, ParticipationType, ActivityParticipation } from '../../..
 import { Observable, Subject, combineLatest } from 'rxjs';
 import { map, shareReplay, startWith } from 'rxjs/operators';
 import { ParticipationPipe } from '../../pipes/participation.pipe';
-import { AgendaService } from '../../services/agenda.service';
 import { RouterLink } from '@angular/router';
 import { ShowUserDataDialog } from '../../dialogs/show-user-data/show-user-data.dialog';
 import { ConfirmShowUserDataDialog } from '../../dialogs/confirm-show-user-data/confirm-show-user-data.dialog';
@@ -112,15 +111,12 @@ export class AgendaComponent implements OnInit {
 
   constructor(
     private dialog: MatDialog,
-    private agendaService: AgendaService,
     private userService: UserService
   ) {}
 
   ngOnInit(): void {
     this.agenda.activities.sort((a, b) => a.date.getTime() - b.date.getTime())
     this.agenda.participants = this.agenda.participants.filter(participant => participant.id !== this.user?.id)
-
-    // this.agenda$ = agendaService.getAgenda()
 
     this.activites$ = this.filter.valueChanges.pipe(
       startWith(this.filters[0]),

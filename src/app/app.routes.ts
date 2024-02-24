@@ -10,29 +10,41 @@ import { AboutComponent } from './components/about/about.component';
 import { AgendaService } from './services/agenda.service';
 import { AuthService } from './services/auth.service';
 import { ActivityComponent } from './components/activity/activity.component';
+import { ClubService } from './services/club.service';
+import { Club } from './models/club.model';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/agenda', pathMatch: 'full' },
   {
-    path: 'agenda',
-    component: AgendaComponent,
-    canActivate: [authFullOrNotLogGuard],
+    path:'',
     resolve: {
-      'agenda': () => inject(AgendaService).getAgenda(),
-      'user': () => inject(AuthService).user$,
-    }
-  }, {
-    path: 'activity/:id',
-    component: ActivityComponent,
-    canActivate: [authFullOrNotLogGuard],
-    resolve: {
-      'activity': (route: ActivatedRouteSnapshot, state: RouterStateSnapshot) => {
-        const agendaService = inject(AgendaService)
+      'club': () => inject(ClubService).getClub(),
+    },
+    children: [{
+      path: 'agenda',
+      component: AgendaComponent,
+      canActivate: [authFullOrNotLogGuard],
+      resolve: {
+        'agenda': (route: ActivatedRouteSnapshot) => {
+          const club: Club = route.parent!.data['club'];
 
-        return agendaService.getActivity(route.params['id'])
-      },
-      'user': () => inject(AuthService).user$,
-    }
+          return club.getAgenda()
+        },
+        'user': () => inject(AuthService).user$,
+      }
+    }, {
+      path: 'activity/:id',
+      component: ActivityComponent,
+      canActivate: [authFullOrNotLogGuard],
+      resolve: {
+        'activity': (route: ActivatedRouteSnapshot, state: RouterStateSnapshot) => {
+          const club: Club = route.parent!.data['club'];
+
+          return club.getActivity(route.params['id'])
+        },
+        'user': () => inject(AuthService).user$,
+      }
+    }]
   },
   { path: 'login', component: LoginComponent },
   {
