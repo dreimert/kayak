@@ -8,13 +8,13 @@ module.exports = {
     script: 'npm run api-watch',
     time: true,
   },{
-    name: 'Caddy',
+    name: 'Kayakons - Caddy',
     script: 'npm run caddy',
     watch: ['caddy/*'],
     watch_delay: 1000,
     time: true,
   },{
-    name: `Maildev`,
+    name: `Kayakons - Maildev`,
     script: `npm run maildev`,
     time: true,
   }],
