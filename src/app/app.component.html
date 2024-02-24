@@ -3,10 +3,12 @@
       [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
       [mode]="(isHandset$ | async) ? 'over' : 'side'"
       [opened]="false">
-    <mat-toolbar>Menu</mat-toolbar>
+    <mat-toolbar>{{ (clubService.club$ | async)?.name }}</mat-toolbar>
     <mat-nav-list>
       <a mat-list-item routerLink="/agenda" routerLinkActive="active">Agenda</a>
+      <mat-divider></mat-divider>
       <a mat-list-item routerLink="/profile" routerLinkActive="active">Profil</a>
+      <mat-divider></mat-divider>
       <a mat-list-item routerLink="/about" routerLinkActive="active">À propos</a>
     </mat-nav-list>
   </mat-sidenav>

@@ -12,6 +12,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { Observable } from 'rxjs';
 import { map, shareReplay } from 'rxjs/operators';
 
+import { ClubService } from './services/club.service';
+
 @Component({
   selector: 'ky-root',
   standalone: true,
@@ -41,4 +43,6 @@ export class AppComponent {
       map(result => result.matches),
       shareReplay()
     );
+
+  constructor (public clubService: ClubService) {}
 }
