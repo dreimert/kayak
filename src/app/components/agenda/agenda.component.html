@@ -1,9 +1,5 @@
 <p class="bienvenue">Bienvenue dans l'agenda des sorties !</p>
-<p>Vous pouvez :</p>
-<ul>
-  <li>Cliquer sur le logo d'une activité pour avoir plus de détails sur celle-ci.</li>
-  <li>Cliquer sur le burger à coté de "Kayakons !" pour modifier votre profil ou en savoir plus sur l'application.</li>
-</ul>
+
 <div class="mat-elevation-z8" class="horizontal-scroll">
   <table class="full-width-table" aria-label="Agenda du club">
     <tbody>
@@ -58,7 +54,7 @@
         @if (user) {
           <th>Votre participation<br/>{{user.name}}</th>
           @for (myParticipation of authUserParticipations$ | async; track myParticipation.activity) {
-            <td class="participation" [class]="myParticipation.type">
+            <td class="participation reverse" [class]="myParticipation.type">
               <ky-participation-icon [type]="myParticipation.type"></ky-participation-icon>
               <mat-button-toggle-group [(ngModel)]="myParticipation.type" (change)="updateParticipation(myParticipation)" aria-label="Type de participation">
                 <mat-button-toggle [value]="ParticipationType.Oui" class="oui">
@@ -77,7 +73,7 @@
                   <mat-icon>manage_accounts</mat-icon>
                 </mat-button-toggle>
                 <mat-button-toggle [value]="ParticipationType.Security" class="security">
-                  <mat-icon>shield_person</mat-icon>
+                  <mat-icon>security</mat-icon>
                 </mat-button-toggle>
               </mat-button-toggle-group>
               <!-- <mat-form-field>
@@ -145,7 +141,7 @@
     <li><mat-icon class="non">close</mat-icon> : Ne participe pas</li>
     <li><mat-icon class="nonRepondu">question_mark</mat-icon> : N'a pas répondu</li>
     <li><mat-icon class="coordinator">manage_accounts</mat-icon> : Participe à l'organisation</li>
-    <li><mat-icon class="security">shield_person</mat-icon> : Assure la sécurité</li>
+    <li><mat-icon class="security">security</mat-icon> : Assure la sécurité</li>
   </ul>
   <ul>
     <li><mat-icon>kayaking</mat-icon> : Kmer</li>
@@ -170,3 +166,11 @@
     </li>
   </ul>
 </div>
+
+<p>Vous pouvez :</p>
+<ul>
+  <li>Cliquer sur le logo d'une activité pour avoir plus de détails sur celle-ci.</li>
+  <li>Cliquer sur le burger à coté de "Kayakons !" pour ouvrir le menu.
+  <li>Modifier votre profil dans le menu.</li>
+  <!-- <li>Créer une nouvelle activité dans le menu</li> -->
+</ul>
