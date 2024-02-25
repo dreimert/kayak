@@ -63,10 +63,12 @@ type Activity {
   id: ID!
   title: String
   description: String
-  date: DateTime!
+  start: DateTime!
+  end: DateTime!
   type: ActivityType!
   recurring: Boolean
   participations: [ActivityParticipation!]!
+  limit: Int
 }
 
 type Recurrence {

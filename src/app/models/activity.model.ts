@@ -12,18 +12,22 @@ export class Activity {
   public title: string
   public description: string
   public type: ActivityType
-  public date: Date
+  public start: Date
+  public end: Date
   public recurring: boolean
   public participations: ActivityParticipation[]
+  public limit: number
 
   constructor (data: Partial<Activity>) {
     this.id = data.id || ''
     this.title = data.title || ''
     this.description = data.description || ''
     this.type = data.type || ActivityType.Kmer
-    this.date = data.date ? new Date(data.date) : new Date()
+    this.start = data.start ? new Date(data.start) : new Date()
+    this.end = data.end ? new Date(data.end) : new Date()
     this.recurring = data.recurring || false
     this.participations = [...(data.participations || [])]
+    this.limit = data.limit || 0
   }
 
   getParticipationSum () {

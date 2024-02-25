@@ -21,7 +21,7 @@ export type RecurrencePattern = {
 }
 
 // https://stackoverflow.com/questions/47893110/typescript-mapped-types-class-to-interface-without-methods
-// export type Recurrence = Omit<Activity, 'date' | 'participations' | 'getParticipations' | 'recurring'> & {
+// export type Recurrence = Omit<Activity, 'start' | 'participations' | 'getParticipations' | 'recurring'> & {
 //   start: Date
 //   end?: Date
 //   pattern: RecurrencePattern
@@ -33,8 +33,12 @@ export class Recurrence extends Model {
   type: ActivityType;
   start: Date;
   end?: Date;
+  /**
+   * Durée de l'activité en millisecondes
+   */
+  duration: number;
   pattern: RecurrencePattern;
-  coordinator: ID | undefined;
+  coordinators: ID[] | undefined;
 
   constructor(data: Partial<Recurrence>, private club: Club) {
     super(data.id, club.recurrences);
@@ -44,8 +48,9 @@ export class Recurrence extends Model {
     this.type = data.type;
     this.start = data.start ? new Date(data.start) : new Date();
     this.end = data.end ? new Date(data.end) : undefined;
+    this.duration = data.duration || 2 * 60 * 60 * 1000;
     this.pattern = data.pattern;
-    this.coordinator = data.coordinator;
+    this.coordinators = data.coordinators;
   }
 
   toJSON() {
@@ -56,8 +61,9 @@ export class Recurrence extends Model {
       type: this.type,
       start: this.start,
       end: this.end,
+      duration: this.duration,
       pattern: this.pattern,
-      coordinator: this.coordinator
+      coordinators: this.coordinators
     }
   }
 }

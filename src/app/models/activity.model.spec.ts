@@ -6,7 +6,8 @@ describe('Activity', () => {
     expect(new Activity({
       id: '1',
       type: ActivityType.Kmer,
-      date: new Date(),
+      start: new Date(),
+      end: new Date(),
       participations: []
     })).toBeTruthy();
   });

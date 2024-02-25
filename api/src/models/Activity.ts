@@ -10,23 +10,31 @@ import { User } from "./User.js";
 export class Activity extends Model {
   title: string;
   description: string;
-  date: Date;
+  start: Date;
+  end: Date;
   type: ActivityType;
   recurring: boolean;
   participations: ActivityParticipation[];
-  coordinator: ID | undefined;
-  // state: 'draft' | 'published' | 'archived';
+  coordinators: ID[];
+  // state: 'draft' | 'published' | 'cancel' | 'archived';
+  limit: number;
+  waitingList: ID[];
 
   constructor(data: Partial<Activity>) {
     super(data.id, db.activities)
 
     this.title = data.title
     this.description = data.description
-    this.date = new Date(data.date)
+    // @ts-ignore
+    this.start = new Date(data.start || data.date)
+    this.end = new Date(data.end || this.start)
     this.type = data.type
     this.recurring = data.recurring || false
-    this.participations = data.participations
-    this.coordinator = data.coordinator
+    this.participations = data.participations || []
+    this.coordinators = data.coordinators || []
+    // this.state = data.state || 'draft'
+    this.limit = data.limit
+    this.waitingList = data.waitingList || []
   }
 
   getParticipations() {
@@ -36,11 +44,11 @@ export class Activity extends Model {
     }))
   }
 
-  static create(data: any, user: ID | undefined) {
+  static create(data: any, coordinators: ID[] = []) {
     const activity = new Activity(data)
 
-    activity.coordinator = user
-    activity.participations.push({ participant: user, type: ParticipationType.coordinator })
+    activity.coordinators = coordinators
+    activity.participations = coordinators.map(coordinator => ({ participant: coordinator, type: ParticipationType.coordinator }))
 
     db.activities.push(activity)
 

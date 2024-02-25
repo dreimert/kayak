@@ -34,7 +34,8 @@ export class Club {
             agenda {
               activities {
                 id
-                date
+                start
+                end
                 participations {
                   participant {
                     id
@@ -69,7 +70,8 @@ export class Club {
             id
             title
             description
-            date
+            start
+            end
             participations {
               participant {
                 id
@@ -78,6 +80,7 @@ export class Club {
               type
             }
             type
+            limit
           }
         }
       `,

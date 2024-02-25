@@ -75,7 +75,8 @@ export class Club extends Model {
           return new Activity({
             title: recurrence.title,
             description: recurrence.description,
-            date: instance,
+            start: instance,
+            end: new Date(instance.getTime() + recurrence.duration),
             type: recurrence.type,
             // club: this.id,
             recurring: true,
@@ -112,7 +113,7 @@ export class Club extends Model {
       const upcomingRecurringActivities = this.getUpcomingRecurringActivities(now);
 
       upcomingRecurringActivities.forEach((activity) => {
-        const findActivity = db.activities.find((act) => act.date.getTime() === activity.date.getTime() && act.type === activity.type);
+        const findActivity = db.activities.find((act) => act.start.getTime() === activity.start.getTime() && act.type === activity.type);
 
         if (!findActivity) {
           db.activities.push(activity);
