@@ -10,7 +10,7 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 
-import { ActivityType, ParticipationType, ActivityParticipation } from '../../../types';
+import { ActivityType, ParticipationType, ActivityTypeLabelsList } from '../../../types';
 import { Observable, Subject, combineLatest } from 'rxjs';
 import { map, shareReplay, startWith } from 'rxjs/operators';
 import { ParticipationPipe } from '../../pipes/participation.pipe';
@@ -64,6 +64,7 @@ export class AgendaComponent implements OnInit {
 
   ParticipationType = ParticipationType
   ActivityType = ActivityType
+  ActivityTypeLabelsList = ActivityTypeLabelsList
 
   activites$: Observable<Activity[]>
 
@@ -88,24 +89,16 @@ export class AgendaComponent implements OnInit {
   updateAgenda$ = new Subject<void>()
 
   filters = [{
-    name: 'Aucun',
+    label: 'Aucun',
+    icon: 'interests',
     filter: (activity: Activity) => true
-  }, {
-    name: 'Eau vive',
-    filter: (activity: Activity) => activity.type === ActivityType.EauVive
-  }, {
-    name: 'Musculation',
-    filter: (activity: Activity) => activity.type === ActivityType.Musculation
-  }, {
-    name: 'Piscine',
-    filter: (activity: Activity) => activity.type === ActivityType.Piscine
-  }, {
-    name: 'Randonnée',
-    filter: (activity: Activity) => activity.type === ActivityType.Kmer
-  }, {
-    name: 'Slalom',
-    filter: (activity: Activity) => activity.type === ActivityType.Slalom
-  }]
+  }, ...ActivityTypeLabelsList.map((type) => {
+    return {
+      label: type.label,
+      icon: type.icon,
+      filter: (activity: Activity) => activity.type === type.value,
+    }
+  })]
 
   filter = new FormControl(this.filters[0]);
 
@@ -115,7 +108,7 @@ export class AgendaComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.agenda.activities.sort((a, b) => a.date.getTime() - b.date.getTime())
+    this.agenda.activities.sort((a, b) => a.start.getTime() - b.start.getTime())
     this.agenda.participants = this.agenda.participants.filter(participant => participant.id !== this.user?.id)
 
     this.activites$ = this.filter.valueChanges.pipe(
@@ -126,12 +119,12 @@ export class AgendaComponent implements OnInit {
     this.headers$ = this.activites$.pipe(
       map(activities => {
         return activities.reduce((acc, activite) => {
-          const year = activite.date.getFullYear()
-          const month = activite.date.toLocaleString('default', { month: 'long' })
-          const day = activite.date.getDate()
-          const weekday = activite.date.toLocaleString('default', { weekday: 'short'})
-          const hour = activite.date.getHours()
-          const minute = activite.date.getMinutes().toString().padStart(2, '0')
+          const year = activite.start.getFullYear()
+          const month = activite.start.toLocaleString('default', { month: 'long' })
+          const day = activite.start.getDate()
+          const weekday = activite.start.toLocaleString('default', { weekday: 'short'})
+          const hour = activite.start.getHours()
+          const minute = activite.start.getMinutes().toString().padStart(2, '0')
 
           const displayMonth = `${month} ${year}`
           const lastMonth = acc['months'].at(-1)

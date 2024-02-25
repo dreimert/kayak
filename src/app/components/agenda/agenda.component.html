@@ -9,7 +9,10 @@
             <mat-label>Filtre</mat-label>
             <mat-select [formControl]="filter">
               @for (filter of filters; track $index) {
-                <mat-option [value]="filter">{{ filter.name }}</mat-option>
+                <mat-option [value]="filter">
+                  <mat-icon>{{ filter.icon }}</mat-icon>
+                  {{ filter.label }}
+                </mat-option>
               }
             </mat-select>
           </mat-form-field>
@@ -89,7 +92,7 @@
         } @else {
           <th>Participer !</th>
           <td [attr.colspan]="(activites$ | async)?.length">
-            <a mat-raised-button color="primary" class="flex" routerLink="/login">Se connecter ou créer un compte</a>
+            <a mat-raised-button color="primary" class="full-width" routerLink="/login">Se connecter ou créer un compte</a>
           </td>
         }
       </tr>
@@ -97,7 +100,7 @@
         <tr>
           <th class="user">
             <div class="row">
-              <span class="flex">{{participant.name}}</span>
+              <span class="full-width">{{participant.name}}</span>
               @if (user) {
                 <!-- à restraindre aux membres du codir / organisateur de l'évènement. Déporter sur la page évènement -->
                 <!-- <button
@@ -144,11 +147,9 @@
     <li><mat-icon class="security">security</mat-icon> : Assure la sécurité</li>
   </ul>
   <ul>
-    <li><mat-icon>kayaking</mat-icon> : Kmer</li>
-    <li><mat-icon>pool</mat-icon> : Piscine</li>
-    <li><mat-icon>fitness_center</mat-icon> : Musculation</li>
-    <li><mat-icon>waves</mat-icon> : Eau-vive</li>
-    <li><mat-icon>flag</mat-icon> : Slalom</li>
+    @for (type of ActivityTypeLabelsList; track type.value) {
+      <li><mat-icon>{{ type.icon }}</mat-icon> : {{ type.label }}</li>
+    }
     <li><mat-icon>interests</mat-icon> : Autres disciplines</li>
   </ul>
   <ul>

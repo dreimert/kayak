@@ -12,6 +12,7 @@ import { ActivityComponent } from './components/activity/activity.component';
 import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
 import { ClubService } from './services/club.service';
 import { Club } from './models/club.model';
+import { CreateActivityComponent } from './components/create-activity/create-activity.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/agenda', pathMatch: 'full' },
@@ -32,6 +33,10 @@ export const routes: Routes = [
         },
         'user': () => inject(AuthService).user$,
       }
+    }, {
+      path: 'nouvelle-activite',
+      component: CreateActivityComponent,
+      canActivate: [authGuard],
     }, {
       path: 'activity/:id',
       component: ActivityComponent,

@@ -25,11 +25,12 @@ export type ActivityParticipation = {
 }
 
 export const ActivityTypeLabelsList = [
-  { value: ActivityType.Kmer, label: 'Kmer' },
-  { value: ActivityType.Piscine, label: 'Piscine' },
-  { value: ActivityType.EauVive, label: 'Eau vive' },
-  { value: ActivityType.Slalom, label: 'Slalom' },
-  { value: ActivityType.Musculation, label: 'Musculation' },
+  { value: ActivityType.Kmer, label: 'Randonnée', icon: "kayaking" },
+  { value: ActivityType.Piscine, label: 'Piscine', icon: "pool" },
+  { value: ActivityType.EauVive, label: 'Eau vive', icon: "waves" },
+  { value: ActivityType.Slalom, label: 'Slalom', icon: "flag" },
+  { value: ActivityType.Musculation, label: 'Musculation', icon: "fitness_center" },
 ]
 
 export const ActivityTypeToLabel = (type: ActivityType) => ActivityTypeLabelsList.find((activityType) => activityType.value === type)?.label || type
+export const ActivityTypeToIcon = (type: ActivityType) => ActivityTypeLabelsList.find((activityType) => activityType.value === type)?.icon || 'interests'

@@ -3,10 +3,12 @@
     <mat-icon>restart_alt</mat-icon>
   }
 </h1>
-<p>Date : {{ activity.date.toLocaleDateString() }}</p>
-<p>Heure : {{ activity.date.toLocaleTimeString() }}</p>
-<p>Type d'activité : <ky-activity-icon [type]="activity.type"></ky-activity-icon> {{ activity.activityTypeLabel() }}
-</p>
+<p>Départ : {{ activity.start.toLocaleDateString() }} - {{ activity.start.toLocaleTimeString() }}</p>
+<p>Retour : {{ activity.end.toLocaleDateString() }} - {{ activity.end.toLocaleTimeString() }}</p>
+<p>Type d'activité : <ky-activity-icon [type]="activity.type"></ky-activity-icon> {{ activity.activityTypeLabel() }}</p>
+@if (activity.limit) {
+  <p>Limite de participants : {{ activity.limit }}</p>
+}
 <p class="description">{{ activity.description }}</p>
 <div class="mat-elevation-z8" class="horizontal-scroll">
   <table class="full-width-table" aria-label="Participant à l'activité">
@@ -31,6 +33,9 @@
                 <mat-icon>question_mark</mat-icon>
               </mat-button-toggle>
               <mat-button-toggle [value]="ParticipationType.Coordinator" class="coordinator">
+                <mat-icon>manage_accounts</mat-icon>
+              </mat-button-toggle>
+              <mat-button-toggle [value]="ParticipationType.Security" class="security">
                 <mat-icon>security</mat-icon>
               </mat-button-toggle>
             </mat-button-toggle-group>
@@ -38,7 +43,7 @@
         } @else {
           <th>Participer !</th>
           <td>
-            <a mat-raised-button color="primary" class="flex" routerLink="/login">Se connecter ou créer un compte</a>
+            <a mat-raised-button color="primary" class="full-width" routerLink="/login">Se connecter ou créer un compte</a>
           </td>
         }
       </tr>
@@ -46,7 +51,7 @@
         <tr>
           <th class="user">
             <div class="row">
-              <span class="flex">{{ participation.participant.name }}</span>
+              <span class="full-width">{{ participation.participant.name }}</span>
               @if (user) {
                 <!-- à restraindre aux membres du codir / organisateur de l'évènement. Déporter sur la page évènement -->
                 <!-- <button

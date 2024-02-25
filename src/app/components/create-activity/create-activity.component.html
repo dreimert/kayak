@@ -1,0 +1,106 @@
+<form (ngSubmit)="onSubmit()" [formGroup]="activityForm">
+  <mat-form-field class="full-width">
+    <mat-label>Titre</mat-label>
+    <input type="text" matInput formControlName="title" placeholder="Sortie au lac d...">
+    @if (activityForm.get('title')?.hasError('required')) {
+      <mat-error>Le titre est <strong>obligatoire</strong></mat-error>
+    }
+  </mat-form-field>
+
+  <mat-form-field class="full-width">
+    <mat-label>Type d'activité</mat-label>
+    <mat-select formControlName="type">
+      @for (type of ActivityTypeLabelsList; track type) {
+        <mat-option [value]="type.value">
+          <mat-icon>{{ type.icon }}</mat-icon>
+          {{ type.label }}
+        </mat-option>
+      }
+    </mat-select>
+    @if (activityForm.get('type')?.hasError('required')) {
+      <mat-error>Le type d'activité est <strong>obligatoire</strong></mat-error>
+    }
+  </mat-form-field>
+
+  <mat-form-field class="full-width">
+    <mat-label>Description</mat-label>
+    <textarea matInput formControlName="description" placeholder="Parcours, niveau, materiel..."></textarea>
+    @if (activityForm.get('description')?.hasError('required')) {
+      <mat-error>La description est <strong>obligatoire</strong></mat-error>
+    }
+  </mat-form-field>
+
+  <div formGroupName="dates">
+    <mat-form-field class="full-width">
+      <mat-label>Dates de votre activité</mat-label>
+      <mat-date-range-input [rangePicker]="picker">
+        <input matStartDate placeholder="Date de départ" formControlName="start">
+        <input matEndDate placeholder="Date de retour" formControlName="end">
+      </mat-date-range-input>
+      <mat-hint>JJ/MM/AAAA – JJ/MM/AAAA</mat-hint>
+      <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-date-range-picker #picker></mat-date-range-picker>
+      @if (activityForm.get('dates')?.get('start')?.hasError('required') || activityForm.get('dates')?.get('end')?.hasError('required') || activityForm.get('dates')?.hasError('matStartDateInvalid') || activityForm.get('dates')?.hasError('matEndDateInvalid')) {
+        <mat-error>Les dates de départ et de retour sont <strong>obligatoires</strong></mat-error>
+      }
+    </mat-form-field>
+
+    <div class="row">
+      <mat-form-field class="full-width">
+        <mat-label>Heure de départ</mat-label>
+        <input
+          matInput
+          formControlName="startTime"
+          [format]="24"
+          [ngxMatTimepicker]="startTime"
+          placeholder="09:00"
+        />
+        <mat-icon matSuffix
+          (click)="startTime.open()">
+          watch_later
+        </mat-icon>
+        @if (activityForm.get('dates')?.get('startTime')?.hasError('required')) {
+          <mat-error>L'heure de départ est <strong>obligatoire</strong></mat-error>
+        }
+      </mat-form-field>
+      <ngx-mat-timepicker #startTime></ngx-mat-timepicker>
+
+      <mat-form-field class="full-width">
+        <mat-label>Heure de retour</mat-label>
+        <input
+          matInput
+          formControlName="endTime"
+          [format]="24"
+          [ngxMatTimepicker]="endTime"
+          placeholder="18:00"
+        />
+        <mat-icon matSuffix
+          (click)="endTime.open()">
+          watch_later
+        </mat-icon>
+        @if (activityForm.get('dates')?.get('endTime')?.hasError('required')) {
+          <mat-error>L'heure de départ est <strong>obligatoire</strong></mat-error>
+        }
+      </mat-form-field>
+      <ngx-mat-timepicker #endTime></ngx-mat-timepicker>
+    </div>
+  </div>
+
+  <mat-form-field class="full-width">
+    <mat-label>Nombre de participants (0 pour ne pas mettre de limite)</mat-label>
+    <input type="number" matInput formControlName="limit" min="0" placeholder="10">
+    @if (activityForm.get('limit')?.hasError('required')) {
+      <mat-error>Le nombre de participants est <strong>obligatoire</strong></mat-error>
+    }
+    @if (activityForm.get('limit')?.hasError('min')) {
+      <mat-error>Le nombre de participants doit être <strong>supérieur ou égal à 0</strong></mat-error>
+    }
+  </mat-form-field>
+
+  <button class="full-width" mat-raised-button color="primary" [disabled]="!activityForm.valid" type="submit">Créer</button>
+</form>
+
+@if (activity$ | async; as activity) {
+  <p class="padding">Votre activité a été créé avec success !</p>
+  <a mat-raised-button color="primary" class="full-width" [routerLink]="['/activity', activity.id]">Voir l'activité !</a>
+}

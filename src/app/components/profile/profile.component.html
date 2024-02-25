@@ -2,7 +2,7 @@
 <p>Votre numéro de téléphone n'est pas afficher par défaut. Un utilisateur authentifié peut choisir de le regarder en cas d'urgence ou pour des besoins d'organisation mais vous en serez notifié.</p>
 <p>Vous devez saisir votre numéro de téléphone au format international en commençant par +33 pour les numéros français. Il ne doit pas y avoir d'espace.</p>
 <form (ngSubmit)="onSubmit()" [formGroup]="profileForm">
-  <mat-form-field class="flex">
+  <mat-form-field class="full-width">
     <mat-icon matPrefix>person</mat-icon>
     <mat-label>Nom</mat-label>
     <input type="text" matInput formControlName="name" placeholder="Jean Dupont">
@@ -10,7 +10,7 @@
       <mat-error>Le nom est <strong>obligatoire</strong></mat-error>
     }
   </mat-form-field>
-  <mat-form-field class="flex">
+  <mat-form-field class="full-width">
     <mat-icon matPrefix>phone</mat-icon>
     <mat-label>Téléphone</mat-label>
     <input type="tel" matInput formControlName="phone" placeholder="+33654321098">
@@ -21,7 +21,7 @@
       <mat-error>Le téléphone doit commencer par + suivi du code pays et sans espace.</mat-error>
     }
   </mat-form-field>
-  <mat-form-field class="flex">
+  <mat-form-field class="full-width">
     <mat-icon matPrefix>notifications</mat-icon>
     <mat-label>Abonnements aux créations de sorties :</mat-label>
     <mat-select formControlName="notifications" multiple>
@@ -31,11 +31,11 @@
     </mat-select>
   </mat-form-field>
 
-  <button class="flex" mat-raised-button color="primary" [disabled]="!profileForm.valid" type="submit">Sauvegarder</button>
+  <button class="full-width" mat-raised-button color="primary" [disabled]="!profileForm.valid" type="submit">Sauvegarder</button>
 </form>
 
 
 @if (profile$ | async; as profile) {
   <p class="padding">Votre profile a été mise à jour avec success !</p>
-  <a mat-raised-button color="primary" class="flex" routerLink="/agenda">Voir l'agenda !</a>
+  <a mat-raised-button color="primary" class="full-width" routerLink="/agenda">Voir l'agenda !</a>
 }

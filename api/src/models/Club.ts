@@ -8,6 +8,8 @@ import { User } from "./User.js";
 import { Recurrence } from "./Recurrence.js";
 
 export class Club extends Model {
+  readonly numberOfWeeksAnticipation = 6;
+
   name: string;
   domain: string;
   members: ID[];
@@ -21,23 +23,32 @@ export class Club extends Model {
     this.name = data.name;
     this.domain = data.domain;
     this.members = data.members || [];
+    this.administrateurs = data.administrateurs || [];
     this.activities = data.activities || [];
     this.recurrences = data.recurrences || []
 
     this.recurrences = this.recurrences.map((recurrence) => new Recurrence(recurrence, this));
   }
 
-  getMembers() {
+  getMembers () {
     return this.members.map((member) => User.findById(member));
   }
 
-  getActivities() {
+  getAdministrateurs () {
+    return this.administrateurs.map((administrateur) => User.findById(administrateur));
+  }
+
+  isAdministrateur (user: User) {
+    return this.administrateurs.includes(user.id);
+  }
+
+  getActivities () {
     return this.activities.map((activity) => Activity.findById(activity)).filter((activity) => activity !== undefined);
   }
 
-  getAgenda() {
+  getAgenda () {
     const agendaActivities = this.getActivities()
-      .filter((activity) => activity?.date! > new Date());
+      .filter((activity) => activity?.start! > new Date());
 
     return {
       activities: agendaActivities,
@@ -53,7 +64,7 @@ export class Club extends Model {
     };
   }
 
-  getRecurrences() {
+  getRecurrences () {
     return this.recurrences;
   }
 
@@ -80,7 +91,7 @@ export class Club extends Model {
             type: recurrence.type,
             // club: this.id,
             recurring: true,
-            participations: []
+            coordinators: [...(recurrence.coordinators || [])],
           });
         } else {
           return
@@ -109,7 +120,7 @@ export class Club extends Model {
     const now = new Date();
     const createdActivities: Activity[] = [];
 
-    for (let i = 0; i < 8; i++) {
+    for (let i = 0; i < this.numberOfWeeksAnticipation; i++) {
       const upcomingRecurringActivities = this.getUpcomingRecurringActivities(now);
 
       upcomingRecurringActivities.forEach((activity) => {

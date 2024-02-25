@@ -2,7 +2,7 @@
 <p>En plus de l'adresse mail, vous devez accepter les conditions d'utilisations. Aucune donnée n'est revendu ou envoyé à des entreprises.</p>
 
 <form (ngSubmit)="onSubmit()" [formGroup]="loginForm">
-  <mat-form-field class="flex">
+  <mat-form-field class="full-width">
     <mat-icon matPrefix>mail</mat-icon>
     <mat-label>Mail</mat-label>
     <input type="email" matInput formControlName="email" placeholder="Ex. damien@example.com">
@@ -15,7 +15,7 @@
   </mat-form-field>
   <p>Conditions d'utilisation : <a href="/about" target="_blank">à propos</a></p>
   <mat-checkbox formControlName="cgu">J'accepte les conditions générales d'utilisations<sup>*</sup></mat-checkbox>
-  <button class="flex" mat-raised-button color="primary" [disabled]="!loginForm.valid" type="submit">Envoyer</button>
+  <button class="full-width" mat-raised-button color="primary" [disabled]="!loginForm.valid" type="submit">Envoyer</button>
 </form>
 
 @if (login$ | async; as login) {

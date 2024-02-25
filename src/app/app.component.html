@@ -5,11 +5,24 @@
       [opened]="false">
     <mat-toolbar>{{ (clubService.club$ | async)?.name }}</mat-toolbar>
     <mat-nav-list>
-      <a mat-list-item routerLink="/agenda" routerLinkActive="active">Agenda</a>
+      <a mat-list-item routerLink="/agenda" routerLinkActive="active">
+        <mat-icon matListItemIcon>calendar_month</mat-icon>
+        <div matListItemTitle>Agenda</div>
+      </a>
+      <a mat-list-item routerLink="/nouvelle-activite" routerLinkActive="active">
+        <mat-icon matListItemIcon>add</mat-icon>
+        <div matListItemTitle>Créer une activité</div>
+      </a>
       <mat-divider></mat-divider>
-      <a mat-list-item routerLink="/profile" routerLinkActive="active">Profil</a>
+      <a mat-list-item routerLink="/profile" routerLinkActive="active">
+        <mat-icon matListItemIcon>person</mat-icon>
+        <div matListItemTitle>Profil</div>
+      </a>
       <mat-divider></mat-divider>
-      <a mat-list-item routerLink="/about" routerLinkActive="active">À propos</a>
+      <a mat-list-item routerLink="/about" routerLinkActive="active">
+        <mat-icon matListItemIcon>info</mat-icon>
+        <div matListItemTitle>À propos</div>
+      </a>
     </mat-nav-list>
   </mat-sidenav>
   <mat-sidenav-content>

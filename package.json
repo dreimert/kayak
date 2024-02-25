@@ -40,6 +40,7 @@
     "graphql": "^16.8.1",
     "graphql-scalars": "^1.22.4",
     "nedb-session-store": "^1.1.2",
+    "ngx-mat-timepicker": "^17.0.3",
     "nodemailer": "^6.9.9",
     "passport": "^0.7.0",
     "passport-magic-login": "^1.2.2",

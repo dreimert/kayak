@@ -42,8 +42,8 @@ const resolvers = {
     clubByDomain: (_, args: { domain: string }) => Club.findByDomain(args.domain),
     activity: (_, args: { id: ID }) => Activity.findById(args.id),
     user: (_, args: { id: ID }) => User.findById(args.id),
-    me: (_, __, { user }) => {
-      return user || null;
+    me: (_, __, context: Context) => {
+      return context.user || null;
     },
     userPrivateData: async (_, args: { userId: ID, type: string }, context: Context) => {
       if (!context.user?.id) {
@@ -81,6 +81,29 @@ const resolvers = {
   },
 
   Mutation: {
+    createActivity: (_, args: { clubId: ID, input: Pick<Activity, 'title' | 'description' | 'type' | 'start' | 'end' | 'limit'> }, context: Context) : Activity => {
+      if (!context.user?.id) {
+        throw new Error('Vous devez être connecté pour accéder à cette ressource');
+      }
+
+      const club = Club.findById(args.clubId);
+
+      if (!club) {
+        throw new Error(`Club not found: ${args.clubId}`);
+      }
+
+      const activity = Activity.create({
+        ...args.input,
+        recurring: false,
+      }, [context.user.id]);
+
+      club.activities.push(activity.id);
+
+      // notify club members
+      User.notifyNewActivity(activity, club);
+
+      return activity;
+    },
     // participate(activityId: ID!, userId: ID!, type: ParticipationType!): ActivityParticipation!
     participate: (_, args: { activityId: ID, userId: ID, type: ParticipationType }, context) : ActivityParticipation => {
       const activity = Activity.findById(args.activityId);

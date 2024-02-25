@@ -15,7 +15,7 @@ type Query {
 type Mutation {
   # createClub(name: String!): Club!
   # createUser(name: String!, email: EmailAddress!, phone: PhoneNumber!): User!
-  # createActivity(clubId: ID!, date: DateTime!, type: ActivityType!): Activity!
+  createActivity(clubId: ID!, input: ActivityInput!): Activity!
   participate(activityId: ID!, userId: ID!, type: ParticipationType!): ActivityParticipation!
   updateProfile(userId: ID!, input: ProfileInput!): UserFull!
 }
@@ -96,6 +96,15 @@ input ProfileInput {
   name: String!
   phone: PhoneNumber!
   notifications: [ActivityType!]
+}
+
+input ActivityInput {
+  title: String!
+  description: String!
+  start: DateTime!
+  end: DateTime!
+  type: ActivityType!
+  limit: Int
 }
 
 enum ActivityType {
