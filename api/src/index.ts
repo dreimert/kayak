@@ -7,11 +7,13 @@ import express from 'express'
 import passport from 'passport'
 
 import { magicLogin } from './auth/magicLink.js';
-import { db } from './datas/db.js';
+import { db } from './datas/db-mongo.js';
 import { server as apolloServer } from './graphql/graphql.js';
 import { User } from './models/User.js';
+import { Club } from './models/Club.js';
+import { isValidObjectId } from 'mongoose';
 
-db.loadDB()
+await db.initDB()
 
 const app = express();
 
@@ -24,8 +26,12 @@ passport.serializeUser(function(user, cb) {
 });
 
 passport.deserializeUser(function(user, cb) {
-  process.nextTick(function() {
-    const find = User.findById(user.id);
+  process.nextTick(async function() {
+    if (!isValidObjectId(user.id)) {
+      return cb(null, null);
+    }
+
+    const find = await User.findById(user.id);
 
     if (!find) {
       console.error('User not found', user.id);
@@ -95,8 +101,9 @@ app.listen(port, () => {
   console.info(`API server listening on port ${port}`);
 });
 
+const clubs = await Club.find({})
 
-db.clubs.forEach((club) => {
+clubs.forEach(async (club) => {
   console.info(club.name);
-  console.info(club.createRecurrentActivity());
+  console.info(await club.createRecurrentActivity());
 })

@@ -1,22 +1,21 @@
+import { HydratedDocument, Types } from 'mongoose';
 import { ApolloServer } from '@apollo/server';
 import { ApolloServerPluginLandingPageLocalDefault, ApolloServerPluginLandingPageProductionDefault } from '@apollo/server/plugin/landingPage/default';
 import { ApolloServerErrorCode } from '@apollo/server/errors';
 
 import { readFileSync } from 'fs';
-import { DateTimeResolver, EmailAddressResolver, PhoneNumberResolver } from 'graphql-scalars';
+import { DateTimeResolver, EmailAddressResolver, PhoneNumberResolver, ObjectIDResolver } from 'graphql-scalars';
 
-import { ActivityParticipation, ID } from '../types-db.js';
-
-import { Club } from '../models/Club.js';
+import { Club, IClubMethods, TClub } from '../models/Club.js';
 
 import { ParticipationType } from '../enums/ParticipationType.js';
 import { ActivityType } from '../enums/ActivityType.js';
-import { User } from '../models/User.js';
-import { sendMail } from '../mail.js';
-import { Activity } from '../models/Activity.js';
+import { TUser, User } from '../models/User.js';
+import { notifyNewActivity, sendMail } from '../mail.js';
+import { Activity, ActivityParticipation, TActivity } from '../models/Activity.js';
 
 export type Context = {
-  user?: User;
+  user?: HydratedDocument<TUser>;
 }
 
 // TODO : https://www.apollographql.com/docs/apollo-server/api/plugin/drain-http-server/
@@ -32,25 +31,26 @@ const resolvers = {
   DateTime: DateTimeResolver,
   EmailAddress: EmailAddressResolver,
   PhoneNumber: PhoneNumberResolver,
+  // ObjectID: ObjectIDResolver,
 
   ParticipationType,
   ActivityType,
 
   Query: {
-    clubs: () => Club.all(),
-    club: (_, args: { id: ID }) => Club.findById(args.id),
-    clubByDomain: (_, args: { domain: string }) => Club.findByDomain(args.domain),
-    activity: (_, args: { id: ID }) => Activity.findById(args.id),
-    user: (_, args: { id: ID }) => User.findById(args.id),
+    clubs: async () => await Club.find({}),
+    club: async (_, args: { id: Types.ObjectId }) => await Club.findById(args.id),
+    clubByDomain: async (_, args: { domain: string }) => await Club.findOne({ domain: args.domain }),
+    activity: async (_, args: { id: Types.ObjectId }) => await Activity.findById(args.id),
+    user: async (_, args: { id: Types.ObjectId }) => await User.findById(args.id),
     me: (_, __, context: Context) => {
       return context.user || null;
     },
-    userPrivateData: async (_, args: { userId: ID, type: string }, context: Context) => {
+    userPrivateData: async (_, args: { userId: Types.ObjectId, type: string }, context: Context) => {
       if (!context.user?.id) {
         throw new Error('Vous devez être connecté pour accéder à cette ressource');
       }
 
-      const user = User.findById(args.userId);
+      const user = await User.findById(args.userId);
 
       if (!user) {
         throw new Error(`User not found: ${args.userId}`);
@@ -81,38 +81,36 @@ const resolvers = {
   },
 
   Mutation: {
-    createActivity: (_, args: { clubId: ID, input: Pick<Activity, 'title' | 'description' | 'type' | 'start' | 'end' | 'limit'> }, context: Context) : Activity => {
+    createActivity: async (_, args: { clubId: Types.ObjectId, input: Pick<TActivity, 'title' | 'description' | 'type' | 'start' | 'end' | 'limit'> }, context: Context) : Promise<HydratedDocument<TActivity>> => {
       if (!context.user?.id) {
         throw new Error('Vous devez être connecté pour accéder à cette ressource');
       }
 
-      const club = Club.findById(args.clubId);
+      const club = await Club.findById(args.clubId);
 
       if (!club) {
         throw new Error(`Club not found: ${args.clubId}`);
       }
 
-      const activity = Activity.create({
-        ...args.input,
-        recurring: false,
-      }, [context.user.id]);
+      const activity = await Activity.create(args.input);
 
       club.activities.push(activity.id);
 
+      await club.save();
+
       // notify club members
-      User.notifyNewActivity(activity, club);
+      await notifyNewActivity(activity, club);
 
       return activity;
     },
-    // participate(activityId: ID!, userId: ID!, type: ParticipationType!): ActivityParticipation!
-    participate: (_, args: { activityId: ID, userId: ID, type: ParticipationType }, context) : ActivityParticipation => {
-      const activity = Activity.findById(args.activityId);
+    participate: async (_, args: { activityId: Types.ObjectId, userId: Types.ObjectId, type: ParticipationType }, context: Context) : Promise<ActivityParticipation> => {
+      const activity = await Activity.findById(args.activityId);
 
       if (!activity) {
         throw new Error(`Activity not found: ${args.activityId}`);
       }
 
-      const user = User.findById(args.userId);
+      const user = await User.findById(args.userId);
 
       if (!user) {
         throw new Error(`User not found: ${args.userId}`);
@@ -122,7 +120,7 @@ const resolvers = {
         throw new Error(`User not authorized: ${args.userId}`);
       }
 
-      const participation = activity.participations.find((participation) => participation.participant === user.id);
+      const participation = activity.participations.find((participation) => participation.participant.equals(user.id));
 
       if (participation) {
         participation.type = args.type;
@@ -133,14 +131,16 @@ const resolvers = {
         });
       }
 
+      await activity.save();
+
       return {
         participant: user.id,
         type: args.type,
       };
     },
-    updateProfile: (_, args: { userId: ID, input: Pick<User, 'name' | 'phone' | 'notifications'> }, context) : User => {
-      //(user: ID!, name: String!, phone: PhoneNumber!): User!
-      const user = User.findById(args.userId);
+    updateProfile: async (_, args: { userId: Types.ObjectId, input: Pick<TUser, 'name' | 'phone' | 'notifications'> }, context) : Promise<HydratedDocument<TUser>> => {
+      //(user: Types.ObjectId!, name: String!, phone: PhoneNumber!): User!
+      const user = await User.findById(args.userId);
 
       if (!user) {
         throw new Error(`User not found: ${args.userId}`);
@@ -154,18 +154,20 @@ const resolvers = {
       user.phone = args.input.phone;
       user.notifications = args.input.notifications || [];
 
+      await user.save();
+
       return user;
     },
   },
 
   Club: {
-    members: (parent: Club) => parent.getMembers(),
-    activities: (parent: Club) => parent.getActivities(),
-    agenda: (parent: Club) => parent.getAgenda(),
+    members: (parent: HydratedDocument<TClub, IClubMethods>) => parent.getMembers(),
+    activities: (parent: HydratedDocument<TClub, IClubMethods>) => parent.getActivities(),
+    agenda: (parent: HydratedDocument<TClub, IClubMethods>) => parent.getAgenda(),
   },
 
   ActivityParticipation: {
-    participant: (parent: ActivityParticipation) => User.findById(parent.participant),
+    participant: async (parent: ActivityParticipation) => await User.findById(parent.participant),
   },
 };
 

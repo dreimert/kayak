@@ -1,5 +1,10 @@
+import { HydratedDocument } from "mongoose"
 import { readFileSync } from "node:fs"
 import nodemailer from "nodemailer"
+
+import { TActivity } from "./models/Activity.js"
+import { TClub } from "./models/Club.js"
+import { User } from "./models/User.js"
 
 // MAIL="contact@kayakons.ovh"
 // MAIL_PASSWORD=""
@@ -37,4 +42,21 @@ export async function sendMail (to: string, subject: string, text: string, html:
     text,
     html
   })
+}
+
+export async function notifyNewActivity (activity: HydratedDocument<TActivity>, club: HydratedDocument<TClub>) {
+  const users = User.find({ notifications: activity.type })
+
+  let link = `${process.env['FRONT_URL']}/activity/${activity.id}`
+
+  link = link.replace(process.env.DOMAIN, `${club.domain}.${process.env.DOMAIN}`)
+
+  for await (const user of users) {
+    await sendMail(
+      `${user.name} <${user.email}>`,
+      `Nouvelle activité : ${activity.title}`,
+      `Une nouvelle activité a été créée : ${activity.title}. Pour en savoir plus, cliquez sur le lien suivant : ${link}`,
+      `<html>Une nouvelle activité a été créée : ${activity.title}. Pour en savoir plus, cliquez sur le lien suivant : <a href="${link}">${link}</a><html>`,
+    )
+  }
 }

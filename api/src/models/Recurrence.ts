@@ -1,8 +1,6 @@
-import { Model } from "./Model.js";
+import mongoose, { InferSchemaType } from "mongoose";
 
-import { ID } from "../types-db.js";
 import { ActivityType } from "../enums/ActivityType.js";
-import { Club } from "./Club.js";
 
 export enum Day {
   Sunday,
@@ -14,56 +12,66 @@ export enum Day {
   Saturday,
 }
 
+const recurrencePatternSchema = new mongoose.Schema({
+  day: {
+    type: Number,
+    enum: Day,
+    required: true,
+  },
+  hour: {
+    type: Number,
+    required: true,
+    min: 0,
+    max: 23,
+  },
+  minutes: {
+    type: Number,
+    required: true,
+    min: 0,
+    max: 59,
+  },
+})
+
 export type RecurrencePattern = {
   day: Day,
   hour: number,
   minutes: number
 }
 
-// https://stackoverflow.com/questions/47893110/typescript-mapped-types-class-to-interface-without-methods
-// export type Recurrence = Omit<Activity, 'start' | 'participations' | 'getParticipations' | 'recurring'> & {
-//   start: Date
-//   end?: Date
-//   pattern: RecurrencePattern
-// }
-
-export class Recurrence extends Model {
-  title: string;
-  description: string;
-  type: ActivityType;
-  start: Date;
-  end?: Date;
+export const recurrenceSchema = new mongoose.Schema({
+  title: {
+    type: String,
+    required: true,
+  },
+  description:  {
+    type: String,
+    required: true,
+  },
+  type: {
+    type: String,
+    enum: ActivityType,
+    required: true,
+  },
+  start: {
+    type: Date,
+    required: true,
+  },
+  end: Date,
   /**
    * Durée de l'activité en millisecondes
    */
-  duration: number;
-  pattern: RecurrencePattern;
-  coordinators: ID[] | undefined;
+  duration: {
+    type: Number,
+    required: true,
+  },
+  pattern: {
+    type: recurrencePatternSchema,
+    required: true,
+  },
+  coordinators: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+  }],
+})
 
-  constructor(data: Partial<Recurrence>, private club: Club) {
-    super(data.id, club.recurrences);
-
-    this.title = data.title;
-    this.description = data.description;
-    this.type = data.type;
-    this.start = data.start ? new Date(data.start) : new Date();
-    this.end = data.end ? new Date(data.end) : undefined;
-    this.duration = data.duration || 2 * 60 * 60 * 1000;
-    this.pattern = data.pattern;
-    this.coordinators = data.coordinators;
-  }
-
-  toJSON() {
-    return {
-      id: this.id,
-      title: this.title,
-      description: this.description,
-      type: this.type,
-      start: this.start,
-      end: this.end,
-      duration: this.duration,
-      pattern: this.pattern,
-      coordinators: this.coordinators
-    }
-  }
-}
+export type TRecurrence = InferSchemaType<typeof recurrenceSchema>

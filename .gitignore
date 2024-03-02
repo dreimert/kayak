@@ -43,3 +43,5 @@ Thumbs.db
 .env
 .prod.env
 session.db
+
+/db

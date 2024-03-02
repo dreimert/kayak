@@ -1,5 +1,9 @@
 module.exports = {
   apps: [{
+    name: 'Kayakons - mongodb',
+    script: 'mongod',
+    args: '--dbpath ./db --ipv6', // activation de l'ipv6 pour contourner un bug
+  }, {
     name: 'Kayakons - frontend',
     script: 'npm run serve',
     time: true,

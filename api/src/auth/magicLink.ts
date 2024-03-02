@@ -45,18 +45,21 @@ export const magicLogin = new MagicLoginStrategy({
   // "payload" contains { "destination": "email" }
   // In standard passport fashion, call callback with the error as the first argument (if there was one)
   // and the user data as the second argument!
-  verify: (payload, callback, req: Request) => {
+  verify: async (payload, callback, req: Request) => {
     // Get or create a user with the provided email from the database
     const destination = payload.destination.toLowerCase()
 
-    const user = User.findByEmail(destination)
+    const user = await User.findOne({ email: destination }) //.findByEmail(destination)
 
     if (user) {
       callback(null, user)
     } else {
       const domain = getSubDomain(req.hostname)
 
-      const user = User.create(destination, domain)
+      const user = await User.create({
+        email: destination,
+        domain: domain || 'cklom'
+      })
 
       callback(null, user)
     }

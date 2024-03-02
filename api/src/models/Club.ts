@@ -1,164 +1,169 @@
-import { db } from "../datas/db.js";
+import mongoose, { HydratedDocument, InferSchemaType, Types } from "mongoose";
 
-import { Model } from "./Model.js";
-import { Activity } from "./Activity.js";
+import { recurrenceSchema } from "./Recurrence.js";
+import { TUser, User } from "./User.js";
+import { Activity, TActivity } from "./Activity.js";
 
-import { ID } from "../types-db.js";
-import { User } from "./User.js";
-import { Recurrence } from "./Recurrence.js";
+export const NumberOfWeeksAnticipation = 6;
 
-export class Club extends Model {
-  readonly numberOfWeeksAnticipation = 6;
-
-  name: string;
-  domain: string;
-  members: ID[];
-  administrateurs: ID[];
-  activities: ID[];
-  recurrences: Recurrence[];
-
-  constructor(data: Partial<Club>) {
-    super(data.id, db.clubs);
-
-    this.name = data.name;
-    this.domain = data.domain;
-    this.members = data.members || [];
-    this.administrateurs = data.administrateurs || [];
-    this.activities = data.activities || [];
-    this.recurrences = data.recurrences || []
-
-    this.recurrences = this.recurrences.map((recurrence) => new Recurrence(recurrence, this));
-  }
-
-  getMembers () {
-    return this.members.map((member) => User.findById(member));
-  }
-
-  getAdministrateurs () {
-    return this.administrateurs.map((administrateur) => User.findById(administrateur));
-  }
-
-  isAdministrateur (user: User) {
-    return this.administrateurs.includes(user.id);
-  }
-
-  getActivities () {
-    return this.activities.map((activity) => Activity.findById(activity)).filter((activity) => activity !== undefined);
-  }
-
-  getAgenda () {
-    const agendaActivities = this.getActivities()
-      .filter((activity) => activity?.start! > new Date());
-
-    return {
-      activities: agendaActivities,
-      participants: () => [...(agendaActivities
-        .reduce((set, activity) => {
-          activity!.participations.forEach((participation) => {
-            set.add(participation.participant);
-          });
-
-          return set;
-        }, new Set<ID>()))]
-        .map((id) => User.findById(id))
-    };
-  }
-
-  getRecurrences () {
-    return this.recurrences;
-  }
-
-  getUpcomingRecurringActivities (now: Date = new Date()): Activity[] {
-    return this.recurrences
-      .filter((recurrence) => !recurrence.end || recurrence.end.getTime() > now.getTime())
-      .map((recurrence) => {
-        const nextRecurrence = new Date(now);
-        nextRecurrence.setHours(recurrence.pattern.hour);
-        nextRecurrence.setMinutes(recurrence.pattern.minutes);
-        nextRecurrence.setSeconds(0);
-        nextRecurrence.setMilliseconds(0);
-
-        const daysUntilNextRecurrence = (recurrence.pattern.day - nextRecurrence.getDay() + 7) % 7;
-
-        const instance = new Date(nextRecurrence.getTime() + daysUntilNextRecurrence * 24 * 60 * 60 * 1000);
-
-        if (recurrence.start.getTime() < instance.getTime() && (!recurrence.end || instance.getTime() < recurrence.end.getTime())) {
-          return new Activity({
-            title: recurrence.title,
-            description: recurrence.description,
-            start: instance,
-            end: new Date(instance.getTime() + recurrence.duration),
-            type: recurrence.type,
-            // club: this.id,
-            recurring: true,
-            coordinators: [...(recurrence.coordinators || [])],
-          });
-        } else {
-          return
-        }
-      })
-      .filter((instance) => instance !== undefined);
-  }
-
-  // createActivity (date: Date, type: ActivityType) {
-  //   const activity = Activity.create({
-  //     date,
-  //     type,
-  //     club: this.id,
-  //     participations: []
-  //   });
-
-  //   // db.activities.push(activity);
-
-
-  //   this.activities.push(activity.id);
-
-  //   return activity;
-  // }
-
-  createRecurrentActivity () {
-    const now = new Date();
-    const createdActivities: Activity[] = [];
-
-    for (let i = 0; i < this.numberOfWeeksAnticipation; i++) {
-      const upcomingRecurringActivities = this.getUpcomingRecurringActivities(now);
-
-      upcomingRecurringActivities.forEach((activity) => {
-        const findActivity = db.activities.find((act) => act.start.getTime() === activity.start.getTime() && act.type === activity.type);
-
-        if (!findActivity) {
-          db.activities.push(activity);
-          this.activities.push(activity.id);
-          createdActivities.push(activity);
-        }
-      });
-
-      now.setTime(now.getTime() + 7 * 24 * 60 * 60 * 1000);
-    }
-
-    return createdActivities;
-  }
-
-  static create(name: string, domain: string) {
-    const club = new Club({
-      name,
-      domain,
-    });
-
-    db.clubs.push(club);
-
-    return club;
-  }
-
-  static findById(id: ID) {
-    return db.clubs.find((club) => club.id === id);
-  }
-
-  static findByDomain(domain: string) {
-    return db.clubs.find((club) => club.domain === domain);
-  }
-
-  static all() {
-    return db.clubs;
-  }
+type Agenda = {
+  activities: HydratedDocument<TActivity>[],
+  participants: HydratedDocument<TUser>[]
 }
+
+export interface IClubMethods {
+  getMembers (): Promise<HydratedDocument<TUser>[]>
+  getAdministrateurs (): Promise<HydratedDocument<TUser>[]>
+  getActivities (): Promise<HydratedDocument<TActivity>[]>
+  isAdministrateur (user: HydratedDocument<TUser>): boolean
+  getAgenda (): Promise<Agenda>
+  getUpcomingRecurringActivities (now?: Date): Promise<HydratedDocument<TActivity>[]>
+  createRecurrentActivity (): Promise<HydratedDocument<TActivity>[]>
+}
+
+const clubSchema = new mongoose.Schema({
+  name: {
+    type: String,
+    required: true,
+  },
+  domain: {
+    type: String,
+    required: true,
+  },
+  members: {
+    type: [{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+    }],
+    default: [],
+  },
+  administrateurs: {
+    type: [{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+    }],
+    default: [],
+  },
+  activities: {
+    type: [{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Activity',
+    }],
+    default: [],
+  },
+  recurrences: {
+    type: [recurrenceSchema],
+    default: [],
+  },
+}, {
+  timestamps: true,
+  methods: {
+    getMembers () {
+      if (!this.populated('members')) {
+        this.populate('members');
+      }
+      return this.members;
+    },
+
+    getAdministrateurs () {
+      if (!this.populated('administrateurs')) {
+        this.populate('administrateurs');
+      }
+      return this.administrateurs;
+    },
+
+    getActivities () {
+      if (!this.populated('activities')) {
+        this.populate('activities');
+      }
+      return this.activities;
+    },
+
+    getRecurrences () {
+      return this.recurrences;
+    },
+
+    isAdministrateur (user: HydratedDocument<TUser>): boolean {
+      return this.administrateurs.includes(user.id);
+    },
+    async getAgenda () {
+      const self = await this.populate<{ activities: TActivity[] }>('activities')
+
+      const agendaActivities = self.activities
+        .filter((activity) => activity.start.getTime() > Date.now());
+
+      return {
+        activities: agendaActivities,
+        participants: await Promise.all([...(agendaActivities
+          .reduce((set, activity) => {
+            activity!.participations.forEach((participation) => {
+              set.add(participation.participant.toString());
+            });
+
+            return set;
+          }, new Set<string>()))]
+          .map((id) => User.findById(id))
+        )
+      };
+    },
+    async getUpcomingRecurringActivities (now: Date = new Date()): Promise<HydratedDocument<TActivity>[]> {
+      return this.recurrences
+        .filter((recurrence) => !recurrence.end || recurrence.end.getTime() > now.getTime())
+        .map((recurrence) => {
+          const nextRecurrence = new Date(now);
+          nextRecurrence.setHours(recurrence.pattern.hour);
+          nextRecurrence.setMinutes(recurrence.pattern.minutes);
+          nextRecurrence.setSeconds(0);
+          nextRecurrence.setMilliseconds(0);
+
+          const daysUntilNextRecurrence = (recurrence.pattern.day - nextRecurrence.getDay() + 7) % 7;
+
+          const instance = new Date(nextRecurrence.getTime() + daysUntilNextRecurrence * 24 * 60 * 60 * 1000);
+
+          if (recurrence.start.getTime() < instance.getTime() && (!recurrence.end || instance.getTime() < recurrence.end.getTime())) {
+            return new Activity({
+              title: recurrence.title,
+              description: recurrence.description,
+              start: instance,
+              end: new Date(instance.getTime() + recurrence.duration),
+              type: recurrence.type,
+              recurring: true,
+              coordinators: [...(recurrence.coordinators || [])],
+            });
+          } else {
+            return
+          }
+        })
+        .filter((instance) => instance !== undefined);
+    },
+    async createRecurrentActivity () {
+      const now = new Date();
+      const createdActivities: HydratedDocument<TActivity>[] = [];
+
+      for (let i = 0; i < NumberOfWeeksAnticipation; i++) {
+        // @ts-ignore
+        const upcomingRecurringActivities: HydratedDocument<TActivity>[] = await this.getUpcomingRecurringActivities(now);
+
+        for (const activity of upcomingRecurringActivities) {
+          const findActivity = await Activity.findOne({ start: activity.start, type: activity.type });
+
+          if (!findActivity) {
+            activity.save();
+            this.activities.push(activity.id);
+            createdActivities.push(activity);
+          }
+        }
+
+        now.setTime(now.getTime() + 7 * 24 * 60 * 60 * 1000);
+      }
+
+      await this.save();
+
+      return createdActivities;
+    },
+  },
+});
+
+export type TClub = InferSchemaType<typeof clubSchema>;
+
+export const Club = mongoose.model('Club', clubSchema);
