@@ -92,7 +92,16 @@ const resolvers = {
         throw new Error(`Club not found: ${args.clubId}`);
       }
 
-      const activity = await Activity.create(args.input);
+      const input: Partial<TActivity> = {
+        ...args.input,
+        coordinators: [context.user.id],
+        participations: [{
+          participant: context.user.id,
+          type: ParticipationType.coordinator,
+        }],
+      };
+
+      const activity = await Activity.create(input);
 
       club.activities.push(activity.id);
 
