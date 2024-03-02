@@ -1,5 +1,5 @@
 import { Apollo, gql } from "apollo-angular"
-import { map, shareReplay, tap } from "rxjs/operators"
+import { map, tap } from "rxjs/operators"
 
 import { ActivityParticipation, ActivityType, ActivityTypeToLabel, ID, ParticipationType } from "../../types"
 
@@ -63,8 +63,6 @@ export class Activity {
     }).pipe(
       map(result => result?.data?.participate),
       tap(participate => {
-        console.log('tap participate', participate);
-
         const participationIndex = this.participations.findIndex((p) => p.participant.id === userId)
 
         if (participationIndex !== -1) {

@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 
-import { ParticipationType } from '../../../types';
+import { ParticipationType, ParticipationTypeToIcon } from '../../../types';
 
 @Component({
   selector: 'ky-participation-icon',
@@ -13,5 +13,5 @@ import { ParticipationType } from '../../../types';
 export class ParticipationIconComponent {
   @Input({ required: true }) type: ParticipationType
 
-  ParticipationType = ParticipationType
+  ParticipationTypeToIcon = ParticipationTypeToIcon
 }

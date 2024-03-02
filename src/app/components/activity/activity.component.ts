@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 
-import { ActivityType, ParticipationType } from '../../../types';
+import { ActivityType, ParticipationType, ParticipationTypeLabelsList } from '../../../types';
 import { MatIconModule } from '@angular/material/icon';
 import { ParticipationIconComponent } from '../participation-icon/participation-icon.component';
 import { AsyncPipe } from '@angular/common';
@@ -31,6 +31,7 @@ export class ActivityComponent implements OnInit {
 
   ActivityType = ActivityType
   ParticipationType = ParticipationType
+  ParticipationTypeLabelsList = ParticipationTypeLabelsList
 
   participation: ParticipationType
   others: Activity['participations']

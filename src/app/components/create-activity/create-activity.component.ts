@@ -80,8 +80,6 @@ export class CreateActivityComponent {
   }
 
   transformForm (data: CreateActivityComponent['activityForm']['value']) {
-    console.log('data', data);
-
     return {
       title: data.title,
       type: data.type,

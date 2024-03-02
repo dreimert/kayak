@@ -25,12 +25,23 @@ export type ActivityParticipation = {
 }
 
 export const ActivityTypeLabelsList = [
-  { value: ActivityType.Kmer, label: 'Randonnée', icon: "kayaking" },
-  { value: ActivityType.Piscine, label: 'Piscine', icon: "pool" },
-  { value: ActivityType.EauVive, label: 'Eau vive', icon: "waves" },
-  { value: ActivityType.Slalom, label: 'Slalom', icon: "flag" },
-  { value: ActivityType.Musculation, label: 'Musculation', icon: "fitness_center" },
+  { value: ActivityType.Kmer, label: 'Randonnée', icon: 'kayaking' },
+  { value: ActivityType.Piscine, label: 'Piscine', icon: 'pool' },
+  { value: ActivityType.EauVive, label: 'Eau vive', icon: 'waves' },
+  { value: ActivityType.Slalom, label: 'Slalom', icon: 'flag' },
+  { value: ActivityType.Musculation, label: 'Renforcement musculaire', icon: 'fitness_center' },
+]
+
+export const ParticipationTypeLabelsList = [
+  { value: ParticipationType.Oui, label: 'Oui', icon: 'check' },
+  { value: ParticipationType.PeutEtre, label: 'Peut-être', icon: 'change_circle' },
+  { value: ParticipationType.Non, label: 'Non', icon: 'close' },
+  { value: ParticipationType.NonRepondu, label: 'Non répondu', icon: 'question_mark' },
+  { value: ParticipationType.Coordinator, label: 'Coordinateur', icon: 'manage_accounts' },
+  { value: ParticipationType.Security, label: 'Sécurité', icon: 'security' },
 ]
 
 export const ActivityTypeToLabel = (type: ActivityType) => ActivityTypeLabelsList.find((activityType) => activityType.value === type)?.label || type
 export const ActivityTypeToIcon = (type: ActivityType) => ActivityTypeLabelsList.find((activityType) => activityType.value === type)?.icon || 'interests'
+
+export const ParticipationTypeToIcon = (type: ParticipationType) => ParticipationTypeLabelsList.find((participationType) => participationType.value === type)?.icon || 'question_mark'

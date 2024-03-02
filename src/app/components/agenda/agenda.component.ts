@@ -10,7 +10,7 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 
-import { ActivityType, ParticipationType, ActivityTypeLabelsList } from '../../../types';
+import { ParticipationType, ActivityTypeLabelsList, ParticipationTypeLabelsList } from '../../../types';
 import { Observable, Subject, combineLatest } from 'rxjs';
 import { map, shareReplay, startWith } from 'rxjs/operators';
 import { ParticipationPipe } from '../../pipes/participation.pipe';
@@ -62,9 +62,8 @@ export class AgendaComponent implements OnInit {
   @Input({ required: true }) agenda: Agenda
   @Input() user: User | null = null
 
-  ParticipationType = ParticipationType
-  ActivityType = ActivityType
   ActivityTypeLabelsList = ActivityTypeLabelsList
+  ParticipationTypeLabelsList = ParticipationTypeLabelsList
 
   activites$: Observable<Activity[]>
 
@@ -89,7 +88,7 @@ export class AgendaComponent implements OnInit {
   updateAgenda$ = new Subject<void>()
 
   filters = [{
-    label: 'Aucun',
+    label: 'Tout voir',
     icon: 'interests',
     filter: (activity: Activity) => true
   }, ...ActivityTypeLabelsList.map((type) => {

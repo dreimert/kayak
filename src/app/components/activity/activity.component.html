@@ -19,25 +19,11 @@
           <td [class]="participation">
             <ky-participation-icon [type]="participation"></ky-participation-icon>
             <mat-button-toggle-group [(ngModel)]="participation" (change)="participate(participation)" aria-label="Type de participation">
-              <mat-button-toggle [value]="ParticipationType.Oui" class="oui">
-                <mat-icon class="oui">check</mat-icon>
-              </mat-button-toggle>
-              <mat-button-toggle [value]="ParticipationType.Non" class="non">
-                <mat-icon>close</mat-icon>
-              </mat-button-toggle>
-              <br/>
-              <mat-button-toggle [value]="ParticipationType.PeutEtre" class="peutEtre">
-                <mat-icon>change_circle</mat-icon>
-              </mat-button-toggle>
-              <mat-button-toggle [value]="ParticipationType.NonRepondu" class="nonRepondu">
-                <mat-icon>question_mark</mat-icon>
-              </mat-button-toggle>
-              <mat-button-toggle [value]="ParticipationType.Coordinator" class="coordinator">
-                <mat-icon>manage_accounts</mat-icon>
-              </mat-button-toggle>
-              <mat-button-toggle [value]="ParticipationType.Security" class="security">
-                <mat-icon>security</mat-icon>
-              </mat-button-toggle>
+              @for (type of ParticipationTypeLabelsList; track type.value) {
+                <mat-button-toggle [value]="type.value" [class]="type.value">
+                  <mat-icon>{{ type.icon }}</mat-icon>
+                </mat-button-toggle>
+              }
             </mat-button-toggle-group>
           </td>
         } @else {

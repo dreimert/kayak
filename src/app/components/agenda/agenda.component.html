@@ -60,33 +60,12 @@
             <td class="participation reverse" [class]="myParticipation.type">
               <ky-participation-icon [type]="myParticipation.type"></ky-participation-icon>
               <mat-button-toggle-group [(ngModel)]="myParticipation.type" (change)="updateParticipation(myParticipation)" aria-label="Type de participation">
-                <mat-button-toggle [value]="ParticipationType.Oui" class="oui">
-                  <mat-icon>check</mat-icon>
-                </mat-button-toggle>
-                <mat-button-toggle [value]="ParticipationType.PeutEtre" class="peutEtre">
-                  <mat-icon>swap_vert</mat-icon>
-                </mat-button-toggle>
-                <mat-button-toggle [value]="ParticipationType.Non" class="non">
-                  <mat-icon>close</mat-icon>
-                </mat-button-toggle>
-                <mat-button-toggle [value]="ParticipationType.NonRepondu" class="nonRepondu">
-                  <mat-icon>question_mark</mat-icon>
-                </mat-button-toggle>
-                <mat-button-toggle [value]="ParticipationType.Coordinator" class="coordinator">
-                  <mat-icon>manage_accounts</mat-icon>
-                </mat-button-toggle>
-                <mat-button-toggle [value]="ParticipationType.Security" class="security">
-                  <mat-icon>security</mat-icon>
-                </mat-button-toggle>
+                @for (type of ParticipationTypeLabelsList; track type.value) {
+                  <mat-button-toggle [value]="type.value" [class]="type.value">
+                    <mat-icon>{{ type.icon }}</mat-icon>
+                  </mat-button-toggle>
+                }
               </mat-button-toggle-group>
-              <!-- <mat-form-field>
-                <mat-select [(ngModel)]="participation.type">
-                  <mat-option [value]="ParticipationType.Oui">Oui</mat-option>
-                  <mat-option [value]="ParticipationType.Non">Non</mat-option>
-                  <mat-option [value]="ParticipationType.PeutEtre">Peut-être</mat-option>
-                  <mat-option [value]="ParticipationType.NonRepondu"></mat-option>
-                </mat-select>
-              </mat-form-field> -->
             </td>
           }
         } @else {
@@ -168,10 +147,12 @@
   </ul>
 </div>
 
-<p>Vous pouvez :</p>
+<p>Astuces :</p>
 <ul>
-  <li>Cliquer sur le logo d'une activité pour avoir plus de détails sur celle-ci.</li>
-  <li>Cliquer sur le burger à coté de "Kayakons !" pour ouvrir le menu.
-  <li>Modifier votre profil dans le menu.</li>
-  <!-- <li>Créer une nouvelle activité dans le menu</li> -->
+  <li>Cliquez sur le logo d'une activité pour avoir plus de détails sur celle-ci.</li>
+  <li>Cliquez sur le burger à coté de "Kayakons !" pour ouvrir le menu.</li>
+  <li>Vous pouvez modifier votre profil dans le menu.</li>
+  <li>Vous pouvez créer une nouvelle activité dans le menu</li>
+  <li>Vous pouvez filtrer les activités en cliquant sur le filtre en haut à gauche.</li>
+  <li>Se mettre en <mat-icon class="peutEtre">swap_vert</mat-icon> permet de recevoir des notifications et rappels.</li>
 </ul>
