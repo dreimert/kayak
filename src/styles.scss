@@ -31,33 +31,33 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   color: black;
 }
 
-mat-button-toggle.oui.mat-button-toggle-checked, .oui.reverse, .reverse .oui {
-  color: white;
+mat-button-toggle.oui.mat-button-toggle-checked, .oui.reverse, .oui.reverse:nth-child(even), .reverse .oui {
+  color: #fafafa;
   background-color: green;
 }
 
-mat-button-toggle.non.mat-button-toggle-checked, .non.reverse, .reverse .non {
-  color: white;
+mat-button-toggle.non.mat-button-toggle-checked, .non.reverse, .non.reverse:nth-child(even), .reverse .non {
+  color: #fafafa;
   background-color: red;
 }
 
 
-mat-button-toggle.peutEtre.mat-button-toggle-checked, .peutEtre.reverse, .reverse .peutEtre {
-  color: white;
+mat-button-toggle.peutEtre.mat-button-toggle-checked, .peutEtre.reverse, .peutEtre.reverse:nth-child(even), .reverse .peutEtre {
+  color: #fafafa;
   background-color: orange;
 }
 
-mat-button-toggle.coordinator.mat-button-toggle-checked, .coordinator.reverse, .reverse .coordinator {
-  color: white;
+mat-button-toggle.coordinator.mat-button-toggle-checked, .coordinator.reverse, .coordinator.reverse:nth-child(even), .reverse .coordinator {
+  color: #fafafa;
   background-color: cornflowerblue;
 }
 
-mat-button-toggle.security.mat-button-toggle-checked, .security.reverse, .reverse .security {
-  color: white;
+mat-button-toggle.security.mat-button-toggle-checked, .security.reverse, .security.reverse:nth-child(even), .reverse .security {
+  color: #fafafa;
   background-color: blue;
 }
 
 mat-button-toggle.nonRepondu.mat-button-toggle-checked, .nonRepondu.reverse, .reverse .nonRepondu {
   color: black;
-  background-color: white;
+  background-color: #fafafa00;
 }

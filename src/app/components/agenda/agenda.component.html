@@ -118,12 +118,9 @@
 <p>Légende :</p>
 <div class="legende">
   <ul>
-    <li><mat-icon class="oui">check</mat-icon> : Participe</li>
-    <li><mat-icon class="peutEtre">swap_vert</mat-icon> : Je ne sais pas encore</li>
-    <li><mat-icon class="non">close</mat-icon> : Ne participe pas</li>
-    <li><mat-icon class="nonRepondu">question_mark</mat-icon> : N'a pas répondu</li>
-    <li><mat-icon class="coordinator">manage_accounts</mat-icon> : Participe à l'organisation</li>
-    <li><mat-icon class="security">security</mat-icon> : Assure la sécurité</li>
+    @for (participation of ParticipationTypeLabelsList; track participation.value) {
+      <li><mat-icon class="{{ participation.value }}">{{ participation.icon }}</mat-icon> : {{ participation.explain }}</li>
+    }
   </ul>
   <ul>
     @for (type of ActivityTypeLabelsList; track type.value) {

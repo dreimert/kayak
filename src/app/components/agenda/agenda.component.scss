@@ -34,6 +34,10 @@ th.user .row {
   align-items: center;
 }
 
+td:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
 .footer th {
   border-top: 2px solid black;
 }

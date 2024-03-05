@@ -33,12 +33,12 @@ export const ActivityTypeLabelsList = [
 ]
 
 export const ParticipationTypeLabelsList = [
-  { value: ParticipationType.Oui, label: 'Oui', icon: 'check' },
-  { value: ParticipationType.PeutEtre, label: 'Peut-être', icon: 'change_circle' },
-  { value: ParticipationType.Non, label: 'Non', icon: 'close' },
-  { value: ParticipationType.NonRepondu, label: 'Non répondu', icon: 'question_mark' },
-  { value: ParticipationType.Coordinator, label: 'Coordinateur', icon: 'manage_accounts' },
-  { value: ParticipationType.Security, label: 'Sécurité', icon: 'security' },
+  { value: ParticipationType.Oui, label: 'Oui', icon: 'check', explain: 'Participe'},
+  { value: ParticipationType.PeutEtre, label: 'Peut-être', icon: 'change_circle', explain: 'Je ne sais pas encore' },
+  { value: ParticipationType.Non, label: 'Non', icon: 'close', explain: 'Ne participe pas'},
+  { value: ParticipationType.NonRepondu, label: 'Non répondu', icon: 'question_mark', explain: "N'a pas répondu"},
+  { value: ParticipationType.Coordinator, label: 'Coordinateur', icon: 'manage_accounts', explain: "Participe à l'organisation"},
+  { value: ParticipationType.Security, label: 'Sécurité', icon: 'security', explain: 'Assure la sécurité'},
 ]
 
 export const ActivityTypeToLabel = (type: ActivityType) => ActivityTypeLabelsList.find((activityType) => activityType.value === type)?.label || type
