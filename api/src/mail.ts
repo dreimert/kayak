@@ -49,7 +49,7 @@ export async function notifyNewActivity (activity: HydratedDocument<TActivity>, 
 
   let link = `${process.env['FRONT_URL']}/activity/${activity.id}`
 
-  link = link.replace(process.env.DOMAIN, `${club.domain}.${process.env.DOMAIN}`)
+  link = link.replace(process.env.DOMAIN, club.domains[0])
 
   for await (const user of users) {
     await sendMail(

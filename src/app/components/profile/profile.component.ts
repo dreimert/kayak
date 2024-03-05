@@ -72,7 +72,7 @@ export class ProfileComponent implements OnInit {
             name
             email
             phone
-            domain
+            clubs { id name }
             notifications
           }
         }

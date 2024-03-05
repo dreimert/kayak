@@ -42,7 +42,10 @@ export class AuthService {
             name
             email
             phone
-            domain
+            clubs {
+              id
+              name
+            }
             notifications
           }
         }

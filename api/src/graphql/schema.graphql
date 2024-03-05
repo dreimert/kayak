@@ -22,7 +22,7 @@ type Mutation {
 
 type Club {
   id: ID!
-  domain: String!
+  domains: [String!]!
   name: String!
   members: [User!]!
   activities: [Activity!]!
@@ -46,7 +46,7 @@ type UserFull {
   name: String!
   email: EmailAddress!
   phone: PhoneNumber!
-  domain: String
+  clubs: [Club!]!
   notifications: [ActivityType!]!
 }
 
@@ -55,7 +55,7 @@ type Me {
   name: String
   email: EmailAddress!
   phone: PhoneNumber
-  domain: String
+  clubs: [Club!]!
   notifications: [ActivityType!]!
 }
 

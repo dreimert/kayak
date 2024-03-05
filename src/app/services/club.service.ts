@@ -20,11 +20,7 @@ export class ClubService {
     Club.apollo = apollo
     Activity.apollo = apollo
 
-    let domain = document.location.hostname.split('.')[0];
-
-    if (domain === 'kayakons') {
-      domain = 'cklom'
-    }
+    const domain = document.location.hostname
 
     this.club$ = this.apollo.query<{clubByDomain: Club}>({
       query: gql`

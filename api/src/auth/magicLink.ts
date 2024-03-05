@@ -4,13 +4,10 @@ import _MagicLoginStrategy from "passport-magic-login"
 import { sendMail } from "../mail.js"
 
 import { User } from "../models/User.js"
+import { Club } from "../models/Club.js"
 
 // @ts-ignore
 const MagicLoginStrategy = _MagicLoginStrategy.default
-
-function getSubDomain (hostname: string) {
-  return new RegExp(`^(\\w+)\\.${process.env.DOMAIN}$`).exec(hostname)?.[1]
-}
 
 export const magicLogin = new MagicLoginStrategy({
   secret: process.env.MAGIC_LINK_SECRET,
@@ -23,13 +20,7 @@ export const magicLogin = new MagicLoginStrategy({
   // "href" is your confirmUrl with the confirmation token,
   // for example "/auth/magiclogin/confirm?token=<longtoken>"
   sendMagicLink: async (destination: string, href: string, token: string, req: Request) => {
-    let link = `${process.env['API_URL']}${href}`
-
-    const subDomain = getSubDomain(req.hostname)
-
-    if (subDomain) {
-      link = link.replace(process.env.DOMAIN, `${subDomain}.${process.env.DOMAIN}`)
-    }
+    const link = `https://${req.hostname}/api${href}`
 
     await sendMail(
       destination,
@@ -46,19 +37,27 @@ export const magicLogin = new MagicLoginStrategy({
   // In standard passport fashion, call callback with the error as the first argument (if there was one)
   // and the user data as the second argument!
   verify: async (payload, callback, req: Request) => {
+    const club = await Club.findOne({domains: req.hostname})
+
+    if (!club) {
+      return callback(new Error('Club not found'))
+    }
     // Get or create a user with the provided email from the database
     const destination = payload.destination.toLowerCase()
 
     const user = await User.findOne({ email: destination }) //.findByEmail(destination)
 
     if (user) {
+      if (!user.clubs.includes(club.id)) {
+        user.clubs.push(club.id)
+        await user.save()
+      }
+
       callback(null, user)
     } else {
-      const domain = getSubDomain(req.hostname)
-
       const user = await User.create({
         email: destination,
-        domain: domain || 'cklom'
+        clubs: [club.id]
       })
 
       callback(null, user)

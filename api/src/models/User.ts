@@ -1,12 +1,15 @@
-import mongoose, { InferSchemaType } from "mongoose";
+import { InferSchemaType, model, Schema } from "mongoose";
 
 import { ActivityType } from "../enums/ActivityType.js";
 
-const userSchema = new mongoose.Schema({
+const userSchema = new Schema({
   name: String,
   email: { type: String, required: true },
   phone: String,
-  domain: String,
+  clubs: [{
+    type: Schema.Types.ObjectId,
+    ref: 'Club',
+  }],
   notifications: {
     type: [{
       type: String,
@@ -18,4 +21,4 @@ const userSchema = new mongoose.Schema({
 
 export type TUser = InferSchemaType<typeof userSchema>;
 
-export const User = mongoose.model('User', userSchema);
+export const User = model('User', userSchema);

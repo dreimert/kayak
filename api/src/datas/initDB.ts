@@ -5,7 +5,7 @@ await db.initDB()
 
 const club = await Club.create({
   name: 'CKLOM',
-  domain: 'cklom',
+  domains: ['cklom.kayakons.ovh', 'kayakons.ovh'],
 })
 
 const recurrences = [

@@ -39,7 +39,7 @@ const resolvers = {
   Query: {
     clubs: async () => await Club.find({}),
     club: async (_, args: { id: Types.ObjectId }) => await Club.findById(args.id),
-    clubByDomain: async (_, args: { domain: string }) => await Club.findOne({ domain: args.domain }),
+    clubByDomain: async (_, args: { domain: string }) => await Club.findOne({ domains: args.domain }),
     activity: async (_, args: { id: Types.ObjectId }) => await Activity.findById(args.id),
     user: async (_, args: { id: Types.ObjectId }) => await User.findById(args.id),
     me: (_, __, context: Context) => {
@@ -169,14 +169,22 @@ const resolvers = {
     },
   },
 
+  ActivityParticipation: {
+    participant: async (parent: ActivityParticipation) => await User.findById(parent.participant),
+  },
+
   Club: {
     members: (parent: HydratedDocument<TClub, IClubMethods>) => parent.getMembers(),
     activities: (parent: HydratedDocument<TClub, IClubMethods>) => parent.getActivities(),
     agenda: (parent: HydratedDocument<TClub, IClubMethods>) => parent.getAgenda(),
   },
 
-  ActivityParticipation: {
-    participant: async (parent: ActivityParticipation) => await User.findById(parent.participant),
+  Me: {
+    clubs: async (parent: TUser) => await Promise.all(parent.clubs.map((clubId) => Club.findById(clubId)))
+  },
+
+  UserFull: {
+    clubs: async (parent: TUser) => await Promise.all(parent.clubs.map((clubId) => Club.findById(clubId)))
   },
 };
 

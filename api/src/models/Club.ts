@@ -26,8 +26,11 @@ const clubSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  domain: {
-    type: String,
+  domains: {
+    type: [{
+      type: String,
+      required: true,
+    }],
     required: true,
   },
   members: {
