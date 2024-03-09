@@ -94,19 +94,6 @@ await club.save()
 
 console.log('Club created', club);
 
-
-// "users": [
-//   {
-//     "id": "931712",
-//     "name": "Damien Reimert",
-//     "email": "damien@reimert.fr",
-//     "phone": "+33684734364",
-//     "domain": "cklom",
-//     "notifications": []
-//   },
-
-
-
 const json = fs.readFileSync(process.env.DB_PATH, 'utf8')
 
 const rawUsers = JSON.parse(json).users
