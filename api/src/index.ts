@@ -2,10 +2,11 @@ import { expressMiddleware } from '@apollo/server/express4';
 import cors from 'cors';
 import cookieParser from 'cookie-parser'
 import session from 'express-session'
-import NedbStore from 'nedb-session-store'
+import MongoStore from 'connect-mongo'
 import express from 'express'
 import passport from 'passport'
 
+import { DB_URI } from './datas/db-mongo.js'
 import { magicLogin } from './auth/magicLink.js';
 import { db } from './datas/db-mongo.js';
 import { server as apolloServer } from './graphql/graphql.js';
@@ -50,9 +51,7 @@ app.use(session({
   secret: process.env.SESSION_SECRET,
   resave: false, // don't save session if unmodified
   saveUninitialized: false, // don't create session until something stored
-  store: new (NedbStore(session))({
-    filename: process.env.SESSION_STORE_PATH
-  }),
+  store: MongoStore.create({ mongoUrl: DB_URI }),
   cookie: { maxAge: 1000 * 60 * 60 * 24 * 60 }
 }));
 // app.use(csrf());

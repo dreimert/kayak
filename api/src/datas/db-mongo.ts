@@ -1,12 +1,12 @@
 import mongoose from 'mongoose'
 
-class MongoDB {
-  static uri = process.env['DB_URI'] || 'mongodb://127.0.0.1:27017/kayakons'
+export const DB_URI = process.env['DB_URI'] || 'mongodb://127.0.0.1:27017/kayakons'
 
+class MongoDB {
   constructor () {}
 
   async initDB () {
-    await mongoose.connect(MongoDB.uri);
+    await mongoose.connect(DB_URI);
   }
 
   async closeDB () {
