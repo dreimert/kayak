@@ -1,5 +1,8 @@
+import fs from 'fs'
+
 import { Club } from "../models/Club";
 import { db } from "./db-mongo";
+import { User } from '../models/User';
 
 await db.initDB()
 
@@ -72,7 +75,7 @@ const recurrences = [
     }
   },
   {
-    "title": "Randonnée kmer du semadi après-midi",
+    "title": "Randonnée kmer du samedi après-midi",
     "description": "Surveille si Damien et Benjamin sont là",
     "type": "kmer",
     "start": "2024-02-12T00:00:00.000Z",
@@ -90,5 +93,32 @@ club.recurrences.push(...recurrences)
 await club.save()
 
 console.log('Club created', club);
+
+
+// "users": [
+//   {
+//     "id": "931712",
+//     "name": "Damien Reimert",
+//     "email": "damien@reimert.fr",
+//     "phone": "+33684734364",
+//     "domain": "cklom",
+//     "notifications": []
+//   },
+
+
+
+const json = fs.readFileSync(process.env.DB_PATH, 'utf8')
+
+const rawUsers = JSON.parse(json).users
+
+for (const user of rawUsers) {
+  await User.create({
+    email: user.email,
+    name: user.name,
+    phone: user.phone,
+    clubs: [club.id],
+    notifications: user.notifications
+  })
+}
 
 await db.closeDB()
