@@ -2,6 +2,11 @@
   @if (activity.recurring) {
     <mat-icon>restart_alt</mat-icon>
   }
+  @if (activity.iCanEdit) {
+    <a mat-icon-button [routerLink]="['/activity', activity.id, 'edit']">
+      <mat-icon>edit</mat-icon>
+    </a>
+  }
 </h1>
 <p>Départ : {{ activity.start.toLocaleDateString() }} - {{ activity.start.toLocaleTimeString() }}</p>
 <p>Retour : {{ activity.end.toLocaleDateString() }} - {{ activity.end.toLocaleTimeString() }}</p>
@@ -11,7 +16,7 @@
 }
 <p class="description">{{ activity.description }}</p>
 <div class="mat-elevation-z8" class="horizontal-scroll">
-  <table class="full-width-table" aria-label="Participant à l'activité">
+  <table aria-label="Participant à l'activité">
     <tbody>
       <tr class="participation">
         @if (user) {

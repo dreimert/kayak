@@ -62,7 +62,7 @@ export class Club {
     )
   }
 
-  getActivity (id: string) {
+  getActivity (id: string, fetchPolicy: 'network-only' | 'cache-first' = 'cache-first') {
     return Club.apollo.query<{activity: Activity}>({
       query: gql`
         query Activity($activityId: ID!) {
@@ -81,12 +81,15 @@ export class Club {
             }
             type
             limit
+            coordinators
+            iCanEdit
           }
         }
       `,
       variables: {
         activityId: id
-      }
+      },
+      fetchPolicy
     }).pipe(
       map(result => result.data.activity),
       map(activity => new Activity(activity)),

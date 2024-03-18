@@ -1,7 +1,13 @@
-import { InferSchemaType, Schema, Types, model } from "mongoose";
+import { HydratedDocument, InferSchemaType, Schema, Types, model } from "mongoose";
 
 import { ActivityType } from "../enums/ActivityType.js";
 import { ParticipationType } from "../enums/ParticipationType.js";
+import { TUser } from "./User.js";
+import { Club } from "./Club.js";
+
+export interface IActivityMethods {
+  isCoordinatorOrClubAdministrator (user: HydratedDocument<TUser> | null): Promise<boolean>
+}
 
 export type ActivityParticipation = {
   participant: Types.ObjectId
@@ -64,6 +70,25 @@ const activitySchema = new Schema({
       ref: 'User',
     }],
     default: [],
+  },
+}, {
+  timestamps: true,
+  methods: {
+    async isCoordinatorOrClubAdministrator (user: HydratedDocument<TUser> | null) {
+      if (!user) {
+        return false;
+      } else if (this.coordinators.includes(user.id)) {
+        return true;
+      } else {
+        const clubs = await Club.find({ activities: this.id });
+
+        if (clubs.some((club) => club.administrators.includes(user.id))) {
+          return true;
+        } else {
+          return false;
+        }
+      }
+    },
   },
 })
 

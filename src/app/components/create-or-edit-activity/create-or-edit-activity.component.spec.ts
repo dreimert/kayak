@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { CreateActivityComponent } from './create-activity.component';
+import { CreateActivityComponent } from './create-or-edit-activity.component';
 
 describe('CreateActivityComponent', () => {
   let component: CreateActivityComponent;
@@ -11,7 +11,7 @@ describe('CreateActivityComponent', () => {
       imports: [CreateActivityComponent]
     })
     .compileComponents();
-    
+
     fixture = TestBed.createComponent(CreateActivityComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

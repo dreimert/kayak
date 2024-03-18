@@ -13,7 +13,7 @@ type Agenda = {
 
 export interface IClubMethods {
   getMembers (): Promise<HydratedDocument<TUser>[]>
-  getAdministrateurs (): Promise<HydratedDocument<TUser>[]>
+  getAdministrators (): Promise<HydratedDocument<TUser>[]>
   getActivities (): Promise<HydratedDocument<TActivity>[]>
   isAdministrateur (user: HydratedDocument<TUser>): boolean
   getAgenda (): Promise<Agenda>
@@ -40,7 +40,7 @@ const clubSchema = new mongoose.Schema({
     }],
     default: [],
   },
-  administrateurs: {
+  administrators: {
     type: [{
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',
@@ -68,11 +68,11 @@ const clubSchema = new mongoose.Schema({
       return this.members;
     },
 
-    getAdministrateurs () {
-      if (!this.populated('administrateurs')) {
-        this.populate('administrateurs');
+    getAdministrators () {
+      if (!this.populated('administrators')) {
+        this.populate('administrators');
       }
-      return this.administrateurs;
+      return this.administrators;
     },
 
     getActivities () {
@@ -87,7 +87,7 @@ const clubSchema = new mongoose.Schema({
     },
 
     isAdministrateur (user: HydratedDocument<TUser>): boolean {
-      return this.administrateurs.includes(user.id);
+      return this.administrators.includes(user.id);
     },
     async getAgenda () {
       const self = await this.populate<{ activities: TActivity[] }>('activities')

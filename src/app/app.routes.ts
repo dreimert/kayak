@@ -12,7 +12,7 @@ import { ActivityComponent } from './components/activity/activity.component';
 import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
 import { ClubService } from './services/club.service';
 import { Club } from './models/club.model';
-import { CreateActivityComponent } from './components/create-activity/create-activity.component';
+import { CreateOrEditActivityComponent } from './components/create-or-edit-activity/create-or-edit-activity.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/agenda', pathMatch: 'full' },
@@ -35,20 +35,29 @@ export const routes: Routes = [
       }
     }, {
       path: 'nouvelle-activite',
-      component: CreateActivityComponent,
+      component: CreateOrEditActivityComponent,
       canActivate: [authGuard],
     }, {
       path: 'activity/:id',
-      component: ActivityComponent,
-      canActivate: [authFullOrNotLogGuard],
       resolve: {
         'activity': (route: ActivatedRouteSnapshot, state: RouterStateSnapshot) => {
           const club: Club = route.parent!.data['club'];
 
-          return club.getActivity(route.params['id'])
+          console.log('activity resolver', route.params['id']);
+
+          return club.getActivity(route.params['id'], 'network-only')
         },
         'user': () => inject(AuthService).user$,
-      }
+      },
+      children: [{
+        path: '',
+        component: ActivityComponent,
+        canActivate: [authFullOrNotLogGuard],
+      }, {
+        path: 'edit',
+        component: CreateOrEditActivityComponent,
+        canActivate: [authGuard],
+      }]
     }]
   },
   { path: 'login', component: LoginComponent },

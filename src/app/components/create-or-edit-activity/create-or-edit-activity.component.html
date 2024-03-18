@@ -97,10 +97,22 @@
     }
   </mat-form-field>
 
-  <button class="full-width" mat-raised-button color="primary" [disabled]="!activityForm.valid" type="submit">Créer</button>
+  <button class="full-width" mat-raised-button color="primary" [disabled]="!activityForm.valid" type="submit">
+    @if (activity) {
+      Mettre à jour
+    } @else {
+      Créer
+    }
+  </button>
 </form>
 
 @if (activity$ | async; as activity) {
-  <p class="padding">Votre activité a été créé avec success !</p>
+  <p class="padding">
+    @if (activity) {
+      Votre activité a été modifié avec success !
+    } @else {
+      Votre activité a été créé avec success !
+    }
+  </p>
   <a mat-raised-button color="primary" class="full-width" [routerLink]="['/activity', activity.id]">Voir l'activité !</a>
 }

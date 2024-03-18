@@ -18,6 +18,7 @@ type Mutation {
   createActivity(clubId: ID!, input: ActivityInput!): Activity!
   participate(activityId: ID!, userId: ID!, type: ParticipationType!): ActivityParticipation!
   updateProfile(userId: ID!, input: ProfileInput!): UserFull!
+  updateActivity(activityId: ID!, input: ActivityInput!): Activity!
 }
 
 type Club {
@@ -69,6 +70,8 @@ type Activity {
   recurring: Boolean
   participations: [ActivityParticipation!]!
   limit: Int
+  coordinators: [ID!]!
+  iCanEdit: Boolean!
 }
 
 type Recurrence {

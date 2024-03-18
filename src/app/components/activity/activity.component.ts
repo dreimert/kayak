@@ -27,7 +27,7 @@ import { RouterLink } from '@angular/router';
 })
 export class ActivityComponent implements OnInit {
   @Input({ required: true }) activity: Activity
-  @Input({ required: true }) user: User | null
+  @Input() user: User | null
 
   ActivityType = ActivityType
   ParticipationType = ParticipationType

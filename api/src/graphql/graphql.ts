@@ -12,7 +12,7 @@ import { ParticipationType } from '../enums/ParticipationType.js';
 import { ActivityType } from '../enums/ActivityType.js';
 import { TUser, User } from '../models/User.js';
 import { notifyNewActivity, sendMail } from '../mail.js';
-import { Activity, ActivityParticipation, TActivity } from '../models/Activity.js';
+import { Activity, ActivityParticipation, IActivityMethods, TActivity } from '../models/Activity.js';
 
 export type Context = {
   user?: HydratedDocument<TUser>;
@@ -112,6 +112,29 @@ const resolvers = {
 
       return activity;
     },
+    // updateActivity(activityId: ID!, input: ActivityInput!): Activity!
+    updateActivity: async (_, args: { activityId: Types.ObjectId, input: Pick<TActivity, 'title' | 'description' | 'type' | 'start' | 'end' | 'limit'> }, context: Context) : Promise<HydratedDocument<TActivity>> => {
+      const activity = await Activity.findById(args.activityId);
+
+      if (!activity) {
+        throw new Error(`Activity not found: ${args.activityId}`);
+      }
+
+      if (!activity.isCoordinatorOrClubAdministrator(context.user)) {
+        throw new Error(`User not authorized: ${context.user?.id || 'anonymous'}`);
+      }
+
+      activity.title = args.input.title;
+      activity.description = args.input.description;
+      activity.type = args.input.type;
+      activity.start = args.input.start;
+      activity.end = args.input.end;
+      activity.limit = args.input.limit || 0;
+
+      await activity.save();
+
+      return activity;
+    },
     participate: async (_, args: { activityId: Types.ObjectId, userId: Types.ObjectId, type: ParticipationType }, context: Context) : Promise<ActivityParticipation> => {
       const activity = await Activity.findById(args.activityId);
 
@@ -171,6 +194,12 @@ const resolvers = {
 
   ActivityParticipation: {
     participant: async (parent: ActivityParticipation) => await User.findById(parent.participant),
+  },
+
+  Activity: {
+    iCanEdit: async (parent: HydratedDocument<TActivity, IActivityMethods>, _, context: Context) => {
+      return parent.isCoordinatorOrClubAdministrator(context.user);
+    }
   },
 
   Club: {

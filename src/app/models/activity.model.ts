@@ -17,6 +17,8 @@ export class Activity {
   public recurring: boolean
   public participations: ActivityParticipation[]
   public limit: number
+  public coordinators: ID[]
+  public iCanEdit: boolean
 
   constructor (data: Partial<Activity>) {
     this.id = data.id || ''
@@ -28,6 +30,8 @@ export class Activity {
     this.recurring = data.recurring || false
     this.participations = [...(data.participations || [])]
     this.limit = data.limit || 0
+    this.coordinators = data.coordinators || []
+    this.iCanEdit = data.iCanEdit || false
   }
 
   getParticipationSum () {
