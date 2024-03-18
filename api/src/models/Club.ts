@@ -123,6 +123,10 @@ const clubSchema = new Schema({
 
           const instance = new Date(nextRecurrence.getTime() + daysUntilNextRecurrence * 24 * 60 * 60 * 1000);
 
+          // À faire après le décalage de date, sinon problème au changement d'heure
+          instance.setHours(recurrence.pattern.hour);
+          instance.setMinutes(recurrence.pattern.minutes);
+
           if (recurrence.start.getTime() < instance.getTime() && (!recurrence.end || instance.getTime() < recurrence.end.getTime())) {
             return new Activity({
               title: recurrence.title,
