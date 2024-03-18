@@ -1,24 +1,72 @@
+// :host {
+//   position: sticky;
+//   top: 65px;
+// }
+
 p {
   margin: 8px;
 }
 
 .horizontal-scroll {
-  overflow: scroll;
+  display: block;
+  overflow-x: scroll;
+  overflow-y: scroll;
   padding-bottom: 10px;
 }
 
-.full-width-table {
-  width: 100%;
-}
+// .full-width-table {
+//   width: 100%;
+// }
 
 table {
-  width: 100%;
-  border-collapse: collapse;
+  // position: sticky;
   border: solid black;
+  border-collapse: separate;
+  border-spacing: 0;
+  // overflow: hidden;
+  // top: 64px;
+  // z-index: 1;
+}
+
+tbody {
+  display: block;
+  // overflow-x: hidden;
 }
 
 th {
   border-right-style: solid;
+  position: sticky;
+  background-color: #fafafa;
+  z-index: 1;
+}
+
+th.top-1 {
+  top: 0px;
+}
+
+th.top-2 {
+  top: 42px;
+}
+
+th.top-3 {
+  top: 84px;
+}
+
+th.top-4 {
+  top: 106px;
+}
+
+th.top-5 {
+  top: 138px;
+}
+
+th.left-1 {
+  left: 0px;
+  z-index: 2;
+}
+
+th.top-1.left-1 {
+  z-index: 3;
 }
 
 .small-icon {
