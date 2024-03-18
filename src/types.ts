@@ -8,6 +8,7 @@ export enum ActivityType {
   EauVive = 'eauVive',
   Slalom = 'slalom',
   Musculation = 'musculation',
+  Autres = 'autres',
 }
 
 export enum ParticipationType {
@@ -30,6 +31,7 @@ export const ActivityTypeLabelsList = [
   { value: ActivityType.EauVive, label: 'Eau vive', icon: 'waves' },
   { value: ActivityType.Slalom, label: 'Slalom', icon: 'flag' },
   { value: ActivityType.Musculation, label: 'Renforcement musculaire', icon: 'fitness_center' },
+  { value: ActivityType.Autres, label: 'Autres', icon: 'interests' },
 ]
 
 export const ParticipationTypeLabelsList = [

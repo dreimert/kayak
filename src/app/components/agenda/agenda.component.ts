@@ -89,7 +89,7 @@ export class AgendaComponent implements OnInit {
 
   filters = [{
     label: 'Tout voir',
-    icon: 'interests',
+    icon: 'done_all',
     filter: (activity: Activity) => true
   }, ...ActivityTypeLabelsList.map((type) => {
     return {
