@@ -92,7 +92,7 @@ club.recurrences.push(...recurrences)
 
 await club.save()
 
-console.log('Club created', club);
+console.info('Club created', club);
 
 const json = fs.readFileSync(process.env.DB_PATH, 'utf8')
 

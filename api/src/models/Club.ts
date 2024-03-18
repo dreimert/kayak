@@ -1,4 +1,4 @@
-import mongoose, { HydratedDocument, InferSchemaType, Types } from "mongoose";
+import { HydratedDocument, InferSchemaType, Schema, model } from "mongoose";
 
 import { recurrenceSchema } from "./Recurrence.js";
 import { TUser, User } from "./User.js";
@@ -21,7 +21,7 @@ export interface IClubMethods {
   createRecurrentActivity (): Promise<HydratedDocument<TActivity>[]>
 }
 
-const clubSchema = new mongoose.Schema({
+const clubSchema = new Schema({
   name: {
     type: String,
     required: true,
@@ -35,21 +35,21 @@ const clubSchema = new mongoose.Schema({
   },
   members: {
     type: [{
-      type: mongoose.Schema.Types.ObjectId,
+      type: Schema.Types.ObjectId,
       ref: 'User',
     }],
     default: [],
   },
   administrators: {
     type: [{
-      type: mongoose.Schema.Types.ObjectId,
+      type: Schema.Types.ObjectId,
       ref: 'User',
     }],
     default: [],
   },
   activities: {
     type: [{
-      type: mongoose.Schema.Types.ObjectId,
+      type: Schema.Types.ObjectId,
       ref: 'Activity',
     }],
     default: [],
@@ -169,4 +169,4 @@ const clubSchema = new mongoose.Schema({
 
 export type TClub = InferSchemaType<typeof clubSchema>;
 
-export const Club = mongoose.model('Club', clubSchema);
+export const Club = model('Club', clubSchema);

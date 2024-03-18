@@ -1,4 +1,4 @@
-import mongoose, { InferSchemaType } from "mongoose";
+import { InferSchemaType, Schema } from "mongoose";
 
 import { ActivityType } from "../enums/ActivityType.js";
 
@@ -12,7 +12,7 @@ export enum Day {
   Saturday,
 }
 
-const recurrencePatternSchema = new mongoose.Schema({
+const recurrencePatternSchema = new Schema({
   day: {
     type: Number,
     enum: Day,
@@ -38,7 +38,7 @@ export type RecurrencePattern = {
   minutes: number
 }
 
-export const recurrenceSchema = new mongoose.Schema({
+export const recurrenceSchema = new Schema({
   title: {
     type: String,
     required: true,
@@ -69,7 +69,7 @@ export const recurrenceSchema = new mongoose.Schema({
     required: true,
   },
   coordinators: [{
-    type: mongoose.Schema.Types.ObjectId,
+    type: Schema.Types.ObjectId,
     ref: 'User',
   }],
 })
