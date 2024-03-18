@@ -35,8 +35,11 @@ tbody {
 
 th {
   border-right-style: solid;
-  position: sticky;
   background-color: #fafafa;
+}
+
+th.sticky {
+  position: sticky;
   z-index: 1;
 }
 
