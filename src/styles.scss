@@ -8,15 +8,15 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 }
 
 .oui, .oui.mat-button-toggle {
-  color: green;
+  color: #269f26;
 }
 
 .non, .non.mat-button-toggle {
-  color: red;
+  color: #f44336;
 }
 
 .peutEtre, .peutEtre.mat-button-toggle {
-  color: orange;
+  color: #fbb432;
 }
 
 .coordinator, .coordinator.mat-button-toggle {
@@ -24,7 +24,7 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 }
 
 .security, .security.mat-button-toggle {
-  color: blue;
+  color: #4e4eff;
 }
 
 .nonRepondu, .nonRepondu.mat-button-toggle {
@@ -33,18 +33,18 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
 mat-button-toggle.oui.mat-button-toggle-checked, .oui.reverse, .oui.reverse:nth-child(even), .reverse .oui {
   color: #fafafa;
-  background-color: green;
+  background-color: #269f26;
 }
 
 mat-button-toggle.non.mat-button-toggle-checked, .non.reverse, .non.reverse:nth-child(even), .reverse .non {
   color: #fafafa;
-  background-color: red;
+  background-color: #f44336;
 }
 
 
 mat-button-toggle.peutEtre.mat-button-toggle-checked, .peutEtre.reverse, .peutEtre.reverse:nth-child(even), .reverse .peutEtre {
   color: #fafafa;
-  background-color: orange;
+  background-color: #fbb432;
 }
 
 mat-button-toggle.coordinator.mat-button-toggle-checked, .coordinator.reverse, .coordinator.reverse:nth-child(even), .reverse .coordinator {
@@ -54,7 +54,7 @@ mat-button-toggle.coordinator.mat-button-toggle-checked, .coordinator.reverse, .
 
 mat-button-toggle.security.mat-button-toggle-checked, .security.reverse, .security.reverse:nth-child(even), .reverse .security {
   color: #fafafa;
-  background-color: blue;
+  background-color: #4e4eff;
 }
 
 mat-button-toggle.nonRepondu.mat-button-toggle-checked, .nonRepondu.reverse, .reverse .nonRepondu {
