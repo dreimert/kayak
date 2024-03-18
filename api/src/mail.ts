@@ -35,13 +35,21 @@ if (process.env.MAIL_DKIM_DOMAIN) {
 const transporter = nodemailer.createTransport(configOptions)
 
 export async function sendMail (to: string, subject: string, text: string, html: string) {
-  return await transporter.sendMail({
-    from: `"Kayakons.ovh" <${process.env.MAIL_USER}>`,
-    to,
-    subject,
-    text,
-    html
-  })
+  console.info('Sending mail', subject, 'to', to)
+  try {
+    return await transporter.sendMail({
+      from: `"Kayakons.ovh" <${process.env.MAIL_USER}>`,
+      to,
+      subject,
+      text,
+      html
+    })
+  } catch (error) {
+    console.error('Error sending mail', error);
+
+    return Promise.reject(error)
+  }
+
 }
 
 export async function notifyNewActivity (activity: HydratedDocument<TActivity>, club: HydratedDocument<TClub>) {
