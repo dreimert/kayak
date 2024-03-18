@@ -24,7 +24,7 @@
 
   <mat-form-field class="full-width">
     <mat-label>Description</mat-label>
-    <textarea matInput formControlName="description" placeholder="Parcours, niveau, materiel..."></textarea>
+    <textarea matInput formControlName="description" cdkTextareaAutosize row="3" placeholder="Parcours, niveau, materiel..."></textarea>
     @if (activityForm.get('description')?.hasError('required')) {
       <mat-error>La description est <strong>obligatoire</strong></mat-error>
     }
