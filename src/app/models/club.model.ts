@@ -6,6 +6,7 @@ import { Activity } from "./activity.model";
 import { Agenda } from "./agenda.model";
 import { ID } from "../../types";
 import { User } from "./user.model";
+import { Article } from "./article.model";
 
 export type ClubId = ID
 
@@ -16,6 +17,7 @@ export class Club {
   public name: string
   public members: User[]
   public activities: Activity[]
+  public articles: Article[]
   public agenda: Agenda
 
   constructor (data: Partial<Club>) {
@@ -93,6 +95,52 @@ export class Club {
     }).pipe(
       map(result => result.data.activity),
       map(activity => new Activity(activity)),
+    )
+  }
+
+  getArticles (fetchPolicy: 'network-only' | 'cache-first' = 'cache-first') {
+    return Club.apollo.query<{club: Club}>({
+      query: gql`
+        query Articles($clubId: ID!) {
+          club(id: $clubId) {
+            articles {
+              id
+              title
+            }
+          }
+        }
+      `,
+      variables: {
+        clubId: this.id
+      },
+      fetchPolicy
+    }).pipe(
+      map(result => result.data.club.articles),
+      map(articles => articles.map(article => new Article(article))),
+    )
+  }
+
+  getArticle (id: string, fetchPolicy: 'network-only' | 'cache-first' = 'cache-first') {
+    return Club.apollo.query<{article: Article}>({
+      query: gql`
+        query Article($articleId: ID!) {
+          article(id: $articleId) {
+            id
+            title
+            content
+            createdAt
+            updatedAt
+            iCanEdit
+          }
+        }
+      `,
+      variables: {
+        articleId: id
+      },
+      fetchPolicy
+    }).pipe(
+      map(result => result.data.article),
+      map(article => new Article(article)),
     )
   }
 }

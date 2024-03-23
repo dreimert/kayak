@@ -43,8 +43,6 @@ export const routes: Routes = [
         'activity': (route: ActivatedRouteSnapshot, state: RouterStateSnapshot) => {
           const club: Club = route.parent!.data['club'];
 
-          console.log('activity resolver', route.params['id']);
-
           return club.getActivity(route.params['id'], 'network-only')
         },
         'user': () => inject(AuthService).user$,
@@ -58,6 +56,13 @@ export const routes: Routes = [
         component: CreateOrEditActivityComponent,
         canActivate: [authGuard],
       }]
+    },
+    {
+      path: 'articles',
+      loadChildren: () => import('./articles/articles.routes.js'),
+      resolve: {
+        'user': () => inject(AuthService).user$,
+      },
     }]
   },
   { path: 'login', component: LoginComponent },

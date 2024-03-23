@@ -13,6 +13,7 @@ import { ActivityType } from '../enums/ActivityType.js';
 import { TUser, User } from '../models/User.js';
 import { notifyNewActivity, sendMail } from '../mail.js';
 import { Activity, ActivityParticipation, IActivityMethods, TActivity } from '../models/Activity.js';
+import { Article, IArticleMethods, TArticle } from '../models/Article.js';
 
 export type Context = {
   user?: HydratedDocument<TUser>;
@@ -41,6 +42,7 @@ const resolvers = {
     club: async (_, args: { id: Types.ObjectId }) => await Club.findById(args.id),
     clubByDomain: async (_, args: { domain: string }) => await Club.findOne({ domains: args.domain }),
     activity: async (_, args: { id: Types.ObjectId }) => await Activity.findById(args.id),
+    article: async (_, args: { id: Types.ObjectId }) => await Article.findById(args.id),
     user: async (_, args: { id: Types.ObjectId }) => await User.findById(args.id),
     me: (_, __, context: Context) => {
       return context.user || null;
@@ -135,6 +137,51 @@ const resolvers = {
 
       return activity;
     },
+    createArticle: async (_, args: { clubId: Types.ObjectId, input: Pick<TArticle, 'title' | 'content'> }, context: Context) : Promise<HydratedDocument<TArticle>> => {
+      if (!context.user?.id) {
+        throw new Error('Vous devez être connecté pour accéder à cette ressource');
+      }
+
+      const club = await Club.findById(args.clubId);
+
+      if (!club) {
+        throw new Error(`Club not found: ${args.clubId}`);
+      }
+
+      const input: Partial<TArticle> = {
+        ...args.input,
+        author: context.user.id,
+      };
+
+      const article = await Article.create(input);
+
+      club.articles.push(article.id);
+
+      await club.save();
+
+      // await notifyNewArticle(article, club);
+
+      return article;
+    },
+    // updateArticle(articleId: ID!, input: ArticleInput!): Article!
+    updateArticle: async (_, args: { articleId: Types.ObjectId, input: Pick<TArticle, 'title' | 'content'> }, context: Context) : Promise<HydratedDocument<TArticle>> => {
+      const article = await Article.findById(args.articleId);
+
+      if (!article) {
+        throw new Error(`Article not found: ${args.articleId}`);
+      }
+
+      if (!article.isAuthorOrClubAdministrator(context.user)) {
+        throw new Error(`User not authorized: ${context.user?.id || 'anonymous'}`);
+      }
+
+      article.title = args.input.title;
+      article.content = args.input.content;
+
+      await article.save();
+
+      return article;
+    },
     participate: async (_, args: { activityId: Types.ObjectId, userId: Types.ObjectId, type: ParticipationType }, context: Context) : Promise<ActivityParticipation> => {
       const activity = await Activity.findById(args.activityId);
 
@@ -202,10 +249,17 @@ const resolvers = {
     }
   },
 
+  Article: {
+    iCanEdit: async (parent: HydratedDocument<TArticle, IArticleMethods>, _, context: Context) => {
+      return parent.isAuthorOrClubAdministrator(context.user);
+    }
+  },
+
   Club: {
     members: (parent: HydratedDocument<TClub, IClubMethods>) => parent.getMembers(),
     activities: (parent: HydratedDocument<TClub, IClubMethods>) => parent.getActivities(),
     agenda: (parent: HydratedDocument<TClub, IClubMethods>) => parent.getAgenda(),
+    articles: (parent: HydratedDocument<TClub, IClubMethods>) => parent.getArticles(),
   },
 
   Me: {

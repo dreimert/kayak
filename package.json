@@ -41,6 +41,7 @@
     "graphql": "^16.8.1",
     "graphql-scalars": "^1.22.4",
     "mongoose": "^8.2.0",
+    "ngx-editor": "^17.0.1",
     "ngx-mat-timepicker": "^17.0.3",
     "nodemailer": "^6.9.9",
     "passport": "^0.7.0",

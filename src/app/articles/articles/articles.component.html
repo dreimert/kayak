@@ -1,0 +1,7 @@
+@for (article of articles; track article.id) {
+  <a [routerLink]="['/articles', article.id]">
+    <h2>{{ article.title }}</h2>
+  </a>
+} @empty {
+  <p>Il n'y a pas d'articles pour le moment.</p>
+}

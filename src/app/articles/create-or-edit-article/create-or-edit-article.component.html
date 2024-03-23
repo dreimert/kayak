@@ -1,0 +1,38 @@
+<form (ngSubmit)="onSubmit()" [formGroup]="articleForm">
+  <mat-form-field class="full-width">
+    <mat-label>Titre</mat-label>
+    <input type="text" matInput formControlName="title" placeholder="Sortie au lac d...">
+    @if (articleForm.get('title')?.hasError('required')) {
+      <mat-error>Le titre est <strong>obligatoire</strong></mat-error>
+    }
+  </mat-form-field>
+  <!-- <mat-form-field class="full-width">
+    <mat-label>Auteur</mat-label>
+    <input type="text" matInput formControlName="author">
+    @if (articleForm.get('author')?.hasError('required')) {
+      <mat-error>L'auteur est <strong>obligatoire</strong></mat-error>
+    }
+  </mat-form-field> -->
+  <div class="NgxEditor__Wrapper">
+    <ngx-editor-menu [editor]="editor" [toolbar]="toolbar"> </ngx-editor-menu>
+    <ngx-editor [editor]="editor" formControlName="content" placeholder="Votre article..."></ngx-editor>
+  </div>
+  <button class="full-width" mat-raised-button color="primary" [disabled]="!articleForm.valid" type="submit">
+    @if (article) {
+      Mettre à jour
+    } @else {
+      Créer
+    }
+  </button>
+</form>
+
+@if (article$ | async; as article) {
+  <p class="padding">
+    @if (article) {
+      Votre article a été modifié avec success !
+    } @else {
+      Votre article a été créé avec success !
+    }
+  </p>
+  <a mat-raised-button color="primary" class="full-width" [routerLink]="['/articles', article.id]">Voir l'article !</a>
+}

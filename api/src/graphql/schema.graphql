@@ -7,6 +7,7 @@ type Query {
   club(id: ID!): Club
   clubByDomain(domain: String!): Club
   activity(id: ID!): Activity
+  article(id: ID!): Article
   user(id: ID!): User
   me: Me
   userPrivateData(userId: ID!, type: String!): String!
@@ -16,9 +17,11 @@ type Mutation {
   # createClub(name: String!): Club!
   # createUser(name: String!, email: EmailAddress!, phone: PhoneNumber!): User!
   createActivity(clubId: ID!, input: ActivityInput!): Activity!
+  createArticle(clubId: ID!, input: ArticleInput!): Article!
   participate(activityId: ID!, userId: ID!, type: ParticipationType!): ActivityParticipation!
   updateProfile(userId: ID!, input: ProfileInput!): UserFull!
   updateActivity(activityId: ID!, input: ActivityInput!): Activity!
+  updateArticle(articleId: ID!, input: ArticleInput!): Article!
 }
 
 type Club {
@@ -28,6 +31,7 @@ type Club {
   members: [User!]!
   activities: [Activity!]!
   recurrences: [Recurrence!]!
+  articles: [Article!]!
 
   agenda: Agenda!
 }
@@ -95,6 +99,16 @@ type ActivityParticipation {
   type: ParticipationType!
 }
 
+type Article {
+  id: ID!
+  title: String!
+  author: User!
+  content: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  iCanEdit: Boolean!
+}
+
 input ProfileInput {
   name: String!
   phone: PhoneNumber!
@@ -108,6 +122,11 @@ input ActivityInput {
   end: DateTime!
   type: ActivityType!
   limit: Int
+}
+
+input ArticleInput {
+  title: String!
+  content: String!
 }
 
 enum ActivityType {

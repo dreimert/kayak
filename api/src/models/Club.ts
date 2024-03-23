@@ -3,6 +3,7 @@ import { HydratedDocument, InferSchemaType, Schema, model } from "mongoose";
 import { recurrenceSchema } from "./Recurrence.js";
 import { TUser, User } from "./User.js";
 import { Activity, TActivity } from "./Activity.js";
+import { TArticle } from "./Article.js";
 
 export const NumberOfWeeksAnticipation = 6;
 
@@ -15,6 +16,7 @@ export interface IClubMethods {
   getMembers (): Promise<HydratedDocument<TUser>[]>
   getAdministrators (): Promise<HydratedDocument<TUser>[]>
   getActivities (): Promise<HydratedDocument<TActivity>[]>
+  getArticles (): Promise<HydratedDocument<TArticle>[]>
   isAdministrateur (user: HydratedDocument<TUser>): boolean
   getAgenda (): Promise<Agenda>
   getUpcomingRecurringActivities (now?: Date): Promise<HydratedDocument<TActivity>[]>
@@ -58,26 +60,33 @@ const clubSchema = new Schema({
     type: [recurrenceSchema],
     default: [],
   },
+  articles: {
+    type: [{
+      type: Schema.Types.ObjectId,
+      ref: 'Article',
+    }],
+    default: [],
+  },
 }, {
   timestamps: true,
   methods: {
-    getMembers () {
+    async getMembers () {
       if (!this.populated('members')) {
-        this.populate('members');
+        await this.populate('members');
       }
       return this.members;
     },
 
-    getAdministrators () {
+    async getAdministrators () {
       if (!this.populated('administrators')) {
-        this.populate('administrators');
+        await this.populate('administrators');
       }
       return this.administrators;
     },
 
-    getActivities () {
+    async getActivities () {
       if (!this.populated('activities')) {
-        this.populate('activities');
+        await this.populate('activities');
       }
       return this.activities;
     },
@@ -86,9 +95,17 @@ const clubSchema = new Schema({
       return this.recurrences;
     },
 
+    async getArticles () {
+      if (!this.populated('articles')) {
+        await this.populate('articles');
+      }
+      return this.articles;
+    },
+
     isAdministrateur (user: HydratedDocument<TUser>): boolean {
       return this.administrators.includes(user.id);
     },
+
     async getAgenda () {
       const self = await this.populate<{ activities: TActivity[] }>('activities')
 
@@ -109,6 +126,7 @@ const clubSchema = new Schema({
         )
       };
     },
+
     async getUpcomingRecurringActivities (now: Date = new Date()): Promise<HydratedDocument<TActivity>[]> {
       return this.recurrences
         .filter((recurrence) => !recurrence.end || recurrence.end.getTime() > now.getTime())
@@ -143,6 +161,7 @@ const clubSchema = new Schema({
         })
         .filter((instance) => instance !== undefined);
     },
+
     async createRecurrentActivity () {
       const now = new Date();
       const createdActivities: HydratedDocument<TActivity>[] = [];
