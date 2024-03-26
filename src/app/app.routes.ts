@@ -1,18 +1,11 @@
 import { ActivatedRouteSnapshot, RouterStateSnapshot, Routes } from '@angular/router';
 import { inject } from '@angular/core';
 
-import { AgendaComponent } from './components/agenda/agenda.component';
-import { LoginComponent } from './components/login/login.component';
-import { ProfileComponent } from './components/profile/profile.component';
 import { authGuard } from './guards/auth/auth.guard';
 import { authFullOrNotLogGuard } from './guards/authFullOrNotLog/authFullOrNotLog.guard';
-import { AboutComponent } from './components/about/about.component';
 import { AuthService } from './services/auth.service';
-import { ActivityComponent } from './components/activity/activity.component';
-import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
 import { ClubService } from './services/club.service';
 import { Club } from './models/club.model';
-import { CreateOrEditActivityComponent } from './components/create-or-edit-activity/create-or-edit-activity.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/agenda', pathMatch: 'full' },
@@ -23,7 +16,7 @@ export const routes: Routes = [
     },
     children: [{
       path: 'agenda',
-      component: AgendaComponent,
+      loadComponent: () => import('./components/agenda/agenda.component'),
       canActivate: [authFullOrNotLogGuard],
       resolve: {
         'agenda': (route: ActivatedRouteSnapshot) => {
@@ -35,7 +28,7 @@ export const routes: Routes = [
       }
     }, {
       path: 'nouvelle-activite',
-      component: CreateOrEditActivityComponent,
+      loadComponent: () => import('./components/create-or-edit-activity/create-or-edit-activity.component'),
       canActivate: [authGuard],
     }, {
       path: 'activity/:id',
@@ -49,30 +42,35 @@ export const routes: Routes = [
       },
       children: [{
         path: '',
-        component: ActivityComponent,
+        loadComponent: () => import('./components/activity/activity.component'),
         canActivate: [authFullOrNotLogGuard],
       }, {
         path: 'edit',
-        component: CreateOrEditActivityComponent,
+        loadComponent: () => import('./components/create-or-edit-activity/create-or-edit-activity.component'),
         canActivate: [authGuard],
       }]
-    },
-    {
+    }, {
       path: 'articles',
       loadChildren: () => import('./articles/articles.routes.js'),
       resolve: {
         'user': () => inject(AuthService).user$,
       },
     }]
-  },
-  { path: 'login', component: LoginComponent },
-  {
-    path: 'profile', component: ProfileComponent,
+  }, {
+    path: 'login',
+    loadComponent: () => import('./components/login/login.component'),
+  }, {
+    path: 'profile',
+    loadComponent: () => import('./components/profile/profile.component'),
     canActivate: [authGuard],
     resolve: {
       'user': () => inject(AuthService).user$,
     }
+  }, {
+    path: 'about',
+    loadComponent: () => import('./components/about/about.component'),
+  }, {
+    path: '**',
+    loadComponent: () => import('./components/page-not-found/page-not-found.component'),
   },
-  { path: 'about', component: AboutComponent },
-  { path: '**', component: PageNotFoundComponent },
 ];

@@ -51,4 +51,5 @@ export class ActivityComponent implements OnInit {
       this.total = this.activity.getParticipationSum()
     })
   }
-}
+
+export default ActivityComponent;

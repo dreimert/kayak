@@ -276,26 +276,4 @@ export class AgendaComponent implements OnInit {
     })
   }
 
-  showData (user: UserPartial, type: 'phone' | 'email') {
-    const dialogRef = this.dialog.open(ConfirmShowUserDataDialog, {
-      data: {
-        user,
-        type
-      }
-    });
-
-    dialogRef.afterClosed().subscribe(async result => {
-      this.userService.data(user.id, type).pipe(
-        map(data => {
-          return this.dialog.open(ShowUserDataDialog, {
-            data: {
-              user,
-              data,
-              type
-            }
-          }).afterClosed();
-        })
-      ).subscribe(result => {});
-    });
-  }
-}
+export default AgendaComponent

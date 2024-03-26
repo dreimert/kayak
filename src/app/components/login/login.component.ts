@@ -39,3 +39,5 @@ export class LoginComponent {
     this.login$ = this.authService.login(this.loginForm.value.email!)
   }
 }
+
+export default LoginComponent;

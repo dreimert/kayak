@@ -80,8 +80,6 @@ export class CreateOrEditActivityComponent implements OnInit {
         },
         limit: this.activity.limit,
       });
-
-
     }
   }
 
@@ -158,3 +156,5 @@ export class CreateOrEditActivityComponent implements OnInit {
     }
   }
 }
+
+export default CreateOrEditActivityComponent
