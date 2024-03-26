@@ -134,7 +134,8 @@ enum ActivityType {
   piscine,
   eauVive,
   slalom,
-  musculation
+  musculation,
+  autres,
 }
 
 enum ParticipationType {

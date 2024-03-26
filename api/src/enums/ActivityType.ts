@@ -4,4 +4,5 @@ export enum ActivityType {
   eauVive = 'eauVive',
   slalom = 'slalom',
   musculation = 'musculation',
+  autres = 'autres',
 }
