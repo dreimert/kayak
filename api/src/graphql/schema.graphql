@@ -134,6 +134,7 @@ enum ActivityType {
   piscine,
   eauVive,
   slalom,
+  dragonBoat,
   musculation,
   autres,
 }

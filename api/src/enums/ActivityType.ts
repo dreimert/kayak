@@ -3,6 +3,7 @@ export enum ActivityType {
   piscine = 'piscine',
   eauVive = 'eauVive',
   slalom = 'slalom',
+  dragonBoat = 'dragonBoat',
   musculation = 'musculation',
   autres = 'autres',
 }
