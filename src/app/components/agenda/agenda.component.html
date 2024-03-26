@@ -77,33 +77,14 @@
       </tr>
       @for (participant of othersUserParticipations$ | async; track participant.id) {
         <tr>
-          <th class="user" class="sticky left-1">
-            <div class="row">
-              <span class="full-width">{{participant.name}}</span>
-              @if (user) {
-                <!-- à restraindre aux membres du codir / organisateur de l'évènement. Déporter sur la page évènement -->
-                <!-- <button
-                  type="button"
-                  aria-label="Voir le mail"
-                  mat-icon-button
-                  (click)="showData(participant, 'email')">
-                  <mat-icon aria-label="mail">email</mat-icon>
-                </button> -->
-                <button
-                  type="button"
-                  aria-label="Voir le numero de téléphone"
-                  mat-icon-button
-                  (click)="showData(participant, 'phone')">
-                  <mat-icon aria-label="téléphone">phone</mat-icon>
-                </button>
-              }
-              </div>
-            </th>
-            @for (participation of participant.participations; track $index) {
-              <td [class]="participation" class="reverse">
-                <ky-participation-icon [type]="participation"></ky-participation-icon>
-              </td>
-            }
+          <th class="user sticky left-1">
+            {{participant.name}}
+          </th>
+          @for (participation of participant.participations; track $index) {
+            <td [class]="participation" class="reverse">
+              <ky-participation-icon [type]="participation"></ky-participation-icon>
+            </td>
+          }
         </tr>
       }
       <tr class="footer">

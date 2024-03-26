@@ -6,7 +6,7 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTableModule } from '@angular/material/table';
-import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 
@@ -15,9 +15,6 @@ import { Observable, Subject, combineLatest } from 'rxjs';
 import { map, shareReplay, startWith } from 'rxjs/operators';
 import { ParticipationPipe } from '../../pipes/participation.pipe';
 import { RouterLink } from '@angular/router';
-import { ShowUserDataDialog } from '../../dialogs/show-user-data/show-user-data.dialog';
-import { ConfirmShowUserDataDialog } from '../../dialogs/confirm-show-user-data/confirm-show-user-data.dialog';
-import { UserService } from '../../services/user.service';
 import { ParticipationIconComponent } from '../participation-icon/participation-icon.component';
 
 import { Activity, ActivityId } from '../../models/activity.model';
@@ -100,11 +97,6 @@ export class AgendaComponent implements OnInit {
   })]
 
   filter = new FormControl(this.filters[0]);
-
-  constructor(
-    private dialog: MatDialog,
-    private userService: UserService
-  ) {}
 
   ngOnInit(): void {
     this.agenda.activities.sort((a, b) => a.start.getTime() - b.start.getTime())
@@ -275,5 +267,6 @@ export class AgendaComponent implements OnInit {
       this.updateAgenda$.next()
     })
   }
+}
 
 export default AgendaComponent

@@ -6,12 +6,17 @@ import { ParticipationIconComponent } from '../participation-icon/participation-
 import { AsyncPipe } from '@angular/common';
 
 import { Activity } from '../../models/activity.model';
-import { User } from '../../models/user.model';
+import { User, UserPartial } from '../../models/user.model';
 import { ActivityIconComponent } from '../activity-icon/activity-icon.component';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { RouterLink } from '@angular/router';
+import { MatDialog } from '@angular/material/dialog';
+import { UserService } from '../../services/user.service';
+import { ShowUserDataDialog } from '../../dialogs/show-user-data/show-user-data.dialog';
+import { ConfirmShowUserDataDialog } from '../../dialogs/confirm-show-user-data/confirm-show-user-data.dialog';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'ky-activity',
@@ -40,6 +45,11 @@ export class ActivityComponent implements OnInit {
     peutEtre: number,
   }
 
+  constructor(
+    private dialog: MatDialog,
+    private userService: UserService
+  ) {}
+
   ngOnInit(): void {
     this.participation = this.activity.participations.find(participation => participation.participant.id === this.user?.id)?.type || ParticipationType.NonRepondu
     this.others = this.activity.participations.filter(participation => participation.participant.id !== this.user?.id)
@@ -51,5 +61,29 @@ export class ActivityComponent implements OnInit {
       this.total = this.activity.getParticipationSum()
     })
   }
+
+  showData (user: UserPartial, type: 'phone' | 'email') {
+    const dialogRef = this.dialog.open(ConfirmShowUserDataDialog, {
+      data: {
+        user,
+        type
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(async result => {
+      this.userService.data(user.id, type).pipe(
+        map(data => {
+          return this.dialog.open(ShowUserDataDialog, {
+            data: {
+              user,
+              data,
+              type
+            }
+          }).afterClosed();
+        })
+      ).subscribe(result => {});
+    });
+  }
+}
 
 export default ActivityComponent;

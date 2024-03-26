@@ -76,13 +76,14 @@ th.top-1.left-1 {
   transform: scale(0.6);
 }
 
-th.user .row {
+th.user {
   min-height: 50px;
-  display: flex;
-  flex-direction: row;
-  flex-wrap: nowrap;
-  justify-content: space-evenly;
-  align-items: center;
+  height: 53px;
+}
+
+td {
+  min-width: 53px;
+  width: 53px;
 }
 
 td:nth-child(even) {
