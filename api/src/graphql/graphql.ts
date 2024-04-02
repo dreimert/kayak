@@ -16,7 +16,7 @@ import { Activity, ActivityParticipation, IActivityMethods, TActivity } from '..
 import { Article, IArticleMethods, TArticle } from '../models/Article.js';
 
 export type Context = {
-  user?: HydratedDocument<TUser>;
+  user?: HydratedDocument<TUser> & { id: Types.ObjectId };
 }
 
 // TODO : https://www.apollographql.com/docs/apollo-server/api/plugin/drain-http-server/
@@ -100,7 +100,7 @@ const resolvers = {
         participations: [{
           participant: context.user.id,
           type: ParticipationType.coordinator,
-        }],
+        }] as Types.DocumentArray<ActivityParticipation>,
       };
 
       const activity = await Activity.create(input);
