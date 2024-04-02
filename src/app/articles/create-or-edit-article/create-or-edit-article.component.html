@@ -29,9 +29,9 @@
 @if (article$ | async; as article) {
   <p class="padding">
     @if (article) {
-      Votre article a été modifié avec success !
+      Votre article a été modifié avec succès !
     } @else {
-      Votre article a été créé avec success !
+      Votre article a été créé avec succès !
     }
   </p>
   <a mat-raised-button color="primary" class="full-width" [routerLink]="['/articles', article.id]">Voir l'article !</a>

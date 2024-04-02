@@ -109,9 +109,9 @@
 @if (activity$ | async; as activity) {
   <p class="padding">
     @if (activity) {
-      Votre activité a été modifié avec success !
+      Votre activité a été modifié avec succès !
     } @else {
-      Votre activité a été créé avec success !
+      Votre activité a été créé avec succès !
     }
   </p>
   <a mat-raised-button color="primary" class="full-width" [routerLink]="['/activity', activity.id]">Voir l'activité !</a>
