@@ -24,6 +24,7 @@ export enum ParticipationType {
 export type ActivityParticipation = {
   participant: User;
   type: ParticipationType;
+  lastUpdate: Date;
 }
 
 export const ActivityTypeLabelsList = [

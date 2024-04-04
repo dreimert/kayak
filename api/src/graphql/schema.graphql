@@ -97,6 +97,7 @@ type RecurrencePattern {
 type ActivityParticipation {
   participant: User!
   type: ParticipationType!
+  lastUpdate: DateTime!
 }
 
 type Article {

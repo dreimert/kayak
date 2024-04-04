@@ -100,6 +100,7 @@ const resolvers = {
         participations: [{
           participant: context.user.id,
           type: ParticipationType.coordinator,
+          lastUpdate: new Date(),
         }] as Types.DocumentArray<ActivityParticipation>,
       };
 
@@ -212,10 +213,7 @@ const resolvers = {
 
       await activity.save();
 
-      return {
-        participant: user.id,
-        type: args.type,
-      };
+      return participation || activity.participations.at(-1);
     },
     updateProfile: async (_, args: { userId: Types.ObjectId, input: Pick<TUser, 'name' | 'phone' | 'notifications'> }, context) : Promise<HydratedDocument<TUser>> => {
       //(user: Types.ObjectId!, name: String!, phone: PhoneNumber!): User!

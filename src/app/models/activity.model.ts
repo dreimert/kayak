@@ -74,7 +74,8 @@ export class Activity {
         } else {
           this.participations.push({
             participant: participate!.participant,
-            type: participate!.type
+            type: participate!.type,
+            lastUpdate: new Date(),
           })
         }
       }),

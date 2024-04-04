@@ -9,11 +9,6 @@ export interface IActivityMethods {
   isCoordinatorOrClubAdministrator (user: HydratedDocument<TUser> | null): Promise<boolean>
 }
 
-export type ActivityParticipation = {
-  participant: Types.ObjectId
-  type: ParticipationType
-}
-
 const activitySchema = new Schema({
   title: {
     type: String,
@@ -51,6 +46,11 @@ const activitySchema = new Schema({
         type: String,
         enum: ParticipationType,
         required: true,
+      },
+      lastUpdate: {
+        type: Date,
+        required: true,
+        default: Date.now,
       },
     }],
     default: [],
@@ -93,5 +93,7 @@ const activitySchema = new Schema({
 })
 
 export type TActivity = InferSchemaType<typeof activitySchema>;
+
+export type ActivityParticipation = TActivity['participations'][0];
 
 export const Activity = model('Activity', activitySchema);
