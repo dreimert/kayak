@@ -57,7 +57,12 @@ mat-button-toggle.security.mat-button-toggle-checked, .security.reverse, .securi
   background-color: #4e4eff;
 }
 
-mat-button-toggle.nonRepondu.mat-button-toggle-checked, .nonRepondu.reverse, .reverse .nonRepondu {
+.nonRepondu.reverse, .reverse .nonRepondu {
   color: black;
   background-color: #fafafa00;
+}
+
+mat-button-toggle.nonRepondu.mat-button-toggle {
+  color: black;
+  background-color: #fafafa;
 }
