@@ -1,7 +1,9 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 import { MatIconModule } from '@angular/material/icon';
 import { AsyncPipe } from '@angular/common';
+
+import { Editor, NgxEditorModule } from 'ngx-editor';
 
 import { Article } from '../../models/article.model';
 import { User } from '../../models/user.model';
@@ -17,6 +19,7 @@ import { RouterLink } from '@angular/router';
   standalone: true,
   imports: [
     FormsModule, ReactiveFormsModule, MatButtonModule, MatButtonToggleModule, MatIconModule,
+    NgxEditorModule,
     AsyncPipe,
     RouterLink,
   ],
@@ -24,4 +27,6 @@ import { RouterLink } from '@angular/router';
 export class ArticleComponent {
   @Input({ required: true }) article: Article
   @Input() user: User | null
+
+  public editor = new Editor()
 }
