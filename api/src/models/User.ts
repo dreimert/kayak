@@ -1,6 +1,7 @@
 import { InferSchemaType, model, Schema } from "mongoose";
 
 import { ActivityType } from "../enums/ActivityType.js";
+import { PaddleColor } from "../enums/PaddleColor.js";
 
 const userSchema = new Schema({
   name: String,
@@ -17,6 +18,18 @@ const userSchema = new Schema({
     }],
     default: [],
   },
+  paddles: [{
+    activityType: {
+      type: String,
+      enum: ActivityType,
+      required: true,
+    },
+    color: {
+      type: String,
+      enum: PaddleColor,
+      required: true,
+    },
+  }],
 })
 
 export type TUser = InferSchemaType<typeof userSchema>;

@@ -44,6 +44,7 @@ type Agenda {
 type User {
   id: ID!
   name: String!
+  paddles: [Paddle!]!
 }
 
 type UserFull {
@@ -53,6 +54,7 @@ type UserFull {
   phone: PhoneNumber!
   clubs: [Club!]!
   notifications: [ActivityType!]!
+  paddles: [Paddle!]!
 }
 
 type Me {
@@ -62,6 +64,7 @@ type Me {
   phone: PhoneNumber
   clubs: [Club!]!
   notifications: [ActivityType!]!
+  paddles: [Paddle!]!
 }
 
 type Activity {
@@ -110,10 +113,21 @@ type Article {
   iCanEdit: Boolean!
 }
 
+type Paddle {
+  activityType: String!
+  color: String!
+}
+
 input ProfileInput {
   name: String!
   phone: PhoneNumber!
   notifications: [ActivityType!]
+  paddles: [PaddleInput!]
+}
+
+input PaddleInput {
+  activityType: String!
+  color: String!
 }
 
 input ActivityInput {

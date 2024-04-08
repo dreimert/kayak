@@ -6,3 +6,16 @@
 .padding {
   padding: 10px;
 }
+
+h3 {
+  margin: 0;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+}
+
+.wrap {
+  flex-wrap: wrap;
+}

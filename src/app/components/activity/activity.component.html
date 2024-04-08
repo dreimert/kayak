@@ -43,6 +43,9 @@
           <th class="user">
             <div class="row">
               <span class="full-width">{{ participation.participant.name }}</span>
+              @if (participation.participant.paddles.length > 0) {
+                <ky-activity-icon [type]="activity.type" [class]="participation.participant.paddles[0].color"></ky-activity-icon>
+              }
               @if (user) {
                 <!-- à restraindre aux membres du codir / organisateur de l'évènement. Déporter sur la page évènement -->
                 <!-- <button

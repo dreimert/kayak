@@ -215,7 +215,7 @@ const resolvers = {
 
       return participation || activity.participations.at(-1);
     },
-    updateProfile: async (_, args: { userId: Types.ObjectId, input: Pick<TUser, 'name' | 'phone' | 'notifications'> }, context) : Promise<HydratedDocument<TUser>> => {
+    updateProfile: async (_, args: { userId: Types.ObjectId, input: Pick<TUser, 'name' | 'phone' | 'notifications' | 'paddles'> }, context) : Promise<HydratedDocument<TUser>> => {
       //(user: Types.ObjectId!, name: String!, phone: PhoneNumber!): User!
       const user = await User.findById(args.userId);
 
@@ -230,6 +230,7 @@ const resolvers = {
       user.name = args.input.name;
       user.phone = args.input.phone;
       user.notifications = args.input.notifications || [];
+      user.paddles = args.input.paddles || [] as TUser['paddles'];
 
       await user.save();
 

@@ -1,6 +1,7 @@
 <p>Votre nom sera affiché lors de votre participation à un évènement.</p>
 <p>Votre numéro de téléphone n'est pas afficher par défaut. Un utilisateur authentifié peut choisir de le regarder en cas d'urgence ou pour des besoins d'organisation mais vous en serez notifié.</p>
 <p>Vous devez saisir votre numéro de téléphone au format international en commençant par +33 pour les numéros français. Il ne doit pas y avoir d'espace.</p>
+
 <form (ngSubmit)="onSubmit()" [formGroup]="profileForm">
   <mat-form-field class="full-width">
     <mat-icon matPrefix>person</mat-icon>
@@ -10,6 +11,7 @@
       <mat-error>Le nom est <strong>obligatoire</strong></mat-error>
     }
   </mat-form-field>
+
   <mat-form-field class="full-width">
     <mat-icon matPrefix>phone</mat-icon>
     <mat-label>Téléphone</mat-label>
@@ -21,12 +23,29 @@
       <mat-error>Le téléphone doit commencer par + suivi du code pays et sans espace.</mat-error>
     }
   </mat-form-field>
+
   <mat-form-field class="full-width">
     <mat-icon matPrefix>notifications</mat-icon>
     <mat-label>Abonnements aux créations de sorties :</mat-label>
     <mat-select formControlName="notifications" multiple>
       @for (activity of ActivityTypeLabelsList; track $index) {
         <mat-option [value]="activity.value">{{ activity.label }}</mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field class="full-width">
+    <mat-label>Mes pagaies (seulement la plus haute de chaque catégorie)</mat-label>
+    <mat-select [compareWith]="comparePaddleColor" formControlName="paddles" multiple>
+      @for (activity of PaddleActivityTypeLabelsList; track $index) {
+        <mat-optgroup [label]="activity.label">
+          @for (color of PaddleColorLabelsList; track $index) {
+            <mat-option [value]="{ activityType: activity.value, color: color.value }">
+              <mat-icon [class]="color.value">{{ ActivityTypeToIcon(activity.value) }}</mat-icon>
+              <span [class]="color.value">Pagaie {{ PaddleColorToLabel(color.value).toLowerCase() }} {{ ActivityTypeToLabel(activity.value).toLowerCase() }}</span>
+            </mat-option>
+          }
+        </mat-optgroup>
       }
     </mat-select>
   </mat-form-field>

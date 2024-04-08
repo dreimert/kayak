@@ -78,6 +78,10 @@ export class Club {
               participant {
                 id
                 name
+                paddles {
+                  activityType
+                  color
+                }
               }
               type
             }

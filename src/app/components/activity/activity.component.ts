@@ -52,7 +52,15 @@ export class ActivityComponent implements OnInit {
 
   ngOnInit(): void {
     this.participation = this.activity.participations.find(participation => participation.participant.id === this.user?.id)?.type || ParticipationType.NonRepondu
-    this.others = this.activity.participations.filter(participation => participation.participant.id !== this.user?.id)
+    this.others = this.activity.participations
+      .filter(participation => participation.participant.id !== this.user?.id)
+      .map(participation => ({
+        ...participation,
+        participant: {
+          ...participation.participant,
+          paddles: participation.participant.paddles.filter(paddle => paddle.activityType === this.activity.type)
+        }
+      }))
     this.total = this.activity.getParticipationSum()
   }
 

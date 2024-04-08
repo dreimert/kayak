@@ -47,6 +47,10 @@ export class AuthService {
               name
             }
             notifications
+            paddles {
+              activityType
+              color
+            }
           }
         }
       `,

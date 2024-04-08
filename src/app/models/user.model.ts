@@ -1,4 +1,4 @@
-import { ActivityType, ID } from "../../types";
+import { ActivityType, ID, Paddle } from "../../types";
 import { Club } from "./club.model";
 
 export type UserId = ID
@@ -20,15 +20,17 @@ export class User {
   public name: string
   public phone?: Phone
   public email?: Email
-  public clubs?: Club[]
+  public clubs: Club[]
   public notifications: ActivityType[]
+  public paddles: Paddle[]
 
   constructor (data: Partial<User>) {
     this.id = data.id || ''
     this.name = data.name || ''
     this.phone = data.phone
     this.email = data.email
-    this.clubs = data.clubs
+    this.clubs = data.clubs || []
     this.notifications = data.notifications || []
+    this.paddles = data.paddles || []
   }
 }
