@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { map } from 'rxjs/operators';
 
-import { ActivityType, ParticipationType, ParticipationTypeLabelsList } from '../../../types';
+import { ActivityType, ID, ParticipationType, ParticipationTypeLabelsList } from '../../../types';
 import { MatIconModule } from '@angular/material/icon';
 import { ParticipationIconComponent } from '../participation-icon/participation-icon.component';
 import { AsyncPipe } from '@angular/common';
@@ -42,6 +42,7 @@ export class ActivityComponent implements OnInit {
 
   participation: ParticipationType
   participationIndex: number
+  participantLimit: ID
   others: Activity['participations']
   total: {
     ouiLike: number,
@@ -75,12 +76,14 @@ export class ActivityComponent implements OnInit {
         }
       })
 
-    console.log(participations);
-
     this.participation = this.activity.participations.find(participation => participation.participant.id === this.user?.id)?.type || ParticipationType.NonRepondu
     this.participationIndex = participations.findIndex(participation => participation.participant.id === this.user?.id)
     this.others = participations.filter(participation => participation.participant.id !== this.user?.id)
     this.total = this.activity.getParticipationSum()
+
+    if (this.activity.limit && this.total.ouiLike >= this.activity.limit) {
+      this.participantLimit = participations[this.activity.limit - 1].participant.id
+    }
   }
 
   participate(participation: ParticipationType) {

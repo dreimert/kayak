@@ -93,7 +93,7 @@
             <ky-participation-icon [type]="participation.type"></ky-participation-icon>
           </td>
         </tr>
-        @if (activity.limit && activity.limit - 1 === $index && !$last) {
+        @if (!$last && participantLimit === participation.participant.id) {
           <tr>
             <th class="waitlist" colspan="2">Liste d'attente</th>
           </tr>
