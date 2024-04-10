@@ -84,6 +84,7 @@ export class Club {
                 }
               }
               type
+              lastUpdate
             }
             type
             limit

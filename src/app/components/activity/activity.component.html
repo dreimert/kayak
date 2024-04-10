@@ -20,7 +20,31 @@
     <tbody>
       <tr class="participation">
         @if (user) {
-          <th>Votre participation<br/>{{user.name}}</th>
+          <th>
+            Votre participation<br/>
+            {{ user.name }}
+            @if (participationIndex !== -1) {
+              @if (isLikeOui(participation)) {
+                @if (activity.limit === 0 || participationIndex < activity.limit) {
+                  <br/>Vous participez !
+                } @else {
+                  <br/>Vous êtes sur liste d'attente
+                }
+              } @else {
+                @if (activity.limit === 0 || total.ouiLike < activity.limit) {
+                  <br/>Il reste de la place.
+                } @else {
+                  <br/>Vous serez sur liste d'attente
+                }
+              }
+            } @else {
+              @if (activity.limit === 0 || total.ouiLike < activity.limit) {
+                <br/>Il reste de la place.
+              } @else {
+                <br/>Vous serez sur liste d'attente
+              }
+            }
+          </th>
           <td [class]="participation">
             <ky-participation-icon [type]="participation"></ky-participation-icon>
             <mat-button-toggle-group hideSingleSelectionIndicator [(ngModel)]="participation" (change)="participate(participation)" aria-label="Type de participation">
@@ -69,6 +93,11 @@
             <ky-participation-icon [type]="participation.type"></ky-participation-icon>
           </td>
         </tr>
+        @if (activity.limit && activity.limit - 1 === $index && !$last) {
+          <tr>
+            <th class="waitlist" colspan="2">Liste d'attente</th>
+          </tr>
+        }
       }
       <tr class="footer">
         <th>Total</th>

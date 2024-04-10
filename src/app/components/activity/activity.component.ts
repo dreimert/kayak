@@ -18,6 +18,7 @@ import { UserService } from '../../services/user.service';
 import { ShowUserDataDialog } from '../../dialogs/show-user-data/show-user-data.dialog';
 import { ConfirmShowUserDataDialog } from '../../dialogs/confirm-show-user-data/confirm-show-user-data.dialog';
 import { LegendComponent } from '../legend/legend.component';
+import { isLikeOui } from '../agenda/agenda.component';
 
 @Component({
   selector: 'ky-activity',
@@ -40,11 +41,14 @@ export class ActivityComponent implements OnInit {
   ParticipationTypeLabelsList = ParticipationTypeLabelsList
 
   participation: ParticipationType
+  participationIndex: number
   others: Activity['participations']
   total: {
     ouiLike: number,
     peutEtre: number,
   }
+
+  isLikeOui = isLikeOui
 
   constructor(
     private dialog: MatDialog,
@@ -52,16 +56,30 @@ export class ActivityComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.participation = this.activity.participations.find(participation => participation.participant.id === this.user?.id)?.type || ParticipationType.NonRepondu
-    this.others = this.activity.participations
-      .filter(participation => participation.participant.id !== this.user?.id)
+    const participations = this.activity.participations
       .map(participation => ({
         ...participation,
+        lastUpdate: new Date(participation.lastUpdate),
         participant: {
           ...participation.participant,
           paddles: participation.participant.paddles.filter(paddle => paddle.activityType === this.activity.type)
         }
       }))
+      .sort((a, b) => {
+        if (isLikeOui(a.type) && !isLikeOui(b.type)) {
+          return -1
+        } else if (!isLikeOui(a.type) && isLikeOui(b.type)) {
+          return 1
+        } else {
+          return a.lastUpdate.getTime() - b.lastUpdate.getTime()
+        }
+      })
+
+    console.log(participations);
+
+    this.participation = this.activity.participations.find(participation => participation.participant.id === this.user?.id)?.type || ParticipationType.NonRepondu
+    this.participationIndex = participations.findIndex(participation => participation.participant.id === this.user?.id)
+    this.others = participations.filter(participation => participation.participant.id !== this.user?.id)
     this.total = this.activity.getParticipationSum()
   }
 

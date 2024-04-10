@@ -33,7 +33,8 @@ type Participation = {
   activity: ActivityId,
   type: ParticipationType
 }
-function isLikeOui (participation: ParticipationType) {
+
+export function isLikeOui (participation: ParticipationType) {
   switch (participation) {
     case ParticipationType.Oui:
     case ParticipationType.Coordinator:
