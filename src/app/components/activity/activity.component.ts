@@ -42,7 +42,7 @@ export class ActivityComponent implements OnInit {
 
   participation: ParticipationType
   participationIndex: number
-  participantLimit: ID
+  participantLimit: ID | undefined
   others: Activity['participations']
   total: {
     ouiLike: number,
@@ -82,7 +82,11 @@ export class ActivityComponent implements OnInit {
     this.total = this.activity.getParticipationSum()
 
     if (this.activity.limit && this.total.ouiLike >= this.activity.limit) {
-      this.participantLimit = participations[this.activity.limit - 1].participant.id
+      this.participantLimit = participations.at(this.activity.limit - 1)?.participant.id
+
+      if (this.participantLimit === this.user?.id) {
+        this.participantLimit = participations.at(this.activity.limit - 2)?.participant.id
+      }
     }
   }
 
