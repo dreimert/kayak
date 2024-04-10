@@ -14,7 +14,8 @@
     "api": "tsc -p ./api/tsconfig.json && node --env-file=.env api/dist/index.js",
     "api-watch": "tsx watch --tsconfig api/tsconfig.json --env-file=.env api/src/index.ts",
     "maildev": "maildev",
-    "caddy": "caddy run --config caddy/Caddyfile"
+    "caddy": "caddy run --config caddy/Caddyfile",
+    "deploy": "git pull ; npm install ; npm start"
   },
   "private": true,
   "dependencies": {
