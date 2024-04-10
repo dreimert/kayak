@@ -204,6 +204,7 @@ const resolvers = {
 
       if (participation) {
         participation.type = args.type;
+        participation.lastUpdate = new Date();
       } else {
         activity.participations.push({
           participant: user.id,
