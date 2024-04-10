@@ -21,6 +21,7 @@ import { Activity, ActivityId } from '../../models/activity.model';
 import { User, UserPartial } from '../../models/user.model';
 import { Agenda } from '../../models/agenda.model';
 import { ActivityIconComponent } from '../activity-icon/activity-icon.component';
+import { LegendComponent } from '../legend/legend.component';
 
 type DisplayableHeader = {
   key: string;
@@ -52,7 +53,7 @@ function isLikeOui (participation: ParticipationType) {
     FormsModule, ReactiveFormsModule, MatButtonModule, MatButtonToggleModule, MatDialogModule, MatFormFieldModule, MatIconModule, MatTableModule, MatSelectModule,
     KeyValuePipe, AsyncPipe, ParticipationPipe,
     RouterLink,
-    ParticipationIconComponent, ActivityIconComponent
+    ActivityIconComponent, LegendComponent, ParticipationIconComponent,
   ]
 })
 export class AgendaComponent implements OnInit {

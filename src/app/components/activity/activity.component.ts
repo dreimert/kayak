@@ -1,4 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { map } from 'rxjs/operators';
 
 import { ActivityType, ParticipationType, ParticipationTypeLabelsList } from '../../../types';
 import { MatIconModule } from '@angular/material/icon';
@@ -16,7 +17,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { UserService } from '../../services/user.service';
 import { ShowUserDataDialog } from '../../dialogs/show-user-data/show-user-data.dialog';
 import { ConfirmShowUserDataDialog } from '../../dialogs/confirm-show-user-data/confirm-show-user-data.dialog';
-import { map } from 'rxjs/operators';
+import { LegendComponent } from '../legend/legend.component';
 
 @Component({
   selector: 'ky-activity',
@@ -27,7 +28,7 @@ import { map } from 'rxjs/operators';
     FormsModule, ReactiveFormsModule, MatButtonModule, MatButtonToggleModule, MatIconModule,
     AsyncPipe,
     RouterLink,
-    ParticipationIconComponent, ActivityIconComponent
+    ActivityIconComponent, LegendComponent, ParticipationIconComponent,
   ],
 })
 export class ActivityComponent implements OnInit {

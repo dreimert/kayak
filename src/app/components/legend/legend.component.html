@@ -1,0 +1,37 @@
+<p>Légende :</p>
+<div class="legend">
+  <ul>
+    @for (participation of ParticipationTypeLabelsList; track participation.value) {
+      <li><mat-icon class="{{ participation.value }}">{{ participation.icon }}</mat-icon> : {{ participation.explain }}</li>
+    }
+  </ul>
+  <ul>
+    @for (type of ActivityTypeLabelsList; track type.value) {
+      <li><mat-icon>{{ type.icon }}</mat-icon> : {{ type.label }}</li>
+    }
+  </ul>
+  <ul>
+    <li>
+      <mat-icon>restart_alt</mat-icon> : Activité récurrente
+    </li>
+    <li>
+      <mat-icon>star</mat-icon> : Activité ponctuelle
+    </li>
+    <li>
+      <mat-icon>warning</mat-icon> : Problème (niveau d'eau, météo, etc.)
+    </li>
+    <li>
+      <mat-icon>cancel</mat-icon> : Activité annulée
+    </li>
+  </ul>
+</div>
+
+<p>Astuces :</p>
+<ul>
+  <li>Cliquez sur le logo d'une activité pour avoir plus de détails sur celle-ci.</li>
+  <li>Cliquez sur le burger à coté de "Kayakons !" pour ouvrir le menu.</li>
+  <li>Vous pouvez modifier votre profil dans le menu.</li>
+  <li>Vous pouvez créer une nouvelle activité dans le menu</li>
+  <li>Vous pouvez filtrer les activités en cliquant sur le filtre en haut à gauche.</li>
+  <li>Se mettre en <mat-icon class="peutEtre">swap_vert</mat-icon> permet de recevoir des notifications et rappels.</li>
+</ul>
