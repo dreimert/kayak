@@ -4,6 +4,7 @@ import { ActivityType } from "../enums/ActivityType.js";
 import { ParticipationType } from "../enums/ParticipationType.js";
 import { TUser } from "./User.js";
 import { Club } from "./Club.js";
+import { ActivityStatus } from "../enums/ActivityStatus.js";
 
 export interface IActivityMethods {
   isCoordinatorOrClubAdministrator (user: HydratedDocument<TUser> | null): Promise<boolean>
@@ -14,9 +15,15 @@ const activitySchema = new Schema({
     type: String,
     required: true,
   },
-  description:  {
+  description: {
     type: String,
     required: true,
+  },
+  status: {
+    type: String,
+    enum: ActivityStatus,
+    required: true,
+    default: ActivityStatus.published,
   },
   start: {
     type: Date,
@@ -63,13 +70,6 @@ const activitySchema = new Schema({
     type: Number,
     required: true,
     default: 0,
-  },
-  waitingList: {
-    type: [{
-      type: Schema.Types.ObjectId,
-      ref: 'User',
-    }],
-    default: [],
   },
 }, {
   timestamps: true,

@@ -36,6 +36,7 @@ export class Club {
             agenda {
               activities {
                 id
+                status
                 start
                 end
                 participations {
@@ -72,6 +73,7 @@ export class Club {
             id
             title
             description
+            status
             start
             end
             participations {

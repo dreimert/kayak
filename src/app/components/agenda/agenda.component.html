@@ -34,7 +34,9 @@
       <tr class="headers">
         @for (activite of activites$ | async; track activite.id) {
           <th>
-            @if (activite.recurring) {
+            @if (activite.status === 'canceled') {
+              <mat-icon class="small-icon">canceled</mat-icon>
+            } @else if (activite.recurring) {
               <mat-icon class="small-icon">restart_alt</mat-icon>
             } @else {
               <mat-icon class="small-icon">star</mat-icon>
@@ -57,15 +59,17 @@
         @if (user) {
           <th class="sticky left-1">Votre participation<br/>{{user.name}}</th>
           @for (myParticipation of authUserParticipations$ | async; track myParticipation.activity) {
-            <td class="participation reverse" [class]="myParticipation.type">
+            <td class="participation reverse" [class]="myParticipation.type" [class.canceled]="myParticipation.canceled">
               <ky-participation-icon [type]="myParticipation.type"></ky-participation-icon>
-              <mat-button-toggle-group hideSingleSelectionIndicator [(ngModel)]="myParticipation.type" (change)="updateParticipation(myParticipation)" aria-label="Type de participation">
-                @for (type of ParticipationTypeLabelsList; track type.value) {
-                  <mat-button-toggle [value]="type.value" [class]="type.value">
-                    <mat-icon>{{ type.icon }}</mat-icon>
-                  </mat-button-toggle>
-                }
-              </mat-button-toggle-group>
+              @if (!myParticipation.canceled) {
+                <mat-button-toggle-group hideSingleSelectionIndicator [(ngModel)]="myParticipation.type" (change)="updateParticipation(myParticipation)" aria-label="Type de participation">
+                  @for (type of ParticipationTypeLabelsList; track type.value) {
+                    <mat-button-toggle [value]="type.value" [class]="type.value">
+                      <mat-icon>{{ type.icon }}</mat-icon>
+                    </mat-button-toggle>
+                  }
+                </mat-button-toggle-group>
+              }
             </td>
           }
         } @else {
@@ -80,8 +84,8 @@
           <th class="user sticky left-1">
             {{participant.name}}
           </th>
-          @for (participation of participant.participations; track $index) {
-            <td [class]="participation" class="reverse">
+          @for (participation of participant.participations; track $index;) {
+            <td [class]="participation" [class.reverse]="!participant.canceled[$index]" [class.canceled]="participant.canceled[$index]">
               <ky-participation-icon [type]="participation"></ky-participation-icon>
             </td>
           }

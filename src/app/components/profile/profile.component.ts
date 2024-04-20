@@ -84,8 +84,6 @@ export class ProfileComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    console.log('ProfileComponent', this.user);
-
     this.profileForm.patchValue({
       name: this.user.name || '',
       phone: this.user.phone || '',

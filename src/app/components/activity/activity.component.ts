@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { map } from 'rxjs/operators';
 
-import { ActivityType, ID, ParticipationType, ParticipationTypeLabelsList } from '../../../types';
+import { ActivityStatusToLabel, ActivityType, ID, ParticipationType, ParticipationTypeLabelsList } from '../../../types';
 import { MatIconModule } from '@angular/material/icon';
 import { ParticipationIconComponent } from '../participation-icon/participation-icon.component';
 import { AsyncPipe } from '@angular/common';
@@ -36,6 +36,7 @@ export class ActivityComponent implements OnInit {
   @Input({ required: true }) activity: Activity
   @Input() user: User | null
 
+  ActivityStatusToLabel = ActivityStatusToLabel
   ActivityType = ActivityType
   ParticipationType = ParticipationType
   ParticipationTypeLabelsList = ParticipationTypeLabelsList

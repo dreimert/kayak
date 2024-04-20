@@ -16,7 +16,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { NgxMatTimepickerModule } from 'ngx-mat-timepicker';
 
 
-import { ActivityType, ActivityTypeLabelsList } from '../../../types';
+import { ActivityStatus, ActivityStatusLabelsList, ActivityType, ActivityTypeLabelsList } from '../../../types';
 import { Activity } from '../../models/activity.model';
 import { Club } from '../../models/club.model';
 import { FrDateAdapter } from '../../adapters/fr-date-adapter';
@@ -42,12 +42,14 @@ export class CreateOrEditActivityComponent implements OnInit {
   @Input() club: Club;
   @Input() activity: Activity;
 
+  ActivityStatusLabelsList = ActivityStatusLabelsList;
   ActivityTypeLabelsList = ActivityTypeLabelsList;
 
   activityForm = this._formBuilder.group({
     title: ['', [Validators.required]],
-    type: [ActivityType.Kmer, [Validators.required]],
     description: ['', [Validators.required]],
+    status: [ActivityStatus.published, [Validators.required]],
+    type: [ActivityType.Kmer, [Validators.required]],
     dates: this._formBuilder.group({
       start: [undefined as Date | undefined, [Validators.required]],
       end: [undefined as Date | undefined, [Validators.required]],
@@ -67,11 +69,14 @@ export class CreateOrEditActivityComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    console.log(this.activity);
+
     if (this.activity) {
       this.activityForm.patchValue({
         title: this.activity.title,
-        type: this.activity.type,
         description: this.activity.description,
+        status: this.activity.status,
+        type: this.activity.type,
         dates: {
           start: this.activity.start,
           end: this.activity.end,
@@ -100,8 +105,9 @@ export class CreateOrEditActivityComponent implements OnInit {
   transformForm (data: CreateOrEditActivityComponent['activityForm']['value']) {
     return {
       title: data.title,
-      type: data.type,
       description: data.description,
+      status: data.status,
+      type: data.type,
       start: this.transformDate(data.dates!.start!, data.dates!.startTime!),
       end: this.transformDate(data.dates!.end!, data.dates!.endTime!),
       limit: this.transformLimit(data.limit!),
@@ -118,7 +124,7 @@ export class CreateOrEditActivityComponent implements OnInit {
         mutation: gql`
           mutation UpdateActivity($activityId: ID!, $input: ActivityInput!) {
             updateActivity(activityId: $activityId, input: $input) {
-              id title description start end type limit
+              id title description status start end type limit
             }
           }
         `,
@@ -131,6 +137,7 @@ export class CreateOrEditActivityComponent implements OnInit {
         tap((updateActivity) => {
           this.activity.title = updateActivity.title;
           this.activity.description = updateActivity.description;
+          this.activity.status = updateActivity.status;
           this.activity.start = updateActivity.start;
           this.activity.end = updateActivity.end;
           this.activity.type = updateActivity.type;
@@ -142,7 +149,7 @@ export class CreateOrEditActivityComponent implements OnInit {
         mutation: gql`
           mutation CreateActivity($clubId: ID!, $input: ActivityInput!) {
             createActivity(clubId: $clubId, input: $input) {
-              id title description start end type limit
+              id title description status start end type limit
             }
           }
         `,

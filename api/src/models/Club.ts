@@ -4,6 +4,7 @@ import { recurrenceSchema } from "./Recurrence.js";
 import { TUser, User } from "./User.js";
 import { Activity, TActivity } from "./Activity.js";
 import { TArticle } from "./Article.js";
+import { ActivityStatus } from "../enums/ActivityStatus.js";
 
 export const NumberOfWeeksAnticipation = 6;
 
@@ -149,6 +150,7 @@ const clubSchema = new Schema({
             return new Activity({
               title: recurrence.title,
               description: recurrence.description,
+              status: ActivityStatus.published,
               start: instance,
               end: new Date(instance.getTime() + recurrence.duration),
               type: recurrence.type,

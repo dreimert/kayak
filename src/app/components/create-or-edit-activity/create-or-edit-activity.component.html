@@ -10,10 +10,25 @@
   <mat-form-field class="full-width">
     <mat-label>Type d'activité</mat-label>
     <mat-select formControlName="type">
-      @for (type of ActivityTypeLabelsList; track type) {
+      @for (type of ActivityTypeLabelsList; track type.value) {
         <mat-option [value]="type.value">
           <mat-icon>{{ type.icon }}</mat-icon>
           {{ type.label }}
+        </mat-option>
+      }
+    </mat-select>
+    @if (activityForm.get('type')?.hasError('required')) {
+      <mat-error>Le type d'activité est <strong>obligatoire</strong></mat-error>
+    }
+  </mat-form-field>
+
+  <mat-form-field class="full-width">
+    <mat-label>Statut de l'activité</mat-label>
+    <mat-select formControlName="status">
+      @for (status of ActivityStatusLabelsList; track status.value) {
+        <mat-option [value]="status.value">
+          <mat-icon>{{ status.icon }}</mat-icon>
+          {{ status.label }}
         </mat-option>
       }
     </mat-select>

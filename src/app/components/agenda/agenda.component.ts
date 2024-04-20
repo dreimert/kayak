@@ -72,10 +72,11 @@ export class AgendaComponent implements OnInit {
     hours: DisplayableHeader[]
   }>
 
-  authUserParticipations$: Observable<Participation[]>
+  authUserParticipations$: Observable<(Participation & { canceled: boolean })[]>
 
   othersUserParticipations$: Observable<(UserPartial & {
     participations: ParticipationType[]
+    canceled: boolean[]
   })[]>
 
   totaux$: Observable<{
@@ -191,7 +192,8 @@ export class AgendaComponent implements OnInit {
 
           return {
             activity: activity.id,
-            type: find?.type ?? ParticipationType.NonRepondu
+            type: find?.type ?? ParticipationType.NonRepondu,
+            canceled: activity.status === 'canceled',
           }
         })
       }),
@@ -207,7 +209,8 @@ export class AgendaComponent implements OnInit {
               const find = activity.participations.find(participation => participant.id === participation.participant.id)
 
               return find?.type ?? ParticipationType.NonRepondu
-            })
+            }),
+            canceled: activities.map(activity => activity.status === 'canceled')
           }
         })
       }),

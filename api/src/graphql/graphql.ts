@@ -83,7 +83,7 @@ const resolvers = {
   },
 
   Mutation: {
-    createActivity: async (_, args: { clubId: Types.ObjectId, input: Pick<TActivity, 'title' | 'description' | 'type' | 'start' | 'end' | 'limit'> }, context: Context) : Promise<HydratedDocument<TActivity>> => {
+    createActivity: async (_, args: { clubId: Types.ObjectId, input: Pick<TActivity, 'title' | 'description' | 'status' | 'type' | 'start' | 'end' | 'limit'> }, context: Context) : Promise<HydratedDocument<TActivity>> => {
       if (!context.user?.id) {
         throw new Error('Vous devez être connecté pour accéder à cette ressource');
       }
@@ -116,7 +116,7 @@ const resolvers = {
       return activity;
     },
     // updateActivity(activityId: ID!, input: ActivityInput!): Activity!
-    updateActivity: async (_, args: { activityId: Types.ObjectId, input: Pick<TActivity, 'title' | 'description' | 'type' | 'start' | 'end' | 'limit'> }, context: Context) : Promise<HydratedDocument<TActivity>> => {
+    updateActivity: async (_, args: { activityId: Types.ObjectId, input: Pick<TActivity, 'title' | 'description' | 'status' | 'type' | 'start' | 'end' | 'limit'> }, context: Context) : Promise<HydratedDocument<TActivity>> => {
       const activity = await Activity.findById(args.activityId);
 
       if (!activity) {
@@ -129,6 +129,7 @@ const resolvers = {
 
       activity.title = args.input.title;
       activity.description = args.input.description;
+      activity.status = args.input.status;
       activity.type = args.input.type;
       activity.start = args.input.start;
       activity.end = args.input.end;

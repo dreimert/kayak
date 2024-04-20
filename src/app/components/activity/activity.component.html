@@ -8,6 +8,7 @@
     </a>
   }
 </h1>
+<p>Status : {{ ActivityStatusToLabel(activity.status) }}</p>
 <p>Départ : {{ activity.start.toLocaleDateString() }} - {{ activity.start.toLocaleTimeString() }}</p>
 <p>Retour : {{ activity.end.toLocaleDateString() }} - {{ activity.end.toLocaleTimeString() }}</p>
 <p>Type d'activité : <ky-activity-icon [type]="activity.type"></ky-activity-icon> {{ activity.activityTypeLabel() }}</p>
@@ -23,10 +24,12 @@
           <th>
             Votre participation<br/>
             {{ user.name }}
-            @if (participationIndex !== -1) {
+            @if (activity.status === 'canceled') {
+              <br/><i>L'activité est annulée.</i>
+            } @else if (participationIndex !== -1) {
               @if (isLikeOui(participation)) {
                 @if (activity.limit === 0 || participationIndex < activity.limit) {
-                  <br/>Vous participez !
+                  <br/><i>Vous participez !</i>
                 } @else {
                   <br/>Vous êtes sur liste d'attente
                 }
@@ -47,13 +50,15 @@
           </th>
           <td [class]="participation">
             <ky-participation-icon [type]="participation"></ky-participation-icon>
-            <mat-button-toggle-group hideSingleSelectionIndicator [(ngModel)]="participation" (change)="participate(participation)" aria-label="Type de participation">
-              @for (type of ParticipationTypeLabelsList; track type.value) {
-                <mat-button-toggle [value]="type.value" [class]="type.value">
-                  <mat-icon>{{ type.icon }}</mat-icon>
-                </mat-button-toggle>
-              }
-            </mat-button-toggle-group>
+            @if (activity.status !== 'canceled') {
+              <mat-button-toggle-group hideSingleSelectionIndicator [(ngModel)]="participation" (change)="participate(participation)" aria-label="Type de participation">
+                @for (type of ParticipationTypeLabelsList; track type.value) {
+                  <mat-button-toggle [value]="type.value" [class]="type.value">
+                    <mat-icon>{{ type.icon }}</mat-icon>
+                  </mat-button-toggle>
+                }
+              </mat-button-toggle-group>
+            }
           </td>
         } @else {
           <th>Participer !</th>

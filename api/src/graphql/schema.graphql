@@ -71,6 +71,7 @@ type Activity {
   id: ID!
   title: String
   description: String
+  status: ActivityStatus
   start: DateTime!
   end: DateTime!
   type: ActivityType!
@@ -85,6 +86,7 @@ type Recurrence {
   id: ID!
   title: String
   description: String
+  status: ActivityStatus
   type: ActivityType!
   start: DateTime!
   end: DateTime
@@ -133,6 +135,7 @@ input PaddleInput {
 input ActivityInput {
   title: String!
   description: String!
+  status: ActivityStatus!
   start: DateTime!
   end: DateTime!
   type: ActivityType!
@@ -153,6 +156,18 @@ enum ActivityType {
   musculation,
   autres,
 }
+
+enum ActivityStatus {
+  draft,
+  published,
+  canceled,
+}
+
+# enum ActivityInscriptionStatus {
+#   open,
+#   waitingList,
+#   closed,
+# }
 
 enum ParticipationType {
   oui

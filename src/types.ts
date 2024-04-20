@@ -2,6 +2,12 @@ import { User } from "./app/models/user.model";
 
 export type ID = string
 
+export enum ActivityStatus {
+  draft = 'draft',
+  published = 'published',
+  canceled = 'canceled',
+}
+
 export enum ActivityType {
   Kmer = 'kmer',
   Piscine = 'piscine',
@@ -36,6 +42,12 @@ export enum PaddleColor {
 
 export type Paddle = { activityType: ActivityType, color: PaddleColor }
 
+export const ActivityStatusLabelsList = [
+  { value: ActivityStatus.draft, label: 'Brouillon', icon: 'drafts' },
+  { value: ActivityStatus.published, label: 'Publiée', icon: 'published' },
+  { value: ActivityStatus.canceled, label: 'Annulée', icon: 'canceled' },
+]
+
 export const ActivityTypeLabelsList = [
   { value: ActivityType.Kmer, label: 'Randonnée', icon: 'kayaking', paddleColor: true},
   { value: ActivityType.Piscine, label: 'Piscine', icon: 'pool' },
@@ -61,6 +73,8 @@ export const PaddleColorLabelsList = [
   { value: PaddleColor.rouge, label: 'Rouge' },
   { value: PaddleColor.noir, label: 'Noir' },
 ]
+
+export const ActivityStatusToLabel = (status: ActivityStatus) => ActivityStatusLabelsList.find((activityStatus) => activityStatus.value === status)?.label || status
 
 export const ActivityTypeToLabel = (type: ActivityType) => ActivityTypeLabelsList.find((activityType) => activityType.value === type)?.label || type
 export const ActivityTypeToIcon = (type: ActivityType) => ActivityTypeLabelsList.find((activityType) => activityType.value === type)?.icon || 'interests'

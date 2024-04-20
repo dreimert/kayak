@@ -1,7 +1,7 @@
 import { Apollo, gql } from "apollo-angular"
 import { map, tap } from "rxjs/operators"
 
-import { ActivityParticipation, ActivityType, ActivityTypeToLabel, ID, ParticipationType } from "../../types"
+import { ActivityParticipation, ActivityStatus, ActivityType, ActivityTypeToLabel, ID, ParticipationType } from "../../types"
 
 export type ActivityId = ID
 
@@ -11,6 +11,7 @@ export class Activity {
   public id: ActivityId
   public title: string
   public description: string
+  public status: ActivityStatus
   public type: ActivityType
   public start: Date
   public end: Date
@@ -24,6 +25,7 @@ export class Activity {
     this.id = data.id || ''
     this.title = data.title || ''
     this.description = data.description || ''
+    this.status = data.status || ActivityStatus.published
     this.type = data.type || ActivityType.Kmer
     this.start = data.start ? new Date(data.start) : new Date()
     this.end = data.end ? new Date(data.end) : new Date()
