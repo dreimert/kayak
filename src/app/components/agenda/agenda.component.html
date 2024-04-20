@@ -59,7 +59,7 @@
         @if (user) {
           <th class="sticky left-1">Votre participation<br/>{{user.name}}</th>
           @for (myParticipation of authUserParticipations$ | async; track myParticipation.activity) {
-            <td class="participation reverse" [class]="myParticipation.type" [class.canceled]="myParticipation.canceled">
+            <td class="participation" [class]="myParticipation.type" [class.reverse]="!myParticipation.canceled" [class.canceled]="myParticipation.canceled">
               <ky-participation-icon [type]="myParticipation.type"></ky-participation-icon>
               @if (!myParticipation.canceled) {
                 <mat-button-toggle-group hideSingleSelectionIndicator [(ngModel)]="myParticipation.type" (change)="updateParticipation(myParticipation)" aria-label="Type de participation">
