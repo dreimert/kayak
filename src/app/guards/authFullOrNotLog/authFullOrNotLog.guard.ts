@@ -13,8 +13,10 @@ export const authFullOrNotLogGuard: CanActivateFn = (route, state) => {
     map(user => !user || !!( user && user.name && user.phone )),
     tap(can => {
       if (!can) {
-        router.navigateByUrl('/profile');
+        return router.parseUrl('/profile');
       }
+
+      return true
     })
   );
 };
