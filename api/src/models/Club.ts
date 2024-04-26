@@ -110,8 +110,10 @@ const clubSchema = new Schema({
     async getAgenda () {
       const self = await this.populate<{ activities: TActivity[] }>('activities')
 
+      const lastTwelveHours = new Date(Date.now() - 12 * 60 * 60 * 1000).getTime();
+
       const agendaActivities = self.activities
-        .filter((activity) => activity.start.getTime() > Date.now());
+        .filter((activity) => activity.end.getTime() > lastTwelveHours );
 
       return {
         activities: agendaActivities,
