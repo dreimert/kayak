@@ -108,25 +108,29 @@ const clubSchema = new Schema({
     },
 
     async getAgenda () {
-      const self = await this.populate<{ activities: TActivity[] }>('activities')
+      const activities = await Activity
+        .find({
+          clubs: this.id,
+          end: {
+            $gt: new Date(Date.now() - 12 * 60 * 60 * 1000), // finie depuis moins de 12h ou en cours
+          },
+        });
 
-      const lastTwelveHours = new Date(Date.now() - 12 * 60 * 60 * 1000).getTime();
-
-      const agendaActivities = self.activities
-        .filter((activity) => activity.end.getTime() > lastTwelveHours );
-
-      return {
-        activities: agendaActivities,
-        participants: await Promise.all([...(agendaActivities
-          .reduce((set, activity) => {
+      const participants = await User.find({
+        _id: {
+          $in: [...activities.reduce((set, activity) => {
             activity!.participations.forEach((participation) => {
               set.add(participation.participant.toString());
             });
 
             return set;
-          }, new Set<string>()))]
-          .map((id) => User.findById(id))
-        )
+          }, new Set<string>())]
+        }
+      });
+
+      return {
+        activities,
+        participants,
       };
     },
 

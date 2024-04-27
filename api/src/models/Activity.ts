@@ -15,6 +15,7 @@ const activitySchema = new Schema({
     type: [Schema.Types.ObjectId],
     ref: 'Club',
     required: true,
+    index: true,
   },
   title: {
     type: String,
@@ -37,6 +38,7 @@ const activitySchema = new Schema({
   end: {
     type: Date,
     required: true,
+    index: true,
   },
   type: {
     type: String,
