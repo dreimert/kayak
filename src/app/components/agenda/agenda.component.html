@@ -55,6 +55,12 @@
           </th>
         }
       </tr>
+      <tr class="headers">
+        <th class="sticky left-1">Total</th>
+        @for (total of totaux$ | async; track total.activity) {
+          <th>{{ total.ouiLike }} (+{{ total.peutEtre }})</th>
+        }
+      </tr>
       <tr class="participation">
         @if (user) {
           <th class="sticky left-1">Votre participation<br/>{{user.name}}</th>
