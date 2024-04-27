@@ -95,6 +95,7 @@ const resolvers = {
       }
 
       const input: Partial<TActivity> = {
+        clubs: [club.id],
         ...args.input,
         coordinators: [context.user.id],
         participations: [{

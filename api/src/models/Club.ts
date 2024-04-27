@@ -150,6 +150,7 @@ const clubSchema = new Schema({
 
           if (recurrence.start.getTime() < instance.getTime() && (!recurrence.end || instance.getTime() < recurrence.end.getTime())) {
             return new Activity({
+              clubs: [this.id],
               title: recurrence.title,
               description: recurrence.description,
               status: ActivityStatus.published,

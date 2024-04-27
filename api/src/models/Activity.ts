@@ -1,4 +1,4 @@
-import { HydratedDocument, InferSchemaType, Schema, Types, model } from "mongoose";
+import { HydratedDocument, InferSchemaType, Schema, model } from "mongoose";
 
 import { ActivityType } from "../enums/ActivityType.js";
 import { ParticipationType } from "../enums/ParticipationType.js";
@@ -11,6 +11,11 @@ export interface IActivityMethods {
 }
 
 const activitySchema = new Schema({
+  clubs: {
+    type: [Schema.Types.ObjectId],
+    ref: 'Club',
+    required: true,
+  },
   title: {
     type: String,
     required: true,
