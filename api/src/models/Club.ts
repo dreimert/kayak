@@ -161,7 +161,7 @@ const clubSchema = new Schema({
               start: instance,
               end: new Date(instance.getTime() + recurrence.duration),
               type: recurrence.type,
-              recurring: true,
+              recurring: `${recurrence.id}-${instance.getMonth()}-${instance.getDate()}`,
               coordinators: [...(recurrence.coordinators || [])],
             });
           } else {
@@ -180,7 +180,7 @@ const clubSchema = new Schema({
         const upcomingRecurringActivities: HydratedDocument<TActivity>[] = await this.getUpcomingRecurringActivities(now);
 
         for (const activity of upcomingRecurringActivities) {
-          const findActivity = await Activity.findOne({ start: activity.start, type: activity.type });
+          const findActivity = await Activity.findOne({ recurring: activity.recurring });
 
           if (!findActivity) {
             activity.save();

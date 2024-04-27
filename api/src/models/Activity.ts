@@ -46,8 +46,7 @@ const activitySchema = new Schema({
     required: true,
   },
   recurring: {
-    type: Boolean,
-    default: false,
+    type: String,
   },
   participations: {
     type: [{

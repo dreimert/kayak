@@ -246,15 +246,18 @@ const resolvers = {
   },
 
   Activity: {
+    recurring: async (parent: HydratedDocument<TActivity, IActivityMethods>) => {
+      return !!parent.recurring;
+    },
     iCanEdit: async (parent: HydratedDocument<TActivity, IActivityMethods>, _, context: Context) => {
       return parent.isCoordinatorOrClubAdministrator(context.user);
-    }
+    },
   },
 
   Article: {
     iCanEdit: async (parent: HydratedDocument<TArticle, IArticleMethods>, _, context: Context) => {
       return parent.isAuthorOrClubAdministrator(context.user);
-    }
+    },
   },
 
   Club: {
