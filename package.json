@@ -33,7 +33,7 @@
     "@angular/ssr": "^17.0.3",
     "@apollo/client": "^3.0.0",
     "@apollo/server": "^4.10.0",
-    "apollo-angular": "^6.0.0",
+    "apollo-angular": "^7.0.1",
     "connect-mongo": "^5.1.0",
     "cookie-parser": "^1.4.6",
     "csurf": "^1.11.0",
