@@ -186,7 +186,7 @@ const resolvers = {
 
       return article;
     },
-    participate: async (_, args: { activityId: Types.ObjectId, userId: Types.ObjectId, type: ParticipationType }, context: Context) : Promise<ActivityParticipation> => {
+    participate: async (_, args: { activityId: Types.ObjectId, userId: Types.ObjectId, type: ParticipationType }, context: Context) : Promise<ActivityParticipation | undefined> => {
       const activity = await Activity.findById(args.activityId);
 
       if (!activity) {
@@ -206,13 +206,21 @@ const resolvers = {
       const participation = activity.participations.find((participation) => participation.participant.equals(user.id));
 
       if (participation) {
-        participation.type = args.type;
-        participation.lastUpdate = new Date();
+        if (args.type !== ParticipationType.nonRepondu) {
+          participation.type = args.type;
+          participation.lastUpdate = new Date();
+        } else {
+          activity.participations.pull(participation);
+        }
       } else {
-        activity.participations.push({
-          participant: user.id,
-          type: args.type,
-        });
+        if (args.type !== ParticipationType.nonRepondu) {
+          activity.participations.push({
+            participant: user.id,
+            type: args.type,
+          });
+        } else {
+          return
+        }
       }
 
       await activity.save();
