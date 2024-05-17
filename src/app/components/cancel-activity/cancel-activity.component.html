@@ -1,0 +1,17 @@
+<h1>Annuler l'activité : {{ activity.title }} ?</h1>
+
+<p>Vous êtes sur le point d'annuler l'activité <strong>{{ activity.title }}</strong>.</p>
+
+<form (ngSubmit)="onSubmit()" [formGroup]="cancelActivityForm">
+  <mat-form-field class="full-width">
+    <mat-label>Motif</mat-label>
+    <textarea matInput formControlName="reason" placeholder="Météo, sécurité, logistique..."></textarea>
+    @if (cancelActivityForm.get('reason')?.hasError('required')) {
+      <mat-error>Le motif est <strong>obligatoire</strong></mat-error>
+    }
+  </mat-form-field>
+
+  <button class="full-width" mat-raised-button color="primary" [disabled]="!cancelActivityForm.valid" type="submit">
+    Annuler l'activité
+  </button>
+</form>

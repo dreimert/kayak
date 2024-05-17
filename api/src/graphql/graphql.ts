@@ -11,9 +11,10 @@ import { Club, IClubMethods, TClub } from '../models/Club.js';
 import { ParticipationType } from '../enums/ParticipationType.js';
 import { ActivityType } from '../enums/ActivityType.js';
 import { TUser, User } from '../models/User.js';
-import { notifyNewActivity, sendMail } from '../mail.js';
+import { notifyActivityCanceled, notifyNewActivity, sendMail } from '../mail.js';
 import { Activity, ActivityParticipation, IActivityMethods, TActivity } from '../models/Activity.js';
 import { Article, IArticleMethods, TArticle } from '../models/Article.js';
+import { ActivityStatus } from '../enums/ActivityStatus.js';
 
 export type Context = {
   user?: HydratedDocument<TUser> & { id: Types.ObjectId };
@@ -239,6 +240,29 @@ const resolvers = {
 
       return user;
     },
+    cancelActivity: async (_, args: { activityId: Types.ObjectId, reason: string }, context: Context) : Promise<boolean> => {
+      const activity = await Activity.findById(args.activityId);
+
+      if (!activity) {
+        throw new Error(`Activity not found: ${args.activityId}`);
+      }
+
+      if (!activity.isCoordinatorOrClubAdministrator(context.user)) {
+        throw new Error(`User not authorized: ${context.user?.id || 'anonymous'}`);
+      }
+
+      activity.status = ActivityStatus.canceled;
+      activity.description = 'Cette activité est annulée : ' + args.reason + '\n\n' + activity.description;
+
+      await activity.save();
+
+      await notifyActivityCanceled(
+        activity,
+        args.reason,
+      );
+
+      return true;
+    }
   },
 
   ActivityParticipation: {

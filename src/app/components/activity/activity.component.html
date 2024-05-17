@@ -6,9 +6,14 @@
     <a mat-icon-button [routerLink]="['/activity', activity.id, 'edit']">
       <mat-icon>edit</mat-icon>
     </a>
+    <a mat-icon-button [routerLink]="['/activity', activity.id, 'cancel']">
+      <mat-icon>close</mat-icon>
+    </a>
   }
 </h1>
-<p>Status : {{ ActivityStatusToLabel(activity.status) }}</p>
+@if (activity && activity.status === 'canceled') {
+  <h1 class="cancel">Cette activité est annulée.</h1>
+}
 <p>Départ : {{ activity.start.toLocaleDateString() }} - {{ activity.start.toLocaleTimeString() }}</p>
 <p>Retour : {{ activity.end.toLocaleDateString() }} - {{ activity.end.toLocaleTimeString() }}</p>
 <p>Type d'activité : <ky-activity-icon [type]="activity.type"></ky-activity-icon> {{ activity.activityTypeLabel() }}</p>

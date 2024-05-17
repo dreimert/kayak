@@ -5,6 +5,7 @@ import nodemailer from "nodemailer"
 import { TActivity } from "./models/Activity.js"
 import { TClub } from "./models/Club.js"
 import { User } from "./models/User.js"
+import { ParticipationType } from "./enums/ParticipationType.js"
 
 // MAIL="contact@kayakons.ovh"
 // MAIL_PASSWORD=""
@@ -64,7 +65,24 @@ export async function notifyNewActivity (activity: HydratedDocument<TActivity>, 
       `${user.name} <${user.email}>`,
       `Nouvelle activité : ${activity.title}`,
       `Une nouvelle activité a été créée : ${activity.title}. Pour en savoir plus, cliquez sur le lien suivant : ${link}`,
-      `<html>Une nouvelle activité a été créée : ${activity.title}. Pour en savoir plus, cliquez sur le lien suivant : <a href="${link}">${link}</a><html>`,
+      `<html>Une nouvelle activité a été créée : ${activity.title}. Pour en savoir plus, cliquez sur le lien suivant : <a href="${link}">${link}</a></html>`,
+    )
+  }
+}
+
+export async function notifyActivityCanceled (activity: HydratedDocument<TActivity>, reason: string) {
+  const users = User.find({
+    _id: {
+      $in: activity.participations.filter(p => p.type !== ParticipationType.non && p.type !== ParticipationType.nonRepondu).map(p => p.participant)
+    }
+  })
+
+  for await (const user of users) {
+    await sendMail(
+      `${user.name} <${user.email}>`,
+      `Activité annulée : ${activity.title}`,
+      `L'activité ${activity.title} a été annulée pour la raison : ${reason}.`,
+      `<html><p>L'activité ${activity.title} a été annulée.</p><p>${reason}</p></html>`,
     )
   }
 }

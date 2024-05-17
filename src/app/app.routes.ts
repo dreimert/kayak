@@ -48,6 +48,10 @@ export const routes: Routes = [
         path: 'edit',
         loadComponent: () => import('./components/create-or-edit-activity/create-or-edit-activity.component'),
         canActivate: [authGuard],
+      }, {
+        path: 'cancel',
+        loadComponent: () => import('./components/cancel-activity/cancel-activity.component'),
+        canActivate: [authGuard],
       }]
     }, {
       path: 'articles',

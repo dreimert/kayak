@@ -15,7 +15,6 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { NgxMatTimepickerModule } from 'ngx-mat-timepicker';
 
-
 import { ActivityStatus, ActivityStatusLabelsList, ActivityType, ActivityTypeLabelsList } from '../../../types';
 import { Activity } from '../../models/activity.model';
 import { Club } from '../../models/club.model';
@@ -59,8 +58,6 @@ export class CreateOrEditActivityComponent implements OnInit {
     limit: [0, [Validators.required, Validators.min(0)]],
   });
 
-  sent = false;
-
   activity$: Observable<Activity> | null = null
 
   constructor (
@@ -69,8 +66,6 @@ export class CreateOrEditActivityComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    console.log(this.activity);
-
     if (this.activity) {
       this.activityForm.patchValue({
         title: this.activity.title,
@@ -116,8 +111,6 @@ export class CreateOrEditActivityComponent implements OnInit {
 
   async onSubmit () {
     this.activityForm.disable();
-
-    this.sent = true;
 
     if (this.activity) {
       this.activity$ = this.apollo.mutate<{updateActivity: Activity}>({

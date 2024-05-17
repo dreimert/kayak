@@ -22,6 +22,7 @@ type Mutation {
   updateProfile(userId: ID!, input: ProfileInput!): UserFull!
   updateActivity(activityId: ID!, input: ActivityInput!): Activity!
   updateArticle(articleId: ID!, input: ArticleInput!): Article!
+  cancelActivity(activityId: ID!, reason: String): Boolean!
 }
 
 type Club {
