@@ -100,9 +100,17 @@ app.listen(port, () => {
   console.info(`API server listening on port ${port}`);
 });
 
-const clubs = await Club.find({})
+async function createRecurrentActivity () {
+  const clubs = await Club.find({})
 
-clubs.forEach(async (club) => {
-  console.info(club.name);
-  console.info(await club.createRecurrentActivity());
-})
+  clubs.forEach(async (club) => {
+    console.info(club.name);
+    console.info(await club.createRecurrentActivity());
+  })
+}
+
+createRecurrentActivity();
+
+setInterval(async () => {
+  createRecurrentActivity()
+}, 1000 * 60 * 60 * 24);
